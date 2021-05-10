@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Multimedia interface V1.2</string>
+    <string name="source_radio">RADIO</string>
+    <string name="source_cdplayer">CD PLAYER</string>
+    <string name="source_aux">AUX</string>
+    <string name="freq_type_radio_main">--</string>
+    <string name="chan_freq_radio_main">---.--</string>
+    <string name="chan_name_radio_main">--------</string>
+    <string name="chan_nr_radio_main">--</string>
+    <string name="volume">Volume: %1$s </string>
+    <string name="function_name">Function Name</string>
+</resources>
