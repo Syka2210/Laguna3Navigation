@@ -172,7 +172,6 @@ int high_box_function(bool counter){
       }
     }    
   }
-  
 }
 
 //Menu settings volume function 
