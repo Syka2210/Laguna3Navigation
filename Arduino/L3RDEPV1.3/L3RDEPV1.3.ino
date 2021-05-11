@@ -172,6 +172,7 @@ int high_box_function(bool counter){
       }
     }    
   }
+  
 }
 
 //Menu settings volume function 
@@ -405,10 +406,12 @@ void gridSortRadio(bool counter) {
       }
 
       if (canMsg.data[0] == 0x22 && highPass == false) {
-        if (canMsg.data[6] == 0x20) high_box = 1;
-        if (canMsg.data[6] == 0x21) high_box = 2;
-        if (canMsg.data[6] == 0x22) high_box = 3;
-        if (canMsg.data[6] == 0x23) high_box = 4;
+
+        //It might be the bit 4, it might be the bit ??6??
+        if (canMsg.data[4] == 0x20) high_box = 1;
+        if (canMsg.data[4] == 0x21) high_box = 2;
+        if (canMsg.data[4] == 0x22) high_box = 3;
+        if (canMsg.data[4] == 0x23) high_box = 4;
         highPass = true;
       }
 
@@ -573,6 +576,130 @@ void gridSort3x2(bool counter){
   }
 }
 
+//Grid 3x3 
+void gridSort3x3(bool counter){
+  int arraySize = 7;
+  String array3x3[arraySize];
+  int arrayElements = 0;
+  bool start_titles = false;
+  bool counter_0x00 = false;
+  bool highPass = false;
+  int rowNr = 1;
+  int columnNr = 1;
+  int arrayPos = 0;
+  char character;
+  while (counter == false){
+    if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
+      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74){
+        //Check how many strings are in the 3x3 array
+        for (int i = 0; i < arraySize; i++){
+          if (array3x3[i].length() > 0) arrayElements++;
+        }
+        //Check how many strings are in the 3x3 array
+
+        //Save the curent selection in the function_name variable
+        //function_name = array3x3[5];
+        //Save the curent selection in the function_name variable
+
+        //Serial transmit the titles depending of number
+        if (arrayElements <= 2){
+          //Insert below the 3 items identifier
+          Serial.print("freq_grid1x3:");
+          Serial.print(high_box);
+          Serial.print(":");
+          Serial.print(frequency_box);
+          Serial.print(":");
+          Serial.print(array3x3[1]);
+          Serial.print(":");
+          Serial.print(array3x3[4]);
+          Serial.println(endString);
+          return;
+        }
+        if (arrayElements >= 3){
+          //Insert below the 3 items identifier
+          Serial.print("freq_grid3x3:");
+          Serial.print(high_box);
+          Serial.print(":");
+          Serial.print(frequency_box);
+          Serial.print(":");
+          Serial.print(array3x3[1]);
+          Serial.print(":");
+          Serial.print(array3x3[2]);
+          Serial.print(":");
+          Serial.print(array3x3[3]);
+          Serial.print(":");
+          Serial.print(array3x3[4]);
+          Serial.print(":");
+          Serial.print(array3x3[5]);
+          Serial.print(":");
+          Serial.print(array3x3[6]);
+          Serial.println(endString);
+          return;
+        }
+      }
+
+      if (canMsg.data[0] == 0x22 && highPass == false) {
+
+        //It might be the bit 4, it might be the bit ??6??
+        if (canMsg.data[4] == 0x20) high_box = 1;
+        if (canMsg.data[4] == 0x21) high_box = 2;
+        if (canMsg.data[4] == 0x22) high_box = 3;
+        if (canMsg.data[4] == 0x23) high_box = 4;
+        highPass = true;
+      }
+
+    if (canMsg.can_id == 289 && canMsg.data[0] ==0x23){ 
+      start_titles = true;
+    }
+
+    if (canMsg.can_id == 289 && start_titles == true){
+      //Serial.println(arrayElements);
+      for (int i=1; i<=7; i++){
+          if (canMsg.data[i] == 0x0D){
+            if (rowNr == 3){
+              //rowNr = 1;
+            }else rowNr++;
+          }
+          if (canMsg.data[i] == 0x00 && i != 0){
+            if (counter_0x00 == true){
+              columnNr++;
+              rowNr = 1;
+              counter_0x00 = false;
+            } else counter_0x00 = true;
+          } else counter_0x00 = false;
+
+          //Checking where on the 3x2 array whe are to save the string
+          if (rowNr == 1 && columnNr == 1) arrayPos = 1;
+          if (rowNr == 2 && columnNr == 1) arrayPos = 2;
+          if (rowNr == 3 && columnNr == 1) arrayPos = 3;
+          if (rowNr == 1 && columnNr == 2) arrayPos = 4;
+          if (rowNr == 2 && columnNr == 2) arrayPos = 5;
+          if (rowNr == 3 && columnNr == 2) arrayPos = 6;
+          //Checking where on the 3x2 array whe are to save the string
+
+          //Saving the string on the coresponding 3x3 array position
+          if (columnNr == 1){
+              if (canMsg.data[i] >= 0x20 && canMsg.data[i] <= 0x7E){
+              character = canMsg.data[i];
+              array3x3[arrayPos].concat(character);
+              }
+          }
+          if (columnNr == 2){
+            if (canMsg.data[i] >= 0x10 && canMsg.data[i] <= 0x15) {
+              character = canMsg.data[i];
+              array3x3[arrayPos] = chan_number(character);
+            }
+            if (canMsg.data[i] == 0x2D){
+              array3x3[arrayPos] = '-';
+            }
+          }
+        }
+          //Saving the string on the coresponding 3x2 array position
+      }
+    }
+  }
+}
+
 void loop(){
   if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
     if(canMsg.can_id == 289){
@@ -594,7 +721,8 @@ void loop(){
 
                                        
       if (canMsg.data[0] == 0x10 && canMsg.data[2] == 0x25){
-        if ((canMsg.data[1] != 0x43 && canMsg.data[1] != 0x31) && canMsg.data[4] == 0x09){
+        if ((canMsg.data[1] != 0x43 && canMsg.data[1] != 0x31 && canMsg.data[1] != 0x2D && canMsg.data[1] != 0x3D) && 
+             canMsg.data[4] == 0x09 && canMsg.data[7] != 0x00){
           //Serial.println("ENTER gridSort3x2");
           gridSort3x2(false); // CHECKED
           //Serial.println("EXIT");
@@ -605,8 +733,13 @@ void loop(){
           gridSortRadio(false); // CHECKED
           //Serial.println("EXIT");
           //Serial.println();
-        }        
-        if ((canMsg.data[1] == 0x43 || canMsg.data[1] == 0x31) && canMsg.data[4] == 0x09 && canMsg.data[5] == 0x01 && canMsg.data[6] == 0x20){
+        }
+        if ((canMsg.data[1] == 0x37 || canMsg.data[1] == 0x1F) && (canMsg.data[3] == 0x41 || canMsg.data[3] == 0x43) && 
+             canMsg.data[4] == 0x07 && canMsg.data[5] == 0x02 && canMsg.data[6] == 0x20){
+          gridSort3x3(false); // CHECKED        
+        }
+        if ((canMsg.data[1] == 0x43 || canMsg.data[1] == 0x31 || canMsg.data[1] == 0x2D || canMsg.data[1] == 0x3D) && 
+             canMsg.data[3] == 0xC1 && canMsg.data[4] == 0x09 && canMsg.data[5] == 0x01 && canMsg.data[6] == 0x20){
           //Serial.println("ENTER frequency_box");
           frequency_box = frequency_type_box(false);
           //Serial.println("EXIT");

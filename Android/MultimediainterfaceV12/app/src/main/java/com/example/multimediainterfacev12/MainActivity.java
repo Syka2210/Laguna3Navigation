@@ -3,8 +3,10 @@ package com.example.multimediainterfacev12;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.annotation.SuppressLint;
 import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +43,22 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     private TextView radio2x4text;
     //----------------------------
     private TextView radio3x2text, radio3x3text, radio3x4text;
+
+    //Declaring the 3x3 grid Layout
+    private LinearLayout radio3x3grid;
+    private TextView radio3x3grid1x1text;
+    private TextView radio3x3grid1x2text;
+    private TextView radio3x3grid1x3text;
+    CardView radio3x3grid2x1card;
+    CardView radio3x3grid2x2card;
+    CardView radio3x3grid2x3card;
+    private TextView radio3x3grid2x1text;
+    private TextView radio3x3grid2x2text;
+    private TextView radio3x3grid2x3text;
+    private TextView radio3x3grid3x1text;
+    private TextView radio3x3grid3x2text;
+    private TextView radio3x3grid3x3text;
+
 
 
     //Declaring the 3x2 menu Layout
@@ -111,6 +129,17 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     CardView cdplayerCard;
     CardView auxCard;
 
+    //Declaring the grid 4 Layout
+    private LinearLayout grid4;
+    private TextView grid4text1x1;
+    private TextView grid4text2x1;
+    private TextView grid4text3x1;
+    private TextView grid4text1x2;
+
+    //Declaring the Information one box Layout
+    private LinearLayout infoGrid;
+    private TextView infoGridText;
+
     String messageReceived = "";
     int a = 0;
     int menuVolumeCounter = 0;
@@ -122,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         arduino = new Arduino(this, 250000);
 
         debugTextbox = findViewById(R.id.debugText);
+        debugTextbox.setMovementMethod(new ScrollingMovementMethod());
 
 
         volume = findViewById(R.id.volume_text);
@@ -145,6 +175,23 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         radio3x2text = findViewById(R.id.radio3x2text);
         radio3x3text = findViewById(R.id.radio3x3text);
         radio3x4text = findViewById(R.id.radio3x4text);
+
+        //Declaring 3x3 radio grid
+        radio3x3grid = findViewById(R.id.radio3x3grid);
+        radio3x3grid2x1card = findViewById(R.id.radio3x3grid2x1card);
+        radio3x3grid2x2card = findViewById(R.id.radio3x3grid2x2card);
+        radio3x3grid2x3card = findViewById(R.id.radio3x3grid2x3card);
+        //--------------------------------------------
+        radio3x3grid1x1text = findViewById(R.id.radio3x3grid1x1text);
+        radio3x3grid1x2text = findViewById(R.id.radio3x3grid1x2text);
+        radio3x3grid1x3text = findViewById(R.id.radio3x3grid1x3text);
+        radio3x3grid2x1text = findViewById(R.id.radio3x3grid2x1text);
+        radio3x3grid2x2text = findViewById(R.id.radio3x3grid2x2text);
+        radio3x3grid2x3text = findViewById(R.id.radio3x3grid2x3text);
+        radio3x3grid3x1text = findViewById(R.id.radio3x3grid3x1text);
+        radio3x3grid3x2text = findViewById(R.id.radio3x3grid3x2text);
+        radio3x3grid3x3text = findViewById(R.id.radio3x3grid3x3text);
+
 
 
         //Declaring 3x2 grid with the first column for icons and second column for text
@@ -331,6 +378,18 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         radioCard = findViewById(R.id.sourceRadioCard);
         cdplayerCard = findViewById(R.id.sourceCdplayerCard);
         auxCard = findViewById(R.id.sourceAuxCard);
+
+        //Declaring the grid 4 layout
+        grid4 = findViewById(R.id.grid4);
+        grid4text1x1 = findViewById(R.id.grid4text1x1);
+        grid4text2x1 = findViewById(R.id.grid4text2x1);
+        grid4text3x1 = findViewById(R.id.grid4text3x1);
+        grid4text1x2 = findViewById(R.id.grid4text1x2);
+
+        //Declaring the Information one box
+        infoGrid = findViewById(R.id.infoGrid);
+        infoGridText = findViewById(R.id.infoGridText);
+
     }
 
     @Override
@@ -357,7 +416,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         messageReceived = messageReceived + str;
 
 
-            debugTextbox(str);
+        if (messageReceived.contains("end_string")) debugTextbox(messageReceived);
         
 
 
@@ -375,7 +434,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             }
 
             //HIGHLIGHTED BOX
-            else if (messageReceived.toLowerCase().contains("HighlightedBox")){
+            else if (messageReceived.toLowerCase().contains("highlightedbox")){
                 highBox(messageReceived);
                 messageReceived = "";
             }
@@ -393,6 +452,20 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             else if (messageReceived.toLowerCase().contains("radio_grid3x3")){
                 // string ex: radio_grid3x3 : 3 (highlighted box) : FM : 92.90 : KISS FM : 1 : 100.00 : PRO FM : 2 : 120.20 : DIGI FM : 3 : end_string
                 radioDisplay(messageReceived);
+                messageReceived = "";
+            }
+
+            //Frequency 3x3 grid  ---> LONG
+            else if (messageReceived.toLowerCase().contains("freq_grid3x3")){
+                // string ex: freq_grid3x3 : 3 (highlighted box) : PTY : 162 : 162 : 162 : 1 : 2 : - : end_string
+                frequency3x3Display(messageReceived);
+                messageReceived = "";
+            }
+
+            //Frequency 1x3 grid  ---> SHORT
+            else if (messageReceived.toLowerCase().contains("freq_grid1x3")){
+                // string ex: freq_grid3x3 : 3 (highlighted box) : PTY : 162 : 2 : end_string
+                frequency3x3DisplayShort(messageReceived);
                 messageReceived = "";
             }
             //////////////////////////RADIO/////////////////////////////
@@ -462,7 +535,8 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                debugTextbox.setText(message);
+                debugTextbox.append("\r\n" + ">" + message);
+                //debugTextbox.setText(message);
             }
         });
     }
@@ -497,6 +571,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
 
     public void volume(final String message){
         runOnUiThread(new Runnable() {
+            @SuppressLint("StringFormatInvalid")
             @Override
             public void run() {
                 // string ex: volume : 22 : end_string
@@ -515,12 +590,17 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 radio2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
                 radio2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
                 radio2x4card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
+
+                radio3x3grid2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
+                radio3x3grid2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
                 //Check for highlighted box nr
                 String[] messageIds = message.split(":");
                 if (messageIds[1].contains("2")){
                     radio2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
+                    radio3x3grid2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
                 }else if (messageIds[1].contains("3")){
                     radio2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
+                    radio3x3grid2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
                 }else if (messageIds[1].contains("4")){
                     radio2x4card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
                 }
@@ -586,6 +666,64 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 if (messageIds[1].contains("4")) radio2x4card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
                 //Bring front the Radio layout.
                 radio3x4grid.setVisibility(View.VISIBLE);
+
+
+            }
+        });
+    }
+
+    public void frequency3x3Display(final String message){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                closeAllDisplays();
+                clearTextBoxes();
+                //set all card colours to main colour
+                radio3x3grid2x1card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
+                radio3x3grid2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
+                radio3x3grid2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
+                // string ex: freq_grid3x3 : 3 (highlighted box) : PTY : 162 : 162 : 162 : 1 : 2 : - : end_string
+                String[] messageIds = message.split(":");
+                radio3x3grid2x1text.setText(messageIds[2]);
+                //----------------------------------------
+                radio3x3grid1x2text.setText(messageIds[3]);
+                radio3x3grid2x2text.setText(messageIds[4]);
+                radio3x3grid3x2text.setText(messageIds[5]);
+                //----------------------------------------
+                radio3x3grid1x3text.setText(messageIds[6]);
+                radio3x3grid2x3text.setText(messageIds[7]);
+                radio3x3grid3x3text.setText(messageIds[8]);
+                //----------------------------------------
+                if (messageIds[1].contains("2")) radio3x3grid2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
+                if (messageIds[1].contains("3")) radio3x3grid2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
+                //Bring front the layout
+                radio3x3grid.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    public void frequency3x3DisplayShort(final String message){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                closeAllDisplays();
+                clearTextBoxes();
+                //set all card colours to main colour
+                radio3x3grid2x1card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
+                radio3x3grid2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
+                radio3x3grid2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
+                // string ex: freq_grid3x3 : 3 (highlighted box) : PTY : 162 : - : end_string
+                String[] messageIds = message.split(":");
+                radio3x3grid2x1text.setText(messageIds[2]);
+                //----------------------------------------
+                radio3x3grid2x2text.setText(messageIds[3]);
+                //----------------------------------------
+                radio3x3grid2x3text.setText(messageIds[4]);
+                //----------------------------------------
+                if (messageIds[1].contains("2")) radio3x3grid2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
+                if (messageIds[1].contains("3")) radio3x3grid2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
+                //Bring front the layout
+                radio3x3grid.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -747,14 +885,43 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         });
     }
 
+    public void grid4(String message){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                closeAllDisplays();
+                clearTextBoxes();
+                // DO STUFF
+                grid4.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    public void informationBox(String message){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                closeAllDisplays();
+                infoGridText.setText("");
+                //String ex   --------------------------------------
+                String[] messageIds = message.split(":");
+                //Set
+                infoGrid.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
     public void closeAllDisplays(){
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 radio3x4grid.setVisibility(View.INVISIBLE);
+                radio3x3grid.setVisibility(View.INVISIBLE);
                 complex3x2grid.setVisibility(View.INVISIBLE);
                 settigsMenuProgressBar.setVisibility(View.INVISIBLE);
                 musicalAtmosphere.setVisibility(View.INVISIBLE);
+                grid4.setVisibility(View.INVISIBLE);
+                infoGrid.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -777,6 +944,21 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 complex1x2text.setText("");
                 complex2x2text.setText("");
                 complex3x2text.setText("");
+
+                grid4text1x1.setText("");
+                grid4text2x1.setText("");
+                grid4text3x1.setText("");
+                grid4text1x2.setText("");
+
+                radio3x3grid1x1text.setText("");
+                radio3x3grid1x2text.setText("");
+                radio3x3grid1x3text.setText("");
+                radio3x3grid2x1text.setText("");
+                radio3x3grid2x2text.setText("");
+                radio3x3grid2x3text.setText("");
+                radio3x3grid3x1text.setText("");
+                radio3x3grid3x2text.setText("");
+                radio3x3grid3x3text.setText("");
             }
         });
     }
