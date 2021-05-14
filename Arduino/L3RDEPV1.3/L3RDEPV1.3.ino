@@ -1,5 +1,6 @@
 #include <mcp2515.h>
 
+
 struct can_frame canMsg;
 
 MCP2515 mcp2515(10);
@@ -99,6 +100,53 @@ String frequency_type_box(bool counter){
   }
 }
 
+/*
+//Radio frequency type detailed SHOW
+void frequency_detailed(bool counter){
+  int arraySize = 3;
+  String array3x3[arraySize];
+  bool start_titles = false;
+  bool counter_0x00 = false;
+  int arrayPos = 1;
+  char character;
+  while (counter == false){
+    if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
+      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74){
+        Serial.print("frequency_detailed:");
+        Serial.print(array3x3[1]);
+        Serial.print(":");
+        Serial.print(array3x3[2]);
+        Serial.println(endString);
+        return;
+      }
+
+      if (canMsg.can_id == 0x22 && canMsg.data[0] >= 0x23){
+        start_titles = true;
+      }
+
+      if (canMsg.can_id == 289 && start_titles == true){
+        for (int i = 1; i <= 7; i++) {
+          if (canMsg.data[i] == 0x00 && i != 0) {
+            if (counter_0x00 == true) {
+              arrayPos ++;
+              counter_0x00 = false;
+            } else counter_0x00 = true;
+          } else counter_0x00 = false;
+
+          
+        //Saving the string on the coresponding 3x3 array position
+          if (canMsg.data[i] >= 0x20 && canMsg.data[i] <= 0x7E) {
+            character = canMsg.data[i];
+            array3x3[arrayPos].concat(character);
+          }
+        //Saving the string on the coresponding 3x3 array position
+        }        
+      }
+    }
+  }
+}
+*/
+
 //Icons function - CHECKED
 String icons(char input){
   String iconOutput;
@@ -111,6 +159,11 @@ String icons(char input){
   if (input == 0x07) iconOutput = "icon_Musical_atmosphere";
   if (input == 0x08) iconOutput = "icon_Display_CD_time";
   if (input == 0x09) iconOutput = "icon_Radio_functions";
+  if (input == 0x0A) iconOutput = "icon_Serious_classics";
+  if (input == 0x0B) iconOutput = "icon_Varied_speech";
+  if (input == 0x0C) iconOutput = "icon_News";
+  if (input == 0x0D) iconOutput = "icon_Sport";
+  if (input == 0x0E) iconOutput = "icon_Pop_music";
   if (input == 0x1A) iconOutput = "icon_Pair_phone";
   if (input == 0x12) iconOutput = "icon_Music_note";
   if (input == 0x13) iconOutput = "icon_Vehicle_phonebook";
@@ -130,6 +183,7 @@ String icons(char input){
   if (input == 0x27) iconOutput = "icon_Cercle_empty";
   if (input == 0x28) iconOutput = "icon_Checked_box";
   if (input == 0x29) iconOutput = "icon_Unchecked_box";
+  if (input == 0x2A) iconOutput = "icon_Folder";
   if (input == 0x2B) iconOutput = "icon_Voice_prompt_volume";
   if (input == 0x40) iconOutput = "icon_1";
   if (input == 0x41) iconOutput = "icon_2";
@@ -474,12 +528,89 @@ void gridSortRadio(bool counter) {
   }
 }
 
+/*
+//Radio function list: FM / PTY / LW
+void frequency_list(bool counter){
+  int arraySize = 7;
+  String array3x2[arraySize];
+  bool start_titles = false;
+  bool counter_0x00 = false;
+  int rowNr = 1;
+  int columnNr = 1;
+  int arrayPos = 0;
+  int arrayElements = 0;
+  char character;
+  while (counter == false){
+    if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
+      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74){
+        if (arrayElements >= 3){
+          //Insert below the 3 items identifier
+          Serial.print("frequency_list:");
+          Serial.print(array3x2[1]);
+          Serial.print(":");
+          Serial.print(array3x2[2]);
+          Serial.print(":");
+          Serial.print(array3x2[3]);
+          Serial.print(":");
+          Serial.print(array3x2[4]);
+          Serial.print(":");
+          Serial.print(array3x2[5]);
+          Serial.print(":");
+          Serial.print(array3x2[6]);
+          Serial.println(endString);
+          return;
+        }
+      }
+
+      if (canMsg.can_id == 289 && canMsg.data[0] ==0x23){ 
+        start_titles = true;
+      }
+
+      if (canMsg.can_id == 289 && start_titles == true){
+        //Serial.println(arrayElements);
+        for (int i=1; i<=7; i++){
+          if (canMsg.data[i] == 0x0D){
+            if (rowNr == 3){
+              //rowNr = 1;
+            }else rowNr++;
+          }
+          if (canMsg.data[i] == 0x00 && i != 0){
+            if (counter_0x00 == true){
+              columnNr++;
+              rowNr = 1;
+              counter_0x00 = false;
+            } else counter_0x00 = true;
+          } else counter_0x00 = false;
+
+          //Checking where on the 3x2 array whe are to save the string
+          if (rowNr == 1 && columnNr == 1) arrayPos = 1;
+          if (rowNr == 2 && columnNr == 1) arrayPos = 2;
+          if (rowNr == 3 && columnNr == 1) arrayPos = 3;
+          if (rowNr == 1 && columnNr == 2) arrayPos = 4;
+          if (rowNr == 2 && columnNr == 2) arrayPos = 5;
+          if (rowNr == 3 && columnNr == 2) arrayPos = 6;
+          //Checking where on the 3x2 array whe are to save the string
+
+          //Saving the string on the coresponding 3x3 array position
+          if (canMsg.data[i] >= 0x20 && canMsg.data[i] <= 0x7E){
+              character = canMsg.data[i];
+              array3x2[arrayPos].concat(character);
+          }
+          //Saving the string on the coresponding 3x2 array position
+        }
+      }
+    }
+  }
+}
+*/
+
 //Universal 3x2 grid - Checked
 void gridSort3x2(bool counter){
   int arraySize = 7;
   String array3x2[arraySize];
   bool start_titles = false;
   bool counter_0x00 = false;
+  bool icon = false;
   int rowNr = 1;
   int columnNr = 1;
   int arrayPos = 0;
@@ -497,7 +628,7 @@ void gridSort3x2(bool counter){
         //Save the curent selection in the function_name variable
         function_name = array3x2[5];
         //Save the curent selection in the function_name variable
-
+        
         //Serial transmit the titles depending of number
         if (arrayElements <= 2){
           //Insert below the 3 items identifier
@@ -527,14 +658,18 @@ void gridSort3x2(bool counter){
         }
       }
 
-    if (canMsg.can_id == 289 && canMsg.data[0] ==0x23){ 
-      start_titles = true;
-    }
+      if (canMsg.can_id == 289 && (canMsg.data[7] == 0xF0 || canMsg.data[7] == 0xF1 || canMsg.data[7] == 0xF2)){
+        icon = true;
+      }
 
-    if (canMsg.can_id == 289 && start_titles == true){
-      //Serial.println(arrayElements);
-      for (int i=1; i<=7; i++){
-          if (canMsg.data[i] == 0x0D){
+      if (canMsg.can_id == 289 && canMsg.data[0] == 0x23){ 
+        start_titles = true;
+      }
+
+      if (canMsg.can_id == 289 && start_titles == true){
+        //Serial.println(arrayElements);
+        for (int i=1; i<=7; i++){
+          if (canMsg.data[i] == 0xF0){
             if (rowNr == 3){
               //rowNr = 1;
             }else rowNr++;
@@ -558,19 +693,29 @@ void gridSort3x2(bool counter){
 
           //Saving the string on the coresponding 3x3 array position
           if (columnNr == 1){
-              if (canMsg.data[i] <= 0x7F && canMsg.data[i] != 0x0D && canMsg.data[i] != 0x00){
-                //Save the icon name in the first array column
-                array3x2[arrayPos] = icons(canMsg.data[i]);
-              }
+            if (icon == true && canMsg.data[i] <= 0x7F && canMsg.data[i] != 0x0D && canMsg.data[i] != 0x00){
+              //Save the icon name in the first array column
+              array3x2[arrayPos] = icons(canMsg.data[i]);
             }
-            if (columnNr == 2){
+            if (icon == true && canMsg.data[i] == 0x0D && (canMsg.data[i-1] != 0XF0 || canMsg.data[i+1] != 0xF1 || canMsg.data[i+1] != 0x00)){
+              //Save the icon name in the first array column
+              array3x2[arrayPos] = icons(canMsg.data[i]);
+            }
+            if (icon == false){
               if (canMsg.data[i] >= 0x20 && canMsg.data[i] <= 0x7E){
               character = canMsg.data[i];
               array3x2[arrayPos].concat(character);
               }
             }
           }
+            if (columnNr == 2){
+              if (canMsg.data[i] >= 0x20 && canMsg.data[i] <= 0x7E){
+              character = canMsg.data[i];
+              array3x2[arrayPos].concat(character);
+              }
+            }
           //Saving the string on the coresponding 3x2 array position
+        }
       }
     }
   }
@@ -596,10 +741,6 @@ void gridSort3x3(bool counter){
           if (array3x3[i].length() > 0) arrayElements++;
         }
         //Check how many strings are in the 3x3 array
-
-        //Save the curent selection in the function_name variable
-        //function_name = array3x3[5];
-        //Save the curent selection in the function_name variable
 
         //Serial transmit the titles depending of number
         if (arrayElements <= 2){
@@ -700,6 +841,80 @@ void gridSort3x3(bool counter){
   }
 }
 
+//3+1 selection
+void confirm_cancel_function(bool counter){
+  int arraySize = 7;
+  String array3x2[arraySize];
+  bool start_titles = false;
+  bool counter_0x00 = false;
+  int rowNr = 1;
+  int columnNr = 1;
+  int arrayPos = 0;
+  int arrayElements = 0;
+  char character;
+  while (counter == false){
+    if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
+      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74){
+        if (arrayElements >= 3){
+          //Insert below the 3 items identifier
+          Serial.print("confirm_cancel_function:");
+          Serial.print(array3x2[1]);
+          Serial.print(":");
+          Serial.print(array3x2[2]);
+          Serial.print(":");
+          Serial.print(array3x2[3]);
+          Serial.print(":");
+          Serial.print(array3x2[4]);
+          Serial.print(":");
+          Serial.print(array3x2[5]);
+          Serial.print(":");
+          Serial.print(array3x2[6]);
+          Serial.println(endString);
+          return;
+        }
+      }
+
+      if (canMsg.can_id == 289 && canMsg.data[0] ==0x23){ 
+        start_titles = true;
+      }
+
+      if (canMsg.can_id == 289 && start_titles == true){
+        //Serial.println(arrayElements);
+        for (int i=1; i<=7; i++){
+            if (canMsg.data[i] == 0x0D){
+              if (rowNr == 3){
+                //rowNr = 1;
+              }else rowNr++;
+            }
+            if (canMsg.data[i] == 0x00 && i != 0){
+              if (counter_0x00 == true){
+                columnNr++;
+                rowNr = 1;
+                counter_0x00 = false;
+              } else counter_0x00 = true;
+            } else counter_0x00 = false;
+
+          //Checking where on the 3x2 array whe are to save the string
+          if (rowNr == 1 && columnNr == 1) arrayPos = 1;
+          if (rowNr == 2 && columnNr == 1) arrayPos = 2;
+          if (rowNr == 3 && columnNr == 1) arrayPos = 3;
+          if (rowNr == 1 && columnNr == 2) arrayPos = 4;
+          if (rowNr == 2 && columnNr == 2) arrayPos = 5;
+          if (rowNr == 3 && columnNr == 2) arrayPos = 6;
+          //Checking where on the 3x2 array whe are to save the string
+
+          //Saving the string on the coresponding 3x3 array position
+          if (canMsg.data[i] >= 0x20 && canMsg.data[i] <= 0x7E){
+              character = canMsg.data[i];
+              array3x2[arrayPos].concat(character);
+          }
+      }
+          //Saving the string on the coresponding 3x2 array position
+      }
+    }
+  }
+}
+
 void loop(){
   if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
     if(canMsg.can_id == 289){
@@ -710,7 +925,7 @@ void loop(){
       }
 
       //Highlighted box
-      if(canMsg.data[0] == 0x10 &&  canMsg.data[2] == 0x20 && canMsg.data[3] == 0x00 && canMsg.data[6] == 0x00){
+      if(canMsg.data[0] == 0x10 && canMsg.data[1] == 0x0E && canMsg.data[2] == 0x20 && canMsg.data[3] == 0x00){
           //In the frame with the first bit=21 the 7'th bit represents the position of the highlighted
           //box. The first box has the value 20, the second 21 and so on.
           //Serial.println("ENTER HIGHLIGHTED BOX");
@@ -718,52 +933,35 @@ void loop(){
           //Serial.println("EXIT");
           //Serial.println();
       }
-
                                        
       if (canMsg.data[0] == 0x10 && canMsg.data[2] == 0x25){
-        if ((canMsg.data[1] != 0x43 && canMsg.data[1] != 0x31 && canMsg.data[1] != 0x2D && canMsg.data[1] != 0x3D) && 
-             canMsg.data[4] == 0x09 && canMsg.data[7] != 0x00){
-          //Serial.println("ENTER gridSort3x2");
-          gridSort3x2(false); // CHECKED
-          //Serial.println("EXIT");
-          //Serial.println();
+        if ((canMsg.data[3] == 0xC1 || canMsg.data[3] == 0xC3) && canMsg.data[4] == 0x09 ){
+          if (canMsg.data[7] == 0x00){
+            frequency_box = frequency_type_box(false);
+          }
+          else gridSort3x2(false); // CHECKED
         }
-        if (canMsg.data[4] == 0x17 && canMsg.data[5] == 0x02){
-          //Serial.println("ENTER gridSortRadio");
+
+        if (canMsg.data[4] == 0x17){
           gridSortRadio(false); // CHECKED
-          //Serial.println("EXIT");
-          //Serial.println();
         }
-        if ((canMsg.data[1] == 0x37 || canMsg.data[1] == 0x1F) && (canMsg.data[3] == 0x41 || canMsg.data[3] == 0x43) && 
-             canMsg.data[4] == 0x07 && canMsg.data[5] == 0x02 && canMsg.data[6] == 0x20){
+
+        if (canMsg.data[4] == 0x07 && canMsg.data[6] == 0x20){
           gridSort3x3(false); // CHECKED        
         }
-        if ((canMsg.data[1] == 0x43 || canMsg.data[1] == 0x31 || canMsg.data[1] == 0x2D || canMsg.data[1] == 0x3D) && 
-             canMsg.data[3] == 0xC1 && canMsg.data[4] == 0x09 && canMsg.data[5] == 0x01 && canMsg.data[6] == 0x20){
-          //Serial.println("ENTER frequency_box");
-          frequency_box = frequency_type_box(false);
-          //Serial.println("EXIT");
-          //Serial.println();
-        }
+
         if (canMsg.data[3] == 0x70 && canMsg.data[4] == 0x00 && canMsg.data[5] == 0x04 && canMsg.data[6] == 0x40){
-          //Serial.println("ENTER menu_volume");
           menu_volume(false, function_name);
-          //Serial.println("EXIT");
-          //Serial.println();
         }
         
         if (canMsg.data[3] == 0x73 && canMsg.data[4] == 0x02 && canMsg.data[6] == 0x40){
-          //Serial.println("ENTER musical_atmosphere");
           musical_atmosphere(false);
-          //Serial.println("EXIT");
-          //Serial.println();
         }
-        if (canMsg.data[3] == 0x41 && canMsg.data[4] == 0x13 && canMsg.data[5] == 0x01 && 
-            canMsg.data[6] == 0x20 && canMsg.data[7] == 0x80){
-          //Serial.println("ENTER sources");
+        if (canMsg.data[3] == 0x63 && canMsg.data[4] == 0x09 && canMsg.data[6] == 0x40){
+          confirm_cancel_function(false);
+        }
+        if (canMsg.data[3] == 0x41 && canMsg.data[4] == 0x13 && canMsg.data[5] == 0x01 && canMsg.data[6] == 0x20 && canMsg.data[7] == 0x80){
           sources();
-          //Serial.println("EXIT");
-          //Serial.println();
         }
       }                                       
     }

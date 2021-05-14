@@ -598,7 +598,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/weatherLayout"
         app:layout_constraintStart_toStartOf="parent"
@@ -616,6 +616,16 @@
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
+
+                <TextView
+                    android:id="@+id/complex1x1text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
 
                 <ImageView
                     android:id="@+id/complex1x1audioSettings"
@@ -674,6 +684,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:srcCompat="@drawable/radio_functions" />
+
+                <ImageView
+                    android:id="@+id/complex1x1seriousClassics"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/serious_classics" />
+
+                <ImageView
+                    android:id="@+id/complex1x1variedSpeech"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/varied_speech" />
+
+                <ImageView
+                    android:id="@+id/complex1x1news"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/news" />
+
+                <ImageView
+                    android:id="@+id/complex1x1sport"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/sport" />
+
+                <ImageView
+                    android:id="@+id/complex1x1popMusic"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/pop_music" />
 
                 <ImageView
                     android:id="@+id/complex1x1pairPhone"
@@ -793,6 +833,12 @@
                     app:srcCompat="@drawable/unchecked_checkbox" />
 
                 <ImageView
+                    android:id="@+id/complex1x1folder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/folder" />
+
+                <ImageView
                     android:id="@+id/complex1x1voicePromptVolume"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -840,12 +886,6 @@
                     android:layout_height="match_parent"
                     app:srcCompat="@drawable/emergency" />
 
-                <ImageView
-                    android:id="@+id/complex1x1folder"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:srcCompat="@drawable/folder" />
-
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -879,6 +919,16 @@
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceSelected">
+
+                <TextView
+                    android:id="@+id/complex2x1text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
 
                 <ImageView
                     android:id="@+id/complex2x1audioSettings"
@@ -937,6 +987,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:srcCompat="@drawable/radio_functions" />
+
+                <ImageView
+                    android:id="@+id/complex2x1seriousClassics"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/serious_classics" />
+
+                <ImageView
+                    android:id="@+id/complex2x1variedSpeech"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/varied_speech" />
+
+                <ImageView
+                    android:id="@+id/complex2x1news"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/news" />
+
+                <ImageView
+                    android:id="@+id/complex2x1sport"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/sport" />
+
+                <ImageView
+                    android:id="@+id/complex2x1popMusic"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/pop_music" />
 
                 <ImageView
                     android:id="@+id/complex2x1pairPhone"
@@ -1055,6 +1135,12 @@
                     app:srcCompat="@drawable/unchecked_checkbox" />
 
                 <ImageView
+                    android:id="@+id/complex2x1folder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/folder" />
+
+                <ImageView
                     android:id="@+id/complex2x1voicePromptVolume"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -1102,12 +1188,6 @@
                     android:layout_height="match_parent"
                     app:srcCompat="@drawable/emergency" />
 
-                <ImageView
-                    android:id="@+id/complex2x1folder"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:srcCompat="@drawable/folder" />
-
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
@@ -1141,6 +1221,16 @@
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
+
+                <TextView
+                    android:id="@+id/complex3x1text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
 
                 <ImageView
                     android:id="@+id/complex3x1audioSettings"
@@ -1199,6 +1289,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:srcCompat="@drawable/radio_functions" />
+
+                <ImageView
+                    android:id="@+id/complex3x1seriousClassics"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/serious_classics" />
+
+                <ImageView
+                    android:id="@+id/complex3x1variedSpeech"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/varied_speech" />
+
+                <ImageView
+                    android:id="@+id/complex3x1news"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/news" />
+
+                <ImageView
+                    android:id="@+id/complex3x1sport"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/sport" />
+
+                <ImageView
+                    android:id="@+id/complex3x1popMusic"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/pop_music" />
 
                 <ImageView
                     android:id="@+id/complex3x1pairPhone"
@@ -1317,6 +1437,12 @@
                     app:srcCompat="@drawable/unchecked_checkbox" />
 
                 <ImageView
+                    android:id="@+id/complex3x1folder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/folder" />
+
+                <ImageView
                     android:id="@+id/complex3x2voicePromptVolume"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -1363,12 +1489,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:srcCompat="@drawable/emergency" />
-
-                <ImageView
-                    android:id="@+id/complex3x1folder"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:srcCompat="@drawable/folder" />
 
             </androidx.cardview.widget.CardView>
 
@@ -1643,6 +1763,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/volumeLayout"
         app:layout_constraintEnd_toStartOf="@+id/weatherLayout"
         app:layout_constraintStart_toStartOf="parent"

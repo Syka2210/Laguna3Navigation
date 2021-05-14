@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     //Declaring the 3x2 menu Layout
     private LinearLayout complex3x2grid;
     private TextView complex1x2text, complex2x2text, complex3x2text;
+    private TextView complex1x1text, complex2x1text, complex3x1text;
     //-----------------------------
     private ImageView iconAudioSettings1x1, iconAudioSettings2x1, iconAudioSettings3x1;
     private ImageView iconPhoneSettings1x1, iconPhoneSettings2x1, iconPhoneSettings3x1;
@@ -74,6 +75,11 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     private ImageView iconMusicalAtmosphere1x1, iconMusicalAtmosphere2x1, iconMusicalAtmosphere3x1;
     private ImageView iconDisplayCDtime1x1, iconDisplayCDtime2x1, iconDisplayCDtime3x1;
     private ImageView iconRadioFunctions1x1, iconRadioFunctions2x1, iconRadioFunctions3x1;
+    private ImageView iconSeriousClassics1x1, iconSeriousClassics2x1, iconSeriousClassics3x1;
+    private ImageView iconVariedSpeech1x1, iconVariedSpeech2x1, iconVariedSpeech3x1;
+    private ImageView iconNews1x1, iconNews2x1, iconNews3x1;
+    private ImageView iconSport1x1, iconSport2x1, iconSport3x1;
+    private ImageView iconPopMusic1x1, iconPopMusic2x1, iconPopMusic3x1;
     private ImageView iconPairPhone1x1, iconPairPhone2x1, iconPairPhone3x1;
     private ImageView iconMusicNote1x1, iconMusicNote2x1, iconMusicNote3x1;
     private ImageView iconPhonebook1x1, iconPhonebook2x1, iconPhonebook3x1;
@@ -92,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     private ImageView iconCercle1x1full, iconCercle2x1full, iconCercle3x1full;
     private ImageView iconCheckedBox1x1, iconCheckedBox2x1, iconCheckedBox3x1;
     private ImageView iconUncheckedBox1x1, iconUncheckedBox2x1, iconUncheckedBox3x1;
+    private ImageView iconFolder1x1, iconFolder2x1, iconFolder3x1;
     private ImageView iconVoicePromptVolume1x1, iconVoicePromptVolume2x1, iconVoicePromptVolume3x1;
     private ImageView iconNumber_1_1x1, iconNumber_1_2x1, iconNumber_1_3x1;
     private ImageView iconNumber_2_1x1, iconNumber_2_2x1, iconNumber_2_3x1;
@@ -100,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     private ImageView iconNumber_5_1x1, iconNumber_5_2x1, iconNumber_5_3x1;
     private ImageView iconAdaptationVolume1x1, iconAdaptationVolume2x1, iconAdaptationVolume3x1;
     private ImageView iconEmergency1x1, iconEmergency2x1, iconEmergency3x1;
-    private ImageView iconFolder1x1, iconFolder2x1, iconFolder3x1;
+
 
 
 
@@ -199,6 +206,9 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         complex1x2text = findViewById(R.id.complex1x2text);
         complex2x2text = findViewById(R.id.complex2x2text);
         complex3x2text = findViewById(R.id.complex3x2text);
+        complex1x1text = findViewById(R.id.complex1x1text);
+        complex2x1text = findViewById(R.id.complex2x1text);
+        complex3x1text = findViewById(R.id.complex3x1text);
         //------------------------------------------------
         iconAudioSettings1x1 = findViewById(R.id.complex1x1audioSettings);
         iconAudioSettings2x1 = findViewById(R.id.complex2x1audioSettings);
@@ -235,6 +245,26 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         iconRadioFunctions1x1 = findViewById(R.id.complex1x1radioFunctions);
         iconRadioFunctions2x1 = findViewById(R.id.complex2x1radioFunctions);
         iconRadioFunctions3x1 = findViewById(R.id.complex3x1radioFunctions);
+        //++++++++++++++++++++++++++++++++++++++++++++++++
+        iconSeriousClassics1x1 = findViewById(R.id.complex1x1seriousClassics);
+        iconSeriousClassics2x1 = findViewById(R.id.complex2x1seriousClassics);
+        iconSeriousClassics3x1 = findViewById(R.id.complex3x1seriousClassics);
+        //++++++++++++++++++++++++++++++++++++++++++++++++
+        iconVariedSpeech1x1 = findViewById(R.id.complex1x1variedSpeech);
+        iconVariedSpeech2x1 = findViewById(R.id.complex2x1variedSpeech);
+        iconVariedSpeech3x1 = findViewById(R.id.complex3x1variedSpeech);
+        //++++++++++++++++++++++++++++++++++++++++++++++++
+        iconNews1x1 = findViewById(R.id.complex1x1news);
+        iconNews2x1 = findViewById(R.id.complex2x1news);
+        iconNews3x1 = findViewById(R.id.complex3x1news);
+        //++++++++++++++++++++++++++++++++++++++++++++++++
+        iconSport1x1 = findViewById(R.id.complex1x1sport);
+        iconSport2x1 = findViewById(R.id.complex2x1sport);
+        iconSport3x1 = findViewById(R.id.complex3x1sport);
+        //++++++++++++++++++++++++++++++++++++++++++++++++
+        iconPopMusic1x1 = findViewById(R.id.complex1x1popMusic);
+        iconPopMusic2x1 = findViewById(R.id.complex2x1popMusic);
+        iconPopMusic3x1 = findViewById(R.id.complex3x1popMusic);
         //++++++++++++++++++++++++++++++++++++++++++++++++
         iconPairPhone1x1 = findViewById(R.id.complex1x1pairPhone);
         iconPairPhone2x1 = findViewById(R.id.complex2x1pairPhone);
@@ -308,6 +338,10 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         iconUncheckedBox2x1 = findViewById(R.id.complex2x1uncheckedCheckbox);
         iconUncheckedBox3x1 = findViewById(R.id.complex3x1uncheckedCheckbox);
         //++++++++++++++++++++++++++++++++++++++++++++++++
+        iconFolder1x1 = findViewById(R.id.complex1x1folder);
+        iconFolder2x1 = findViewById(R.id.complex2x1folder);
+        iconFolder3x1 = findViewById(R.id.complex3x1folder);
+        //++++++++++++++++++++++++++++++++++++++++++++++++
         iconVoicePromptVolume1x1 = findViewById(R.id.complex1x1voicePromptVolume);
         iconVoicePromptVolume2x1 = findViewById(R.id.complex2x1voicePromptVolume);
         iconVoicePromptVolume3x1 = findViewById(R.id.complex3x2voicePromptVolume);
@@ -339,10 +373,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         iconEmergency1x1 = findViewById(R.id.complex1x1emergency);
         iconEmergency2x1 = findViewById(R.id.complex2x1emergency);
         iconEmergency3x1 = findViewById(R.id.complex3x1emergency);
-        //++++++++++++++++++++++++++++++++++++++++++++++++
-        iconFolder1x1 = findViewById(R.id.complex1x1folder);
-        iconFolder2x1 = findViewById(R.id.complex2x1folder);
-        iconFolder3x1 = findViewById(R.id.complex3x1folder);
+
 
 
 
@@ -468,6 +499,26 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 frequency3x3DisplayShort(messageReceived);
                 messageReceived = "";
             }
+
+            /*
+            //Frequency type show
+            else if (messageReceived.toLowerCase().contains("frequency_detailed")){
+                // string ex: frequency_detailed : FM : Frequency Modulation : end_string
+                frequency_detailed(messageReceived);
+                messageReceived = "";
+            }
+
+             */
+
+            /*
+            //Frequency list
+            else if (messageReceived.toLowerCase().contains("frequency_list")){
+                // string ex: frequency_list : FM : PTY : LW : Frequency modulation : FM program type : Long wave : end_string
+                frequency_list(messageReceived);
+                messageReceived = "";
+            }
+
+             */
             //////////////////////////RADIO/////////////////////////////
 
 
@@ -505,6 +556,13 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 messageReceived = "";
             }
             //////////////////////MUSICAL ATMOSPHERE//////////////////////
+
+            // 3+1 selection
+            else if (messageReceived.toLowerCase().contains("confirm_cancel_function")){
+                // string ex: confirm_cancel_function : Cancel : Confirm : : Do you want to reset : these parameters? : end_string
+                confirm_cancel(messageReceived);
+                messageReceived = "";
+            }
 
 
             //CLEAR STRING IF NOT RECOGNIZED
@@ -728,6 +786,55 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         });
     }
 
+    /*
+    public void frequency_detailed(final String message){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                closeAllDisplays();
+                clearTextBoxes();
+                //set all card colours to main colour
+                radio3x3grid2x1card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
+                radio3x3grid2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
+                radio3x3grid2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
+                // string ex: frequency_detailed : FM : Frequency Modulation : end_string
+                String[] messageIds = message.split(":");
+                radio3x3grid2x1text.setText(messageIds[1]);
+                radio3x3grid2x2text.setText(messageIds[2]);
+                //----------------------------------------
+                radio3x3grid2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
+                //Bring front the layout
+                radio3x3grid.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+     */
+
+    /*
+    public void frequency_list(final String message){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                closeAllDisplays();
+                clearTextBoxes();
+                // string ex: frequency_list : FM : PTY : LW : Frequency modulation : FM program type : Long wave : end_string
+                String[] messageIds = message.split(":");
+                radio3x3grid1x1text.setText(messageIds[1]);
+                radio3x3grid2x1text.setText(messageIds[2]);
+                radio3x3grid3x1text.setText(messageIds[3]);
+                //---------------------------------------
+                radio3x3grid1x2text.setText(messageIds[4]);
+                radio3x3grid2x2text.setText(messageIds[5]);
+                radio3x3grid3x2text.setText(messageIds[6]);
+                //---------------------------------------
+                radio3x3grid2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
+                //Bring front the layout
+                radio3x3grid.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+     */
+
     public void menuDisplay(final String message){
         runOnUiThread(new Runnable() {
             @Override
@@ -885,13 +992,20 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         });
     }
 
-    public void grid4(String message){
+    public void confirm_cancel(String message){
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 closeAllDisplays();
                 clearTextBoxes();
-                // DO STUFF
+                // string ex: confirm_cancel_function : Cancel : Confirm : : Do you want to reset : these parameters? : end_string
+                String[] messageIds = message.split(":");
+                //Set text
+                grid4text1x1.setText(messageIds[1]);
+                grid4text2x1.setText(messageIds[2]);
+                grid4text3x1.setText(messageIds[3]);
+                grid4text1x2.append(messageIds[4] + "\r\n" + messageIds[5] + "\r\n" + messageIds[6]);
+                //----------------------------------
                 grid4.setVisibility(View.VISIBLE);
             }
         });
@@ -967,6 +1081,10 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                complex1x1text.setVisibility(View.INVISIBLE);
+                complex2x1text.setVisibility(View.INVISIBLE);
+                complex3x1text.setVisibility(View.INVISIBLE);
+
                 iconAudioSettings1x1.setVisibility(View.INVISIBLE);
                 iconAudioSettings2x1.setVisibility(View.INVISIBLE);
                 iconAudioSettings3x1.setVisibility(View.INVISIBLE);
@@ -1002,6 +1120,26 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 iconRadioFunctions1x1.setVisibility(View.INVISIBLE);
                 iconRadioFunctions2x1.setVisibility(View.INVISIBLE);
                 iconRadioFunctions3x1.setVisibility(View.INVISIBLE);
+
+                iconSeriousClassics1x1.setVisibility(View.INVISIBLE);
+                iconSeriousClassics2x1.setVisibility(View.INVISIBLE);
+                iconSeriousClassics3x1.setVisibility(View.INVISIBLE);
+
+                iconVariedSpeech1x1.setVisibility(View.INVISIBLE);
+                iconVariedSpeech2x1.setVisibility(View.INVISIBLE);
+                iconVariedSpeech3x1.setVisibility(View.INVISIBLE);
+
+                iconNews1x1.setVisibility(View.INVISIBLE);
+                iconNews2x1.setVisibility(View.INVISIBLE);
+                iconNews3x1.setVisibility(View.INVISIBLE);
+
+                iconSport1x1.setVisibility(View.INVISIBLE);
+                iconSport2x1.setVisibility(View.INVISIBLE);
+                iconSport3x1.setVisibility(View.INVISIBLE);
+
+                iconPopMusic1x1.setVisibility(View.INVISIBLE);
+                iconPopMusic2x1.setVisibility(View.INVISIBLE);
+                iconPopMusic3x1.setVisibility(View.INVISIBLE);
 
                 iconPairPhone1x1.setVisibility(View.INVISIBLE);
                 iconPairPhone2x1.setVisibility(View.INVISIBLE);
@@ -1075,6 +1213,10 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 iconUncheckedBox2x1.setVisibility(View.INVISIBLE);
                 iconUncheckedBox3x1.setVisibility(View.INVISIBLE);
 
+                iconFolder1x1.setVisibility(View.INVISIBLE);
+                iconFolder2x1.setVisibility(View.INVISIBLE);
+                iconFolder3x1.setVisibility(View.INVISIBLE);
+
                 iconVoicePromptVolume1x1.setVisibility(View.INVISIBLE);
                 iconVoicePromptVolume2x1.setVisibility(View.INVISIBLE);
                 iconVoicePromptVolume3x1.setVisibility(View.INVISIBLE);
@@ -1118,6 +1260,10 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (!icon1.contains("icon")){
+                    complex1x1text.setText(icon1);
+                    complex1x1text.setVisibility(View.VISIBLE);
+                }
                 if (icon1.contains("icon_Audio_settings")) iconAudioSettings1x1.setVisibility(View.VISIBLE);
                 if (icon1.contains("icon_Phone_settings")) iconPhoneSettings1x1.setVisibility(View.VISIBLE);
                 if (icon1.contains("icon_System_settings")) iconSystemSettings1x1.setVisibility(View.VISIBLE);
@@ -1127,6 +1273,11 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 if (icon1.contains("icon_Musical_atmosphere")) iconMusicalAtmosphere1x1.setVisibility(View.VISIBLE);
                 if (icon1.contains("icon_Display_CD_time")) iconDisplayCDtime1x1.setVisibility(View.VISIBLE);
                 if (icon1.contains("icon_Radio_functions")) iconRadioFunctions1x1.setVisibility(View.VISIBLE);
+                if (icon1.contains("icon_Serious_classics")) iconSeriousClassics1x1.setVisibility(View.VISIBLE);
+                if (icon1.contains("icon_Varied_speech")) iconVariedSpeech1x1.setVisibility(View.VISIBLE);
+                if (icon1.contains("icon_News")) iconNews1x1.setVisibility(View.VISIBLE);
+                if (icon1.contains("icon_Sport")) iconSport1x1.setVisibility(View.VISIBLE);
+                if (icon1.contains("icon_Pop_music")) iconPopMusic1x1.setVisibility(View.VISIBLE);
                 if (icon1.contains("icon_Pair_phone")) iconPairPhone1x1.setVisibility(View.VISIBLE);
                 if (icon1.contains("icon_Music_note")) iconMusicNote1x1.setVisibility(View.VISIBLE);
                 if (icon1.contains("icon_Vehicle_phonebook")) iconPhonebook1x1.setVisibility(View.VISIBLE);
@@ -1146,6 +1297,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 if (icon1.contains("icon_Cercle_full")) iconCercle1x1full.setVisibility(View.VISIBLE);
                 if (icon1.contains("icon_Checked_box")) iconCheckedBox1x1.setVisibility(View.VISIBLE);
                 if (icon1.contains("icon_Unchecked_box")) iconUncheckedBox1x1.setVisibility(View.VISIBLE);
+                if (icon1.contains("icon_Folder")) iconFolder1x1.setVisibility(View.VISIBLE);
                 if (icon1.contains("icon_Voice_prompt_volume")) iconVoicePromptVolume1x1.setVisibility(View.VISIBLE);
                 if (icon1.contains("icon_1")) iconNumber_1_1x1.setVisibility(View.VISIBLE);
                 if (icon1.contains("icon_2")) iconNumber_2_1x1.setVisibility(View.VISIBLE);
@@ -1155,6 +1307,10 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 if (icon1.contains("icon_Adaptation_volume")) iconAdaptationVolume1x1.setVisibility(View.VISIBLE);
                 if (icon1.contains("icon_Emergency")) iconEmergency1x1.setVisibility(View.VISIBLE);
                 //-------------------------------------------------------------------------------------
+                if (!icon2.contains("icon")) {
+                    complex2x1text.setText(icon2);
+                    complex2x1text.setVisibility(View.VISIBLE);
+                }
                 if (icon2.contains("icon_Audio_settings")) iconAudioSettings2x1.setVisibility(View.VISIBLE);
                 if (icon2.contains("icon_Phone_settings")) iconPhoneSettings2x1.setVisibility(View.VISIBLE);
                 if (icon2.contains("icon_System_settings")) iconSystemSettings2x1.setVisibility(View.VISIBLE);
@@ -1164,6 +1320,11 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 if (icon2.contains("icon_Musical_atmosphere")) iconMusicalAtmosphere2x1.setVisibility(View.VISIBLE);
                 if (icon2.contains("icon_Display_CD_time")) iconDisplayCDtime2x1.setVisibility(View.VISIBLE);
                 if (icon2.contains("icon_Radio_functions")) iconRadioFunctions2x1.setVisibility(View.VISIBLE);
+                if (icon2.contains("icon_Serious_classics")) iconSeriousClassics2x1.setVisibility(View.VISIBLE);
+                if (icon2.contains("icon_Varied_speech")) iconVariedSpeech2x1.setVisibility(View.VISIBLE);
+                if (icon2.contains("icon_News")) iconNews2x1.setVisibility(View.VISIBLE);
+                if (icon2.contains("icon_Sport")) iconSport2x1.setVisibility(View.VISIBLE);
+                if (icon2.contains("icon_Pop_music")) iconPopMusic2x1.setVisibility(View.VISIBLE);
                 if (icon2.contains("icon_Pair_phone")) iconPairPhone2x1.setVisibility(View.VISIBLE);
                 if (icon2.contains("icon_Music_note")) iconMusicNote2x1.setVisibility(View.VISIBLE);
                 if (icon2.contains("icon_Vehicle_phonebook")) iconPhonebook2x1.setVisibility(View.VISIBLE);
@@ -1183,6 +1344,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 if (icon2.contains("icon_Cercle_full")) iconCercle2x1full.setVisibility(View.VISIBLE);
                 if (icon2.contains("icon_Checked_box")) iconCheckedBox2x1.setVisibility(View.VISIBLE);
                 if (icon2.contains("icon_Unchecked_box")) iconUncheckedBox2x1.setVisibility(View.VISIBLE);
+                if (icon2.contains("icon_Folder")) iconFolder2x1.setVisibility(View.VISIBLE);
                 if (icon2.contains("icon_Voice_prompt_volume")) iconVoicePromptVolume2x1.setVisibility(View.VISIBLE);
                 if (icon2.contains("icon_1")) iconNumber_1_2x1.setVisibility(View.VISIBLE);
                 if (icon2.contains("icon_2")) iconNumber_2_2x1.setVisibility(View.VISIBLE);
@@ -1192,6 +1354,10 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 if (icon2.contains("icon_Adaptation_volume")) iconAdaptationVolume2x1.setVisibility(View.VISIBLE);
                 if (icon2.contains("icon_Emergency")) iconEmergency2x1.setVisibility(View.VISIBLE);
                 //-------------------------------------------------------------------------------------
+                if (!icon3.contains("icon")) {
+                    complex3x1text.setText(icon3);
+                    complex3x1text.setVisibility(View.INVISIBLE);
+                }
                 if (icon3.contains("icon_Audio_settings")) iconAudioSettings3x1.setVisibility(View.VISIBLE);
                 if (icon3.contains("icon_Phone_settings")) iconPhoneSettings3x1.setVisibility(View.VISIBLE);
                 if (icon3.contains("icon_System_settings")) iconSystemSettings3x1.setVisibility(View.VISIBLE);
@@ -1201,6 +1367,11 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 if (icon3.contains("icon_Musical_atmosphere")) iconMusicalAtmosphere3x1.setVisibility(View.VISIBLE);
                 if (icon3.contains("icon_Display_CD_time")) iconDisplayCDtime3x1.setVisibility(View.VISIBLE);
                 if (icon3.contains("icon_Radio_functions")) iconRadioFunctions3x1.setVisibility(View.VISIBLE);
+                if (icon3.contains("icon_Serious_classics")) iconSeriousClassics3x1.setVisibility(View.VISIBLE);
+                if (icon3.contains("icon_Varied_speech")) iconVariedSpeech3x1.setVisibility(View.VISIBLE);
+                if (icon3.contains("icon_News")) iconNews3x1.setVisibility(View.VISIBLE);
+                if (icon3.contains("icon_Sport")) iconSport3x1.setVisibility(View.VISIBLE);
+                if (icon3.contains("icon_Pop_music")) iconPopMusic3x1.setVisibility(View.VISIBLE);
                 if (icon3.contains("icon_Pair_phone")) iconPairPhone3x1.setVisibility(View.VISIBLE);
                 if (icon3.contains("icon_Music_note")) iconMusicNote3x1.setVisibility(View.VISIBLE);
                 if (icon3.contains("icon_Vehicle_phonebook")) iconPhonebook3x1.setVisibility(View.VISIBLE);
@@ -1220,6 +1391,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 if (icon3.contains("icon_Cercle_full")) iconCercle3x1full.setVisibility(View.VISIBLE);
                 if (icon3.contains("icon_Checked_box")) iconCheckedBox3x1.setVisibility(View.VISIBLE);
                 if (icon3.contains("icon_Unchecked_box")) iconUncheckedBox3x1.setVisibility(View.VISIBLE);
+                if (icon3.contains("icon_Folder")) iconFolder3x1.setVisibility(View.VISIBLE);
                 if (icon3.contains("icon_Voice_prompt_volume")) iconVoicePromptVolume3x1.setVisibility(View.VISIBLE);
                 if (icon3.contains("icon_1")) iconNumber_1_3x1.setVisibility(View.VISIBLE);
                 if (icon3.contains("icon_2")) iconNumber_2_3x1.setVisibility(View.VISIBLE);
