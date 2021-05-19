@@ -598,7 +598,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/weatherLayout"
         app:layout_constraintStart_toStartOf="parent"
@@ -1532,6 +1532,8 @@
                 android:id="@+id/debugText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:maxLines="30"
+                android:scrollbars="vertical"
                 android:text="-------Debug text input-------"
                 android:textColor="#FFFFFF" />
         </androidx.cardview.widget.CardView>
@@ -1628,7 +1630,7 @@
                     android:paddingTop="4dp"
                     android:text="TextView"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
+                    android:textSize="24sp" />
 
             </androidx.cardview.widget.CardView>
 
@@ -1645,7 +1647,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:id="@+id/volume.text"
+            android:id="@+id/volume_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -1751,7 +1753,7 @@
                 android:paddingEnd="5dp"
                 android:text="TextView"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textSize="24sp" />
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>

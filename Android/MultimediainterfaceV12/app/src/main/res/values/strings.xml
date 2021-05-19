@@ -7,6 +7,6 @@
     <string name="chan_freq_radio_main">---.--</string>
     <string name="chan_name_radio_main">--------</string>
     <string name="chan_nr_radio_main">--</string>
-    <string name="volume">Volume: %1$s </string>
+    <string name="volume">Volume:</string>
     <string name="function_name">Function Name</string>
 </resources>

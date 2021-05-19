@@ -7,7 +7,9 @@ import android.annotation.SuppressLint;
 import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -155,6 +157,8 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Make screen stay always on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         arduino = new Arduino(this, 250000);
 
         debugTextbox = findViewById(R.id.debugText);
@@ -499,26 +503,6 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 frequency3x3DisplayShort(messageReceived);
                 messageReceived = "";
             }
-
-            /*
-            //Frequency type show
-            else if (messageReceived.toLowerCase().contains("frequency_detailed")){
-                // string ex: frequency_detailed : FM : Frequency Modulation : end_string
-                frequency_detailed(messageReceived);
-                messageReceived = "";
-            }
-
-             */
-
-            /*
-            //Frequency list
-            else if (messageReceived.toLowerCase().contains("frequency_list")){
-                // string ex: frequency_list : FM : PTY : LW : Frequency modulation : FM program type : Long wave : end_string
-                frequency_list(messageReceived);
-                messageReceived = "";
-            }
-
-             */
             //////////////////////////RADIO/////////////////////////////
 
 
@@ -561,6 +545,13 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             else if (messageReceived.toLowerCase().contains("confirm_cancel_function")){
                 // string ex: confirm_cancel_function : Cancel : Confirm : : Do you want to reset : these parameters? : end_string
                 confirm_cancel(messageReceived);
+                messageReceived = "";
+            }
+
+            //info box
+            else if(messageReceived.toLowerCase().contains("info_box")){
+                // string ex: info_box : Message is received here bla bla : end_string
+                informationBox(messageReceived);
                 messageReceived = "";
             }
 
@@ -634,8 +625,8 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             public void run() {
                 // string ex: volume : 22 : end_string
                 String[] messageIds = message.split(":");
-                volume.setText(getString(R.string.volume, messageIds[1]));
-                //volume.setText("Volume: " + messageIds[1] + " ");
+                //volume.setText(getString(R.string.volume, messageIds[1]));
+                volume.setText("Volume: " + messageIds[1] + " ");
             }
         });
     }
@@ -786,55 +777,6 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         });
     }
 
-    /*
-    public void frequency_detailed(final String message){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                closeAllDisplays();
-                clearTextBoxes();
-                //set all card colours to main colour
-                radio3x3grid2x1card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
-                radio3x3grid2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
-                radio3x3grid2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
-                // string ex: frequency_detailed : FM : Frequency Modulation : end_string
-                String[] messageIds = message.split(":");
-                radio3x3grid2x1text.setText(messageIds[1]);
-                radio3x3grid2x2text.setText(messageIds[2]);
-                //----------------------------------------
-                radio3x3grid2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
-                //Bring front the layout
-                radio3x3grid.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-     */
-
-    /*
-    public void frequency_list(final String message){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                closeAllDisplays();
-                clearTextBoxes();
-                // string ex: frequency_list : FM : PTY : LW : Frequency modulation : FM program type : Long wave : end_string
-                String[] messageIds = message.split(":");
-                radio3x3grid1x1text.setText(messageIds[1]);
-                radio3x3grid2x1text.setText(messageIds[2]);
-                radio3x3grid3x1text.setText(messageIds[3]);
-                //---------------------------------------
-                radio3x3grid1x2text.setText(messageIds[4]);
-                radio3x3grid2x2text.setText(messageIds[5]);
-                radio3x3grid3x2text.setText(messageIds[6]);
-                //---------------------------------------
-                radio3x3grid2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
-                //Bring front the layout
-                radio3x3grid.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-     */
-
     public void menuDisplay(final String message){
         runOnUiThread(new Runnable() {
             @Override
@@ -864,7 +806,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 // STRING EX ---> complex_grid1x2 : icon1 : track_name1 : end_string
                 String[] messageIds = message.split(":");
                 // Set first icon visible
-                setIconsVisible("NULL", messageIds[1], "NULL");
+                setIconsVisible("", messageIds[1], "");
                 complex2x2text.setText(messageIds[2]);
                 complex3x2grid.setVisibility(View.VISIBLE);
             }
@@ -890,6 +832,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                Log.i("myTag", "entered function");
                 int bassVolume;
                 int trebleVolume;
                 closeAllDisplays();
@@ -898,7 +841,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 trebleTextCard.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
                 // String ex: musical_atmosphere : 2 : off : on : _ : title_1 : title_2 : _ : + : 5 : - : 2 : end_string
                 String[] messageIds = message.split(":");
-                if (messageIds[1].toLowerCase().contains("1")){
+                if (messageIds[1].toLowerCase().contains("2")){
                     //set other CardView to main colors
                     bassTextCard.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
                     trebleTextCard.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
@@ -907,7 +850,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                     cardText2.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
 
                 }
-                if (messageIds[1].toLowerCase().contains("2")){
+                if (messageIds[1].toLowerCase().contains("3")){
                     //set other CardView to main colors
                     cardRow2.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
                     cardText2.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
@@ -915,7 +858,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                     //set main CardView to select color
                     bassTextCard.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
                 }
-                if (messageIds[1].toLowerCase().contains("3")){
+                if (messageIds[1].toLowerCase().contains("4")){
                     //set other CardView to main colors
                     cardRow2.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
                     cardText2.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
@@ -928,11 +871,11 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                     emptyCercleRow1.setVisibility(View.INVISIBLE);
                     checkedCercleRow1.setVisibility(View.INVISIBLE);
                 }
-                if (messageIds[2].toLowerCase().contains("off")){
+                if (messageIds[2].toLowerCase().contains("icon_Cercle_empty")){
                     emptyCercleRow1.setVisibility(View.VISIBLE);
                     checkedCercleRow1.setVisibility(View.INVISIBLE);
                 }
-                if (messageIds[2].toLowerCase().contains("on")){
+                if (messageIds[2].toLowerCase().contains("icon_Cercle_full")){
                     emptyCercleRow1.setVisibility(View.INVISIBLE);
                     checkedCercleRow1.setVisibility(View.VISIBLE);
                 }
@@ -941,11 +884,11 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                     emptyCercleRow2.setVisibility(View.INVISIBLE);
                     checkedCercleRow2.setVisibility(View.INVISIBLE);
                 }
-                if (messageIds[3].toLowerCase().contains("off")){
+                if (messageIds[3].toLowerCase().contains("icon_Cercle_empty")){
                     emptyCercleRow2.setVisibility(View.VISIBLE);
                     checkedCercleRow2.setVisibility(View.INVISIBLE);
                 }
-                if (messageIds[3].toLowerCase().contains("on")){
+                if (messageIds[3].toLowerCase().contains("icon_Cercle_full")){
                     emptyCercleRow2.setVisibility(View.INVISIBLE);
                     checkedCercleRow2.setVisibility(View.VISIBLE);
                 }
@@ -954,11 +897,11 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                     emptyCercleRow3.setVisibility(View.INVISIBLE);
                     checkedCercleRow3.setVisibility(View.INVISIBLE);
                 }
-                if (messageIds[4].toLowerCase().contains("off")){
+                if (messageIds[4].toLowerCase().contains("icon_Cercle_empty")){
                     emptyCercleRow3.setVisibility(View.VISIBLE);
                     checkedCercleRow3.setVisibility(View.INVISIBLE);
                 }
-                if (messageIds[4].toLowerCase().contains("on")){
+                if (messageIds[4].toLowerCase().contains("icon_Cercle_full")){
                     emptyCercleRow3.setVisibility(View.INVISIBLE);
                     checkedCercleRow3.setVisibility(View.VISIBLE);
                 }
@@ -971,18 +914,18 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                     bassTrebleLayout.setVisibility(View.VISIBLE);
                 }
 
-                if (messageIds[8] == "+"){
+                if (messageIds[8].contains("+")){
                     bassVolume = Integer.parseInt(messageIds[9]) + 10;
                     bassProgressBar.setProgress(bassVolume);
-                }else if (messageIds[8] == "-"){
+                }else if (messageIds[8].contains("-")){
                     bassVolume = Integer.parseInt(messageIds[9]);
                     bassProgressBar.setProgress(bassVolume);
                 }
 
-                if (messageIds[10] == "+"){
+                if (messageIds[10].contains("+")){
                     trebleVolume = Integer.parseInt(messageIds[11]) + 10;
                     trebleProgressBar.setProgress(trebleVolume);
-                }else if (messageIds[10] == "-"){
+                }else if (messageIds[10].contains("-")){
                     trebleVolume = Integer.parseInt(messageIds[11]);
                     trebleProgressBar.setProgress(trebleVolume);
                 }
@@ -1017,9 +960,9 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             public void run() {
                 closeAllDisplays();
                 infoGridText.setText("");
-                //String ex   --------------------------------------
+                // string ex: info_box : Message is received here bla bla : end_string
                 String[] messageIds = message.split(":");
-                //Set
+                infoGridText.setText(messageIds[1]);
                 infoGrid.setVisibility(View.VISIBLE);
             }
         });
@@ -1356,7 +1299,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 //-------------------------------------------------------------------------------------
                 if (!icon3.contains("icon")) {
                     complex3x1text.setText(icon3);
-                    complex3x1text.setVisibility(View.INVISIBLE);
+                    complex3x1text.setVisibility(View.VISIBLE);
                 }
                 if (icon3.contains("icon_Audio_settings")) iconAudioSettings3x1.setVisibility(View.VISIBLE);
                 if (icon3.contains("icon_Phone_settings")) iconPhoneSettings3x1.setVisibility(View.VISIBLE);
