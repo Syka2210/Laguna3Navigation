@@ -18,6 +18,31 @@ void setup() {
   mcp2515.setNormalMode();
 }
 
+int get_array_position(int columnNr, int rowNr)
+{
+  int arrayPos;
+  if (columnNr == 1)
+  {
+    if (rowNr == 1) arrayPos = 1;
+    else if (rowNr == 2) arrayPos = 2;
+    else if (rowNr == 3) arrayPos = 3;
+  }
+  else if (columnNr == 2)
+  {
+    if (rowNr == 1) arrayPos = 4;
+    else if (rowNr == 2) arrayPos = 5;
+    else if (rowNr == 3) arrayPos = 6;
+  }
+  else if (columnNr == 3)
+  {
+    if (rowNr == 1) arrayPos = 7;
+    else if (rowNr == 2) arrayPos = 8;
+    else if (rowNr == 3) arrayPos = 9;
+  }
+
+  return arrayPos;
+}
+
 //Volume function
 void volume_text(bool counter){
   bool next_digit = false;
@@ -59,19 +84,49 @@ void sources(){
 
 //Channel number function -- CHECKED
 String chan_number(char recv_char){
-  String ch_nr = "0";
-  if (recv_char == 0x10) ch_nr = "1";
-  if (recv_char == 0x11) ch_nr = "2";
-  if (recv_char == 0x12) ch_nr = "3";
-  if (recv_char == 0x13) ch_nr = "4";
-  if (recv_char == 0x14) ch_nr = "5";
-  if (recv_char == 0x15) ch_nr = "6";
-  if (recv_char == 0x46) ch_nr = "7";
-  if (recv_char == 0x47) ch_nr = "8";
-  if (recv_char == 0x48) ch_nr = "9";
-  if (recv_char == 0x49) ch_nr = "10";
-  if (recv_char == 0x4A) ch_nr = "11";
-  if (recv_char == 0x4B) ch_nr = "12";
+  String ch_nr;
+  switch(recv_char){
+    case 0x10:
+      ch_nr = "1";
+      break;
+    case 0x11:
+      ch_nr = "2";
+      break;
+    case 0x12:
+      ch_nr = "3";
+      break;
+    case 0x13:
+      ch_nr = "4";
+      break;
+    case 0x14:
+      ch_nr = "5";
+      break;
+    case 0x15:
+      ch_nr = "6";
+      break;
+    case 0x46:
+      ch_nr = "7";
+      break;
+    case 0x47:
+      ch_nr = "8";
+      break;
+    case 0x48:
+      ch_nr = "9";
+      break;
+    case 0x49:
+      ch_nr = "10";
+      break;
+    case 0x4A:
+      ch_nr = "11";
+      break;
+    case 0x4B:
+      ch_nr = "12";
+      break;
+    default:
+      ch_nr = "0"
+      break;
+    }
+
   return ch_nr;
 }
 
@@ -150,48 +205,137 @@ void frequency_detailed(bool counter){
 //Icons function - CHECKED
 String icons(char input){
   String iconOutput;
-  if (input == 0x01) iconOutput = "icon_Audio_settings";
-  if (input == 0x02) iconOutput = "icon_Phone_settings";
-  if (input == 0x03) iconOutput = "icon_System_settings";
-  if (input == 0x04) iconOutput = "icon_Bluetooth";
-  if (input == 0x05) iconOutput = "icon_Language";
-  if (input == 0x06) iconOutput = "icon_Sound_optimization";
-  if (input == 0x07) iconOutput = "icon_Musical_atmosphere";
-  if (input == 0x08) iconOutput = "icon_Display_CD_time";
-  if (input == 0x09) iconOutput = "icon_Radio_functions";
-  if (input == 0x0A) iconOutput = "icon_Serious_classics";
-  if (input == 0x0B) iconOutput = "icon_Varied_speech";
-  if (input == 0x0C) iconOutput = "icon_News";
-  if (input == 0x0D) iconOutput = "icon_Sport";
-  if (input == 0x0E) iconOutput = "icon_Pop_music";
-  if (input == 0x1A) iconOutput = "icon_Pair_phone";
-  if (input == 0x12) iconOutput = "icon_Music_note";
-  if (input == 0x13) iconOutput = "icon_Vehicle_phonebook";
-  if (input == 0x14) iconOutput = "icon_Mobile_phonebook";
-  if (input == 0x15) iconOutput = "icon_Call_history";
-  if (input == 0x16) iconOutput = "icon_Mail_box";
-  if (input == 0x17) iconOutput = "icon_Directory_management";
-  if (input == 0x18) iconOutput = "icon_Other_audio_settings";
-  if (input == 0x1D) iconOutput = "icon_Missed_calls";
-  if (input == 0x1E) iconOutput = "icon_Received_calls";
-  if (input == 0x1F) iconOutput = "icon_Dialed_numbers";
-  if (input == 0x20) iconOutput = "icon_Put_on_hold";
-  if (input == 0x21) iconOutput = "icon_USB";
-  if (input == 0x24) iconOutput = "icon_Volume";
-  if (input == 0x25) iconOutput = "icon_Ringtone";
-  if (input == 0x26) iconOutput = "icon_Cercle_full";
-  if (input == 0x27) iconOutput = "icon_Cercle_empty";
-  if (input == 0x28) iconOutput = "icon_Checked_box";
-  if (input == 0x29) iconOutput = "icon_Unchecked_box";
-  if (input == 0x2A) iconOutput = "icon_Folder";
-  if (input == 0x2B) iconOutput = "icon_Voice_prompt_volume";
-  if (input == 0x40) iconOutput = "icon_1";
-  if (input == 0x41) iconOutput = "icon_2";
-  if (input == 0x42) iconOutput = "icon_3";
-  if (input == 0x43) iconOutput = "icon_4";
-  if (input == 0x44) iconOutput = "icon_5";
-  if (input == 0x60) iconOutput = "icon_Adaptation_volume";
-  if (input == 0x62) iconOutput = "icon_Emergency";
+
+  switch (input){
+    case 0x01:
+      iconOutput = "icon_Audio_settings";
+      break;
+    case 0x02:
+      iconOutput = "icon_Phone_settings";
+      break;
+    case 0x03:
+      iconOutput = "icon_System_settings";
+      break;
+    case 0x04:
+      iconOutput = "icon_Bluetooth";
+      break;
+    case 0x05:
+      iconOutput = "icon_Language";
+      break;
+    case 0x06:
+      iconOutput = "icon_Sound_optimization";
+      break;
+    case 0x07:
+      iconOutput = "icon_Musical_atmosphere";
+      break;
+    case 0x08:
+      iconOutput = "icon_Display_CD_time";
+      break;
+    case 0x09:
+      iconOutput = "icon_Radio_functions";
+      break;
+    case 0x0A:
+      iconOutput = "icon_Serious_classics";
+      break;
+    case 0x0B:
+      iconOutput = "icon_Varied_speech";
+      break;
+    case 0x0C:
+      iconOutput = "icon_News";
+      break;
+    case 0x0D:
+      iconOutput = "icon_Sport";
+      break;
+    case 0x0E:
+      iconOutput = "icon_Pop_music";
+      break;
+    case 0x1A:
+      iconOutput = "icon_Pair_phone";
+      break;
+    case 0x12:
+      iconOutput = "icon_Music_note";
+      break;
+    case 0x13:
+      iconOutput = "icon_Vehicle_phonebook";
+      break;
+    case 0x14:
+      iconOutput = "icon_Mobile_phonebook";
+      break;
+    case 0x15:
+      iconOutput = "icon_Call_history";
+      break;
+    case 0x16:
+      iconOutput = "icon_Mail_box";
+      break;
+    case 0x17:
+      iconOutput = "icon_Directory_management";
+      break;
+    case 0x18:
+      iconOutput = "icon_Other_audio_settings";
+      break;
+    case 0x1D:
+      iconOutput = "icon_Missed_calls";
+      break;
+    case 0x1E:
+      iconOutput = "icon_Received_calls";
+      break;
+    case 0x1F:
+      iconOutput = "icon_Dialed_numbers";
+      break;
+    case 0x20:
+      iconOutput = "icon_Put_on_hold";
+      break;
+    case 0x21:
+      iconOutput = "icon_USB";
+      break;
+    case 0x24:
+      iconOutput = "icon_Volume";
+      break;
+    case 0x25:
+      iconOutput = "icon_Ringtone";
+      break;
+    case 0x26:
+      iconOutput = "icon_Cercle_full";
+      break;
+    case 0x27:
+      iconOutput = "icon_Cercle_empty";
+      break;
+    case 0x28:
+      iconOutput = "icon_Checked_box";
+      break;
+    case 0x29:
+      conOutput = "icon_Unchecked_box";
+      break;
+    case 0x2A:
+      iconOutput = "icon_Folder";
+      break;
+    case 0x2B:
+      iconOutput = "icon_Voice_prompt_volume";
+      break;
+    case 0x40:
+      iconOutput = "icon_1";
+      break;
+    case 0x41:
+      iconOutput = "icon_2";
+      break;
+    case 0x42:
+      iconOutput = "icon_3";
+      break;
+    case 0x43:
+      iconOutput = "icon_4";
+      break;
+    case 0x44:
+      iconOutput = "icon_5";
+      break;
+    case 0x60:
+      iconOutput = "icon_Adaptation_volume";
+      break;
+    case 0x62:
+      iconOutput = "icon_Emergency";
+      break;
+    default:
+      break;
+  }
   
   return iconOutput;
 }
@@ -317,13 +461,20 @@ void musical_atmosphere(bool counter, char signs){
           //Finish with the grid, check treble and bass values
 
           //Checking where on the 3x2 array whe are to save the string
-          if (arrayPos < 7) {
-            if (rowNr == 1 && columnNr == 1) arrayPos = 1;
-            if (rowNr == 2 && columnNr == 1) arrayPos = 2;
-            if (rowNr == 3 && columnNr == 1) arrayPos = 3;
-            if (rowNr == 1 && columnNr == 2) arrayPos = 4;
-            if (rowNr == 2 && columnNr == 2) arrayPos = 5;
-            if (rowNr == 3 && columnNr == 2) arrayPos = 6;
+          if (arrayPos < 7) 
+          {
+            if (columnNr == 1)
+            {
+              if (rowNr == 1) arrayPos = 1;
+              else if (rowNr == 2) arrayPos = 2;
+              else if (rowNr == 3) arrayPos = 3;
+            }
+            else if (columnNr == 2)
+            {
+              if (rowNr == 1) arrayPos = 4;
+              else if (rowNr == 2) arrayPos = 5;
+              else if (rowNr == 3) arrayPos = 6;
+            }
           }
           //Checking where on the 3x2 array whe are to save the string
 
@@ -467,15 +618,24 @@ void gridSortRadio(bool counter) {
           } else counter_0x00 = false;
 
           //Checking where on the 3x3 array whe are to save the string
-          if (rowNr == 1 && columnNr == 1) arrayPos = 1;
-          if (rowNr == 2 && columnNr == 1) arrayPos = 2;
-          if (rowNr == 3 && columnNr == 1) arrayPos = 3;
-          if (rowNr == 1 && columnNr == 2) arrayPos = 4;
-          if (rowNr == 2 && columnNr == 2) arrayPos = 5;
-          if (rowNr == 3 && columnNr == 2) arrayPos = 6;
-          if (rowNr == 1 && columnNr == 3) arrayPos = 7;
-          if (rowNr == 2 && columnNr == 3) arrayPos = 8;
-          if (rowNr == 3 && columnNr == 3) arrayPos = 9;
+          if (columnNr == 1)
+          {
+            if (rowNr == 1) arrayPos = 1;
+            else if (rowNr == 2) arrayPos = 2;
+            else if (rowNr == 3) arrayPos = 3;
+          }
+          else if (columnNr == 2)
+          {
+            if (rowNr == 1) arrayPos = 4;
+            else if (rowNr == 2) arrayPos = 5;
+            else if (rowNr == 3) arrayPos = 6;
+          }
+          else if (columnNr == 3)
+          {
+            if (rowNr == 1) arrayPos = 7;
+            else if (rowNr == 2) arrayPos = 8;
+            else if (rowNr == 3) arrayPos = 9;
+          }
           //Checking where on the 3x3 array whe are to save the string
 
           //Saving the string on the coresponding 3x3 array position
@@ -661,12 +821,18 @@ void gridSort3x2(bool counter){
           } else counter_0x00 = false;
 
           //Checking where on the 3x2 array whe are to save the string
-          if (rowNr == 1 && columnNr == 1) arrayPos = 1;
-          if (rowNr == 2 && columnNr == 1) arrayPos = 2;
-          if (rowNr == 3 && columnNr == 1) arrayPos = 3;
-          if (rowNr == 1 && columnNr == 2) arrayPos = 4;
-          if (rowNr == 2 && columnNr == 2) arrayPos = 5;
-          if (rowNr == 3 && columnNr == 2) arrayPos = 6;
+          if (columnNr == 1)
+          {
+            if (rowNr == 1) arrayPos = 1;
+            else if (rowNr == 2) arrayPos = 2;
+            else if (rowNr == 3) arrayPos = 3;
+          }
+          else if (columnNr == 2)
+          {
+            if (rowNr == 1) arrayPos = 4;
+            else if (rowNr == 2) arrayPos = 5;
+            else if (rowNr == 3) arrayPos = 6;
+          }
           //Checking where on the 3x2 array whe are to save the string
 
           //Saving the string on the coresponding 3x3 array position
@@ -788,12 +954,18 @@ void gridSort3x3(bool counter){
           } else counter_0x00 = false;
 
           //Checking where on the 3x2 array whe are to save the string
-          if (rowNr == 1 && columnNr == 1) arrayPos = 1;
-          if (rowNr == 2 && columnNr == 1) arrayPos = 2;
-          if (rowNr == 3 && columnNr == 1) arrayPos = 3;
-          if (rowNr == 1 && columnNr == 2) arrayPos = 4;
-          if (rowNr == 2 && columnNr == 2) arrayPos = 5;
-          if (rowNr == 3 && columnNr == 2) arrayPos = 6;
+          if (columnNr == 1)
+          {
+            if (rowNr == 1) arrayPos = 1;
+            else if (rowNr == 2) arrayPos = 2;
+            else if (rowNr == 3) arrayPos = 3;
+          }
+          else if (columnNr == 2)
+          {
+            if (rowNr == 1) arrayPos = 4;
+            else if (rowNr == 2) arrayPos = 5;
+            else if (rowNr == 3) arrayPos = 6;
+          }
           //Checking where on the 3x2 array whe are to save the string
 
           //Saving the string on the coresponding 3x3 array position
@@ -873,12 +1045,18 @@ void confirm_cancel_function(bool counter){
             } else counter_0x00 = false;
 
           //Checking where on the 3x2 array whe are to save the string
-          if (rowNr == 1 && columnNr == 1) arrayPos = 1;
-          if (rowNr == 2 && columnNr == 1) arrayPos = 2;
-          if (rowNr == 3 && columnNr == 1) arrayPos = 3;
-          if (rowNr == 1 && columnNr == 2) arrayPos = 4;
-          if (rowNr == 2 && columnNr == 2) arrayPos = 5;
-          if (rowNr == 3 && columnNr == 2) arrayPos = 6;
+          if (columnNr == 1)
+          {
+            if (rowNr == 1) arrayPos = 1;
+            else if (rowNr == 2) arrayPos = 2;
+            else if (rowNr == 3) arrayPos = 3;
+          }
+          else if (columnNr == 2)
+          {
+            if (rowNr == 1) arrayPos = 4;
+            else if (rowNr == 2) arrayPos = 5;
+            else if (rowNr == 3) arrayPos = 6;
+          }
           //Checking where on the 3x2 array whe are to save the string
 
           //Saving the string on the coresponding 3x3 array position
