@@ -20,7 +20,7 @@ void setup() {
 
 int get_array_position(int columnNr, int rowNr)
 {
-  int arrayPos;
+  int arrayPos = 0;
   if (columnNr == 1)
   {
     if (rowNr == 1) arrayPos = 1;
@@ -123,7 +123,7 @@ String chan_number(char recv_char){
       ch_nr = "12";
       break;
     default:
-      ch_nr = "0"
+      ch_nr = "0";
       break;
     }
 
@@ -304,7 +304,7 @@ String icons(char input){
       iconOutput = "icon_Checked_box";
       break;
     case 0x29:
-      conOutput = "icon_Unchecked_box";
+      iconOutput = "icon_Unchecked_box";
       break;
     case 0x2A:
       iconOutput = "icon_Folder";
@@ -463,6 +463,8 @@ void musical_atmosphere(bool counter, char signs){
           //Checking where on the 3x2 array whe are to save the string
           if (arrayPos < 7) 
           {
+            arrayPos = get_array_position(columnNr, rowNr);
+            /*
             if (columnNr == 1)
             {
               if (rowNr == 1) arrayPos = 1;
@@ -475,6 +477,7 @@ void musical_atmosphere(bool counter, char signs){
               else if (rowNr == 2) arrayPos = 5;
               else if (rowNr == 3) arrayPos = 6;
             }
+            */
           }
           //Checking where on the 3x2 array whe are to save the string
 
@@ -618,6 +621,8 @@ void gridSortRadio(bool counter) {
           } else counter_0x00 = false;
 
           //Checking where on the 3x3 array whe are to save the string
+          arrayPos = get_array_position(columnNr, rowNr);
+          /*
           if (columnNr == 1)
           {
             if (rowNr == 1) arrayPos = 1;
@@ -636,6 +641,7 @@ void gridSortRadio(bool counter) {
             else if (rowNr == 2) arrayPos = 8;
             else if (rowNr == 3) arrayPos = 9;
           }
+          */
           //Checking where on the 3x3 array whe are to save the string
 
           //Saving the string on the coresponding 3x3 array position
@@ -821,6 +827,8 @@ void gridSort3x2(bool counter){
           } else counter_0x00 = false;
 
           //Checking where on the 3x2 array whe are to save the string
+          arrayPos = get_array_position(columnNr, rowNr);
+          /*
           if (columnNr == 1)
           {
             if (rowNr == 1) arrayPos = 1;
@@ -833,6 +841,7 @@ void gridSort3x2(bool counter){
             else if (rowNr == 2) arrayPos = 5;
             else if (rowNr == 3) arrayPos = 6;
           }
+          */
           //Checking where on the 3x2 array whe are to save the string
 
           //Saving the string on the coresponding 3x3 array position
@@ -954,6 +963,8 @@ void gridSort3x3(bool counter){
           } else counter_0x00 = false;
 
           //Checking where on the 3x2 array whe are to save the string
+          arrayPos = get_array_position(columnNr, rowNr);
+          /*
           if (columnNr == 1)
           {
             if (rowNr == 1) arrayPos = 1;
@@ -966,6 +977,7 @@ void gridSort3x3(bool counter){
             else if (rowNr == 2) arrayPos = 5;
             else if (rowNr == 3) arrayPos = 6;
           }
+          */
           //Checking where on the 3x2 array whe are to save the string
 
           //Saving the string on the coresponding 3x3 array position
@@ -1045,6 +1057,8 @@ void confirm_cancel_function(bool counter){
             } else counter_0x00 = false;
 
           //Checking where on the 3x2 array whe are to save the string
+          arrayPos = get_array_position(columnNr, rowNr);
+          /*
           if (columnNr == 1)
           {
             if (rowNr == 1) arrayPos = 1;
@@ -1057,6 +1071,7 @@ void confirm_cancel_function(bool counter){
             else if (rowNr == 2) arrayPos = 5;
             else if (rowNr == 3) arrayPos = 6;
           }
+          */
           //Checking where on the 3x2 array whe are to save the string
 
           //Saving the string on the coresponding 3x3 array position
