@@ -68,18 +68,11 @@ void volume_text(bool counter){
 
 //Sources function
 void sources(){
-  if (canMsg.data[1] == 0x1F){
-    Serial.print("Source:Radio");
-    Serial.println(endString);
-  } 
-  else if (canMsg.data[1] == 0x27){
-    Serial.print("Source:cd_player");
-    Serial.println(endString);
-  } 
-  else if (canMsg.data[1] == 0x43){
-    Serial.print("Source:Auxiliary audio sources");
-    Serial.println(endString);
-  } 
+  if (canMsg.data[1] == 0x1F) Serial.print("Source:Radio"); 
+  else if (canMsg.data[1] == 0x27) Serial.print("Source:cd_player");
+  else if (canMsg.data[1] == 0x43) Serial.print("Source:Auxiliary audio sources");
+  
+  Serial.println(endString);
 } 
 
 //Channel number function -- CHECKED
@@ -341,9 +334,12 @@ String icons(char input){
 }
 
 //Highlighted box
+//TODO: Refactor?
+//Counter never changes, infinite loop?
+//What does this return if it skips the while?
 int high_box_function(bool counter){
   int cbh = 0;
-  while (counter == false){
+  while (counter == false){ 
     if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
       if (canMsg.can_id == 289 && canMsg.data[0] == 0x21){
         if (canMsg.data[6] == 0x20 && high_box != 1){
@@ -370,10 +366,10 @@ int high_box_function(bool counter){
       }
     }    
   }
-  
 }
 
-//Menu settings volume function 
+//Menu settings volume function
+//Counter never changes, infinite loop?
 void menu_volume(bool counter, String function){
   String menu_volume;
   while (counter == false){
@@ -393,7 +389,6 @@ void menu_volume(bool counter, String function){
       }      
     }
   }
-
 }
 
 //Musical atmosphere function
@@ -464,20 +459,6 @@ void musical_atmosphere(bool counter, char signs){
           if (arrayPos < 7) 
           {
             arrayPos = get_array_position(columnNr, rowNr);
-            /*
-            if (columnNr == 1)
-            {
-              if (rowNr == 1) arrayPos = 1;
-              else if (rowNr == 2) arrayPos = 2;
-              else if (rowNr == 3) arrayPos = 3;
-            }
-            else if (columnNr == 2)
-            {
-              if (rowNr == 1) arrayPos = 4;
-              else if (rowNr == 2) arrayPos = 5;
-              else if (rowNr == 3) arrayPos = 6;
-            }
-            */
           }
           //Checking where on the 3x2 array whe are to save the string
 
@@ -526,6 +507,8 @@ void musical_atmosphere(bool counter, char signs){
 }
 
 //Radio function - CHECKED
+//TODO: Tidy up the Serial.prints
+//TODO: Refactor
 void gridSortRadio(bool counter) {
   //Serial.println("Entered gridSortRadio");
   int arraySize = 10;
@@ -622,26 +605,6 @@ void gridSortRadio(bool counter) {
 
           //Checking where on the 3x3 array whe are to save the string
           arrayPos = get_array_position(columnNr, rowNr);
-          /*
-          if (columnNr == 1)
-          {
-            if (rowNr == 1) arrayPos = 1;
-            else if (rowNr == 2) arrayPos = 2;
-            else if (rowNr == 3) arrayPos = 3;
-          }
-          else if (columnNr == 2)
-          {
-            if (rowNr == 1) arrayPos = 4;
-            else if (rowNr == 2) arrayPos = 5;
-            else if (rowNr == 3) arrayPos = 6;
-          }
-          else if (columnNr == 3)
-          {
-            if (rowNr == 1) arrayPos = 7;
-            else if (rowNr == 2) arrayPos = 8;
-            else if (rowNr == 3) arrayPos = 9;
-          }
-          */
           //Checking where on the 3x3 array whe are to save the string
 
           //Saving the string on the coresponding 3x3 array position
@@ -749,6 +712,8 @@ void frequency_list(bool counter){
 */
 
 //Universal 3x2 grid - Checked
+//TODO: Tidy up the Serial.prints
+//TODO: Refactor
 void gridSort3x2(bool counter){
   int arraySize = 7;
   String array3x2[arraySize];
@@ -828,20 +793,6 @@ void gridSort3x2(bool counter){
 
           //Checking where on the 3x2 array whe are to save the string
           arrayPos = get_array_position(columnNr, rowNr);
-          /*
-          if (columnNr == 1)
-          {
-            if (rowNr == 1) arrayPos = 1;
-            else if (rowNr == 2) arrayPos = 2;
-            else if (rowNr == 3) arrayPos = 3;
-          }
-          else if (columnNr == 2)
-          {
-            if (rowNr == 1) arrayPos = 4;
-            else if (rowNr == 2) arrayPos = 5;
-            else if (rowNr == 3) arrayPos = 6;
-          }
-          */
           //Checking where on the 3x2 array whe are to save the string
 
           //Saving the string on the coresponding 3x3 array position
@@ -874,7 +825,9 @@ void gridSort3x2(bool counter){
   }
 }
 
-//Grid 3x3 
+//Grid 3x3
+//TODO: Tidy up the Serial.prints
+//TODO: Refactor
 void gridSort3x3(bool counter){
   int arraySize = 7;
   String array3x3[arraySize];
@@ -964,20 +917,6 @@ void gridSort3x3(bool counter){
 
           //Checking where on the 3x2 array whe are to save the string
           arrayPos = get_array_position(columnNr, rowNr);
-          /*
-          if (columnNr == 1)
-          {
-            if (rowNr == 1) arrayPos = 1;
-            else if (rowNr == 2) arrayPos = 2;
-            else if (rowNr == 3) arrayPos = 3;
-          }
-          else if (columnNr == 2)
-          {
-            if (rowNr == 1) arrayPos = 4;
-            else if (rowNr == 2) arrayPos = 5;
-            else if (rowNr == 3) arrayPos = 6;
-          }
-          */
           //Checking where on the 3x2 array whe are to save the string
 
           //Saving the string on the coresponding 3x3 array position
@@ -1004,6 +943,8 @@ void gridSort3x3(bool counter){
 }
 
 //3+1 selection
+//TODO: Tidy up the Serial.prints
+//TODO: Refactor
 void confirm_cancel_function(bool counter){
   int arraySize = 7;
   String array3x2[arraySize];
@@ -1058,20 +999,6 @@ void confirm_cancel_function(bool counter){
 
           //Checking where on the 3x2 array whe are to save the string
           arrayPos = get_array_position(columnNr, rowNr);
-          /*
-          if (columnNr == 1)
-          {
-            if (rowNr == 1) arrayPos = 1;
-            else if (rowNr == 2) arrayPos = 2;
-            else if (rowNr == 3) arrayPos = 3;
-          }
-          else if (columnNr == 2)
-          {
-            if (rowNr == 1) arrayPos = 4;
-            else if (rowNr == 2) arrayPos = 5;
-            else if (rowNr == 3) arrayPos = 6;
-          }
-          */
           //Checking where on the 3x2 array whe are to save the string
 
           //Saving the string on the coresponding 3x3 array position
