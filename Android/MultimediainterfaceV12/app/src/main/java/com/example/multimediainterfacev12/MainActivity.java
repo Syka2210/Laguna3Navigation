@@ -17,11 +17,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import me.aflak.arduino.Arduino;
 import me.aflak.arduino.ArduinoListener;
 
 public class MainActivity extends AppCompatActivity implements ArduinoListener {
+    private static final String TAG = "MainActivity";
     private Arduino arduino;
+
+    //Initialize log file
+    private static final String LOG_FILE = "dataReceiveLog.txt";
 
     //Debug textView
     private TextView debugTextbox;
@@ -425,12 +433,35 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         infoGrid = findViewById(R.id.infoGrid);
         infoGridText = findViewById(R.id.infoGridText);
 
+        Log.i(TAG, "onCreate");
+
     }
 
     @Override
     protected void onStart(){
         super.onStart();
         arduino.setArduinoListener((ArduinoListener) this);
+        String msg = "reqMsg";
+        arduino.send(msg.getBytes());
+        Log.i(TAG, msg);
+
+        Log.i(TAG, "onStart");
+    }
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume");
+    }
+    protected void onPause(){
+        super.onPause();
+        Log.i(TAG, "onPause");
+    }
+    protected void onStop(){
+        super.onStop();
+        Log.i(TAG, "onStop");
+    }
+    protected void onRestart(){
+        super.onRestart();
+        Log.i(TAG, "onRestart");
     }
 
     @Override
@@ -452,8 +483,8 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
 
 
         if (messageReceived.contains("end_string")) debugTextbox(messageReceived);
-        
 
+        logFile(messageReceived);
 
         if (messageReceived.contains("end_string")){
             // SOURCE
@@ -555,9 +586,18 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 messageReceived = "";
             }
 
+            //log string
+            else if(messageReceived.toLowerCase().contains("candata")){
+                logFile(messageReceived);
+                messageReceived = "";
+            }
+
 
             //CLEAR STRING IF NOT RECOGNIZED
-            else messageReceived = "";
+            else {
+                logFile(messageReceived);
+                messageReceived = "";
+            }
 
         }
 
@@ -871,11 +911,11 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                     emptyCercleRow1.setVisibility(View.INVISIBLE);
                     checkedCercleRow1.setVisibility(View.INVISIBLE);
                 }
-                if (messageIds[2].toLowerCase().contains("icon_Cercle_empty")){
+                if (messageIds[2].toLowerCase().contains("icon_cercle_empty")){
                     emptyCercleRow1.setVisibility(View.VISIBLE);
                     checkedCercleRow1.setVisibility(View.INVISIBLE);
                 }
-                if (messageIds[2].toLowerCase().contains("icon_Cercle_full")){
+                if (messageIds[2].toLowerCase().contains("icon_cercle_full")){
                     emptyCercleRow1.setVisibility(View.INVISIBLE);
                     checkedCercleRow1.setVisibility(View.VISIBLE);
                 }
@@ -884,11 +924,11 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                     emptyCercleRow2.setVisibility(View.INVISIBLE);
                     checkedCercleRow2.setVisibility(View.INVISIBLE);
                 }
-                if (messageIds[3].toLowerCase().contains("icon_Cercle_empty")){
+                if (messageIds[3].toLowerCase().contains("icon_cercle_empty")){
                     emptyCercleRow2.setVisibility(View.VISIBLE);
                     checkedCercleRow2.setVisibility(View.INVISIBLE);
                 }
-                if (messageIds[3].toLowerCase().contains("icon_Cercle_full")){
+                if (messageIds[3].toLowerCase().contains("icon_cercle_full")){
                     emptyCercleRow2.setVisibility(View.INVISIBLE);
                     checkedCercleRow2.setVisibility(View.VISIBLE);
                 }
@@ -897,11 +937,11 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                     emptyCercleRow3.setVisibility(View.INVISIBLE);
                     checkedCercleRow3.setVisibility(View.INVISIBLE);
                 }
-                if (messageIds[4].toLowerCase().contains("icon_Cercle_empty")){
+                if (messageIds[4].toLowerCase().contains("icon_cercle_empty")){
                     emptyCercleRow3.setVisibility(View.VISIBLE);
                     checkedCercleRow3.setVisibility(View.INVISIBLE);
                 }
-                if (messageIds[4].toLowerCase().contains("icon_Cercle_full")){
+                if (messageIds[4].toLowerCase().contains("icon_cercle_full")){
                     emptyCercleRow3.setVisibility(View.INVISIBLE);
                     checkedCercleRow3.setVisibility(View.VISIBLE);
                 }
@@ -918,7 +958,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                     bassVolume = Integer.parseInt(messageIds[9]) + 10;
                     bassProgressBar.setProgress(bassVolume);
                 }else if (messageIds[8].contains("-")){
-                    bassVolume = Integer.parseInt(messageIds[9]);
+                    bassVolume = 10 - Integer.parseInt(messageIds[9]);
                     bassProgressBar.setProgress(bassVolume);
                 }
 
@@ -926,7 +966,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                     trebleVolume = Integer.parseInt(messageIds[11]) + 10;
                     trebleProgressBar.setProgress(trebleVolume);
                 }else if (messageIds[10].contains("-")){
-                    trebleVolume = Integer.parseInt(messageIds[11]);
+                    trebleVolume = 10 - Integer.parseInt(messageIds[11]);
                     trebleProgressBar.setProgress(trebleVolume);
                 }
 
@@ -1350,6 +1390,29 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
 
     public void showToast(String message){
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    public void logFile(String message){
+        FileOutputStream fos = null;
+        try {
+            fos = openFileOutput(LOG_FILE, MODE_APPEND);
+            fos.write(message.getBytes());
+            fos.write("\r\n".getBytes());
+
+            //Toast.makeText(this, "Saved to " + getFilesDir(), Toast.LENGTH_LONG).show();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null){
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 }

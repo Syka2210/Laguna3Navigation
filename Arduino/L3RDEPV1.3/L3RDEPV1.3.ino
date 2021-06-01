@@ -1,4 +1,9 @@
 #include <mcp2515.h>
+#include <Keyboard.h>
+
+#if defined(ARDUINO_AVR_LEONARDO) || defined(ARDUINO_AVR_MICRO)       
+  #define BOARD "Keyboard"
+#endif
 
 
 struct can_frame canMsg;
@@ -11,6 +16,11 @@ String frequency_box;
 String function_name;
 String endString = ":end_string";
 
+String lastSource;
+String lastMessage;
+String lastVolume;
+
+unsigned long delayTime = 250;
 void setup() {
   Serial.begin(250000);
   mcp2515.reset();
@@ -29,12 +39,15 @@ void volume_text(bool counter){
       if (canMsg.can_id == 289 && canMsg.data[0] == 0x23){
         char digit1 = canMsg.data[6];
         Serial.print(digit1);
+        lastVolume.concat(digit1);
         next_digit = true;
       }
       if (canMsg.can_id == 289 && canMsg.data[0] == 0x24 && next_digit == true){
         char digit2 = canMsg.data[1];
         Serial.print(digit2);
         Serial.println(endString);
+        lastVolume.concat(digit2);
+        lastVolume.concat(endString);
         //Serial.println();
       }
     }
@@ -43,17 +56,24 @@ void volume_text(bool counter){
 
 //Sources function
 void sources(){
+  lastSource = "";
   if (canMsg.data[1] == 0x1F){
     Serial.print("Source:Radio");
     Serial.println(endString);
+    lastSource.concat("Source:Radio");
+    lastSource.concat(endString);
   } 
   else if (canMsg.data[1] == 0x27){
     Serial.print("Source:cd_player");
     Serial.println(endString);
+    lastSource.concat("Source:cd_player");
+    lastSource.concat(endString);
   } 
   else if (canMsg.data[1] == 0x43){
     Serial.print("Source:Auxiliary audio sources");
     Serial.println(endString);
+    lastSource.concat("Source:Auxiliary audio sources");
+    lastSource.concat(endString);
   } 
 } 
 
@@ -100,52 +120,7 @@ String frequency_type_box(bool counter){
   }
 }
 
-/*
-//Radio frequency type detailed SHOW
-void frequency_detailed(bool counter){
-  int arraySize = 3;
-  String array3x3[arraySize];
-  bool start_titles = false;
-  bool counter_0x00 = false;
-  int arrayPos = 1;
-  char character;
-  while (counter == false){
-    if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
-      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74){
-        Serial.print("frequency_detailed:");
-        Serial.print(array3x3[1]);
-        Serial.print(":");
-        Serial.print(array3x3[2]);
-        Serial.println(endString);
-        return;
-      }
 
-      if (canMsg.can_id == 0x22 && canMsg.data[0] >= 0x23){
-        start_titles = true;
-      }
-
-      if (canMsg.can_id == 289 && start_titles == true){
-        for (int i = 1; i <= 7; i++) {
-          if (canMsg.data[i] == 0x00 && i != 0) {
-            if (counter_0x00 == true) {
-              arrayPos ++;
-              counter_0x00 = false;
-            } else counter_0x00 = true;
-          } else counter_0x00 = false;
-
-          
-        //Saving the string on the coresponding 3x3 array position
-          if (canMsg.data[i] >= 0x20 && canMsg.data[i] <= 0x7E) {
-            character = canMsg.data[i];
-            array3x3[arrayPos].concat(character);
-          }
-        //Saving the string on the coresponding 3x3 array position
-        }        
-      }
-    }
-  }
-}
-*/
 
 //Icons function - CHECKED
 String icons(char input){
@@ -506,81 +481,7 @@ void gridSortRadio(bool counter) {
   }
 }
 
-/*
-//Radio function list: FM / PTY / LW
-void frequency_list(bool counter){
-  int arraySize = 7;
-  String array3x2[arraySize];
-  bool start_titles = false;
-  bool counter_0x00 = false;
-  int rowNr = 1;
-  int columnNr = 1;
-  int arrayPos = 0;
-  int arrayElements = 0;
-  char character;
-  while (counter == false){
-    if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
-      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74){
-        if (arrayElements >= 3){
-          //Insert below the 3 items identifier
-          Serial.print("frequency_list:");
-          Serial.print(array3x2[1]);
-          Serial.print(":");
-          Serial.print(array3x2[2]);
-          Serial.print(":");
-          Serial.print(array3x2[3]);
-          Serial.print(":");
-          Serial.print(array3x2[4]);
-          Serial.print(":");
-          Serial.print(array3x2[5]);
-          Serial.print(":");
-          Serial.print(array3x2[6]);
-          Serial.println(endString);
-          return;
-        }
-      }
 
-      if (canMsg.can_id == 289 && canMsg.data[0] ==0x23){ 
-        start_titles = true;
-      }
-
-      if (canMsg.can_id == 289 && start_titles == true){
-        //Serial.println(arrayElements);
-        for (int i=1; i<=7; i++){
-          if (canMsg.data[i] == 0x0D){
-            if (rowNr == 3){
-              //rowNr = 1;
-            }else rowNr++;
-          }
-          if (canMsg.data[i] == 0x00 && i != 0){
-            if (counter_0x00 == true){
-              columnNr++;
-              rowNr = 1;
-              counter_0x00 = false;
-            } else counter_0x00 = true;
-          } else counter_0x00 = false;
-
-          //Checking where on the 3x2 array whe are to save the string
-          if (rowNr == 1 && columnNr == 1) arrayPos = 1;
-          if (rowNr == 2 && columnNr == 1) arrayPos = 2;
-          if (rowNr == 3 && columnNr == 1) arrayPos = 3;
-          if (rowNr == 1 && columnNr == 2) arrayPos = 4;
-          if (rowNr == 2 && columnNr == 2) arrayPos = 5;
-          if (rowNr == 3 && columnNr == 2) arrayPos = 6;
-          //Checking where on the 3x2 array whe are to save the string
-
-          //Saving the string on the coresponding 3x3 array position
-          if (canMsg.data[i] >= 0x20 && canMsg.data[i] <= 0x7E){
-              character = canMsg.data[i];
-              array3x2[arrayPos].concat(character);
-          }
-          //Saving the string on the coresponding 3x2 array position
-        }
-      }
-    }
-  }
-}
-*/
 
 //Universal 3x2 grid - Checked
 void gridSort3x2(bool counter){
@@ -647,7 +548,7 @@ void gridSort3x2(bool counter){
       if (canMsg.can_id == 289 && start_titles == true){
         //Serial.println(arrayElements);
         for (int i=1; i<=7; i++){
-          if (canMsg.data[i] == 0xF0){
+          if (canMsg.data[i] == 0x0D &&(canMsg.data[i+1] == 0xF1 || canMsg.data[i+1] == 0xF2 || canMsg.data[i+1] == 0x00 || canMsg.data[i-1] == 0xF0)){
             if (rowNr == 3){
               //rowNr = 1;
             }else rowNr++;
@@ -675,7 +576,7 @@ void gridSort3x2(bool counter){
               //Save the icon name in the first array column
               array3x2[arrayPos] = icons(canMsg.data[i]);
             }
-            if (icon == true && canMsg.data[i] == 0x0D && (canMsg.data[i-1] != 0XF0 || canMsg.data[i+1] != 0xF1 || canMsg.data[i+1] != 0x00)){
+            if (icon == true && canMsg.data[i] == 0x0D && (canMsg.data[i+1] == 0xF0 || canMsg.data[i+1] == 0x00 || canMsg.data[i-1] == 0xF1 || canMsg.data[i-1] == 0xF2)){
               //Save the icon name in the first array column
               array3x2[arrayPos] = icons(canMsg.data[i]);
             }
@@ -833,6 +734,11 @@ void confirm_cancel_function(bool counter){
   while (counter == false){
     if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
       if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74){
+        //Check how many strings are in the array
+        for (int i = 0; i < arraySize; i++){
+          if (array3x2[i].length() > 0) arrayElements++;
+        }
+        //Check how many strings are in the array
         if (arrayElements >= 3){
           //Insert below the 3 items identifier
           Serial.print("confirm_cancel_function:");
@@ -893,12 +799,175 @@ void confirm_cancel_function(bool counter){
   }
 }
 
+void info_box(bool counter){
+  int arraySize = 2;
+  String arrayInfoBox[arraySize];
+  bool start_titles = false;
+  char character;
+  while (counter == false) {
+    if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
+      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74) {
+      Serial.print("info_box:");
+      Serial.print(arrayInfoBox[1]);
+      Serial.println(endString);
+      return;
+      }
+
+      if (canMsg.can_id == 289 && canMsg.data[0] == 0x22){
+        start_titles = true;
+      }
+
+      if (canMsg.can_id == 289 && start_titles == true){
+        for (int i = 1; i <= 7; i++){
+          if (canMsg.data[i] >= 0x20 && canMsg.data[i] <= 0x7E){
+            character = canMsg.data[i];
+            arrayInfoBox[1].concat(character);
+          }
+        }
+      }      
+    }
+  }
+}
+
+/*
+void keyboardButtons(char firstBit){
+      //KEY 1
+      if(firstBit == 0x00){
+        Keyboard.press('1');
+        //Serial.println("1");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 2
+      if(firstBit == 0x01){
+        Keyboard.press(KEY_ESC);
+        //Serial.println("KEY_ESC");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 3
+      if(firstBit == 0x02){
+        Keyboard.press('3');
+        //Serial.println("3");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 5
+      if(firstBit == 0x03){
+        Keyboard.press('5');
+        //Serial.println("5");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 9
+      if(firstBit == 0x04){
+        Keyboard.press('9');
+        //Serial.println("9");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 8
+      if(firstBit == 0x05){
+        Keyboard.press('8');
+        //Serial.println("8");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 7
+      if(firstBit == 0x06){
+        Keyboard.press('7');
+        //Serial.println("7");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 6
+      if(firstBit == 0x07){
+        Keyboard.press('6');
+        //Serial.println("6");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 4
+      if(firstBit == 0x08){
+        Keyboard.press('4');
+        //Serial.println("4");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }  
+}
+
+void keyboardJoystick(char firstBit, char secondBit){
+      //KEY 10
+      if(firstBit == 0x00 && secondBit == 0x06){
+       // Keyboard.press(KEY_UP_ARROW);
+       // Serial.println("KEY_UP_ARROW");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 11
+      if(firstBit == 0x10 && secondBit == 0x05){
+       // Keyboard.press(KEY_UP_ARROW);
+       // Serial.println("KEY_UP_ARROW");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 12
+      if(firstBit == 0x10 && secondBit == 0x00){
+        Keyboard.press(KEY_UP_ARROW);
+        //Serial.println("KEY_UP_ARROW");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 13
+      if(firstBit == 0x20 && secondBit == 0x00){
+        Keyboard.press(KEY_DOWN_ARROW);
+        //Serial.println("KEY_DOWN_ARROW");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 14
+      if(firstBit == 0x30 && secondBit == 0x00){
+        Keyboard.press(KEY_LEFT_ARROW);
+        //Serial.println("KEY_LEFT_ARROW");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 15
+      if(firstBit == 0x40 && secondBit == 0x00){
+        Keyboard.press(KEY_RIGHT_ARROW);
+        //Serial.println("KEY_RIGHT_ARROW");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 16
+      if(firstBit == 0x01 && secondBit == 0x00){
+        Keyboard.press(0xE0);
+        //Serial.println("ENTER_KEY");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+}
+*/
+
 void loop(){
+  String messageRecv ;
+  String incomingByte;
+  if (Serial.available()){
+    char c = Serial.read();
+    incomingByte.concat(c);
+  }
+  if (incomingByte == "reqMsg"){
+    Serial.println(lastSource);
+    Serial.println(lastVolume);
+    Serial.println(lastMessage);
+  }
   if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
     if(canMsg.can_id == 289){
       //Volume function
       if(canMsg.data[0] == 0x10 && canMsg.data[2] == 0x35 && canMsg.data[6] == 0x00){
+        lastVolume = "";
         Serial.print("device_volume:");
+        lastVolume.concat("device_volume:");
         volume_text(false);
       }
 
@@ -935,13 +1004,27 @@ void loop(){
         if (canMsg.data[3] == 0x73 && canMsg.data[4] == 0x02 && canMsg.data[6] == 0x40){
           musical_atmosphere(false, canMsg.data[1]);
         }
-        if (canMsg.data[3] == 0x63 && canMsg.data[4] == 0x09 && canMsg.data[6] == 0x40){
+        if (canMsg.data[3] == 0x63 && canMsg.data[4] == 0x09 && (canMsg.data[6] == 0x40 || canMsg.data[6] == 0x60)){
           confirm_cancel_function(false);
+        }
+        if (canMsg.data[3] == 0x52 && canMsg.data[4] == 0x09 && (canMsg.data[6] == 0x40 || canMsg.data[6] == 0x60)){
+          info_box(false);
         }
         if (canMsg.data[3] == 0x41 && canMsg.data[4] == 0x13 && canMsg.data[5] == 0x01 && canMsg.data[6] == 0x20 && canMsg.data[7] == 0x80){
           sources();
         }
       }                                       
     }
+
+/*
+    if (BOARD == "Keyboard" && canMsg.can_id == 1597){
+      keyboardButtons(canMsg.data[0]);   
+    }
+
+    if (BOARD == "Keyboard" && canMsg.can_id == 1598){
+      keyboardJoystick(canMsg.data[0], canMsg.data[1]);      
+    }
+*/
+
   }
 }

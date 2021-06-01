@@ -4,20 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
     android:background="@color/cardview_dark_background"
+    android:gravity="center"
     android:orientation="horizontal"
-    android:gravity="center">
+    tools:context=".MainActivity">
 
 
     <LinearLayout
         android:id="@+id/sourceTabLayout"
-        android:layout_width="450dp"
-        android:layout_height="80dp"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
         android:layout_marginStart="20dp"
+        android:layout_marginEnd="5dp"
         android:orientation="horizontal"
         android:padding="8dp"
         android:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@+id/weatherLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -35,13 +37,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-black"
-                android:gravity="center_horizontal|center_vertical"
+                android:gravity="center"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:text="@string/source_radio"
                 android:textAlignment="center"
                 android:textColor="@color/textColor"
-                android:textSize="34sp" />
+                android:textSize="20sp" />
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
@@ -58,13 +60,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-black"
-                android:gravity="center_horizontal|center_vertical"
+                android:gravity="center"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:text="@string/source_cdplayer"
                 android:textAlignment="center"
                 android:textColor="@color/textColor"
-                android:textSize="34sp" />
+                android:textSize="20sp" />
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
@@ -81,44 +83,45 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-black"
-                android:gravity="center_horizontal|center_vertical"
+                android:gravity="center"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:text="@string/source_aux"
                 android:textAlignment="center"
                 android:textColor="@color/textColor"
-                android:textSize="34sp" />
+                android:textSize="20sp" />
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/musicalAtmosphere"
-        android:layout_width="550dp"
-        android:layout_height="180dp"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
         android:layout_marginStart="20dp"
         android:orientation="horizontal"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/weatherLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/musicalAtmosphereMain"
-            android:layout_width="300dp"
-            android:layout_height="180dp"
+            android:layout_width="260dp"
+            android:layout_height="match_parent"
             android:background="@color/cardview_dark_background"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:background="@color/cardview_dark_background"
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardRow1"
-                    android:layout_width="80dp"
+                    android:layout_width="50dp"
                     android:layout_height="match_parent"
                     android:layout_margin="1dp"
                     app:cardBackgroundColor="@color/sourceMainBackground">
@@ -127,14 +130,14 @@
                         android:id="@+id/musicAtRow1EmptyCerc"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:visibility="invisible"
+                        android:visibility="visible"
                         app:srcCompat="@drawable/empty_circle" />
 
                     <ImageView
                         android:id="@+id/musicAtRow1FullCerc"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:visibility="invisible"
+                        android:visibility="visible"
                         app:srcCompat="@drawable/full_circle" />
                 </androidx.cardview.widget.CardView>
 
@@ -154,6 +157,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:fontFamily="sans-serif-black"
+                        android:gravity="center_vertical"
                         android:textColor="@color/textColor"
                         android:textSize="20sp" />
                 </androidx.cardview.widget.CardView>
@@ -162,13 +166,13 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:background="@color/cardview_dark_background"
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardRow2"
-                    android:layout_width="80dp"
+                    android:layout_width="50dp"
                     android:layout_height="match_parent"
                     android:layout_margin="1dp"
                     app:cardBackgroundColor="@color/sourceSelected">
@@ -177,14 +181,14 @@
                         android:id="@+id/musicAtRow2EmptyCerc"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:visibility="invisible"
+                        android:visibility="visible"
                         app:srcCompat="@drawable/empty_circle" />
 
                     <ImageView
                         android:id="@+id/musicAtRow2FullCerc"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:visibility="invisible"
+                        android:visibility="visible"
                         app:srcCompat="@drawable/full_circle" />
                 </androidx.cardview.widget.CardView>
 
@@ -204,6 +208,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:fontFamily="sans-serif-black"
+                        android:gravity="center_vertical"
                         android:textColor="@color/textColor"
                         android:textSize="20sp" />
                 </androidx.cardview.widget.CardView>
@@ -212,13 +217,13 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:background="@color/cardview_dark_background"
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardRow3"
-                    android:layout_width="80dp"
+                    android:layout_width="50dp"
                     android:layout_height="match_parent"
                     android:layout_margin="1dp"
                     app:cardBackgroundColor="@color/sourceMainBackground">
@@ -227,14 +232,14 @@
                         android:id="@+id/musicAtRow3EmptyCerc"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:visibility="invisible"
+                        android:visibility="visible"
                         app:srcCompat="@drawable/empty_circle" />
 
                     <ImageView
                         android:id="@+id/musicAtRow3FullCerc"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:visibility="invisible"
+                        android:visibility="visible"
                         app:srcCompat="@drawable/full_circle" />
                 </androidx.cardview.widget.CardView>
 
@@ -254,6 +259,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:fontFamily="sans-serif-black"
+                        android:gravity="center_vertical"
                         android:textColor="@color/textColor"
                         android:textSize="20sp" />
                 </androidx.cardview.widget.CardView>
@@ -263,7 +269,7 @@
 
         <LinearLayout
             android:id="@+id/bassTrebleLayout"
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
@@ -369,23 +375,25 @@
     <LinearLayout
         android:id="@+id/radio3x4grid"
         android:layout_width="0dp"
-        android:layout_height="240dp"
+        android:layout_height="180dp"
         android:layout_marginStart="16dp"
+        android:layout_marginEnd="5dp"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/weatherLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/radioFirstRow"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="60dp"
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio1x1card"
-                android:layout_width="80dp"
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/cardview_dark_background"
@@ -393,7 +401,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio1x2card"
-                android:layout_width="240dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -411,7 +419,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio1x3card"
-                android:layout_width="240dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -428,7 +436,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio1x4card"
-                android:layout_width="80dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -447,12 +455,12 @@
         <LinearLayout
             android:id="@+id/radioSecondRow"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="60dp"
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio2x1card"
-                android:layout_width="80dp"
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -469,7 +477,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio2x2card"
-                android:layout_width="240dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -486,7 +494,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio2x3card"
-                android:layout_width="240dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -497,13 +505,14 @@
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif-black"
                     android:gravity="center"
+                    android:text="asgasgh"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio2x4card"
-                android:layout_width="80dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -522,12 +531,12 @@
         <LinearLayout
             android:id="@+id/radioThirdRow"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="60dp"
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio3x1card"
-                android:layout_width="80dp"
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/cardview_dark_background"
@@ -545,7 +554,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio3x2card"
-                android:layout_width="240dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -562,7 +571,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio3x3card"
-                android:layout_width="240dp"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -579,7 +588,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio3x4card"
-                android:layout_width="80dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -600,7 +609,7 @@
     <LinearLayout
         android:id="@+id/complex3x2grid"
         android:layout_width="0dp"
-        android:layout_height="240dp"
+        android:layout_height="180dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:orientation="vertical"
@@ -613,7 +622,7 @@
         <LinearLayout
             android:id="@+id/complexrow1"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="60dp"
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
@@ -916,7 +925,7 @@
         <LinearLayout
             android:id="@+id/complexrow2"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="60dp"
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
@@ -1218,7 +1227,7 @@
         <LinearLayout
             android:id="@+id/complexrow3"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="60dp"
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
@@ -1520,7 +1529,7 @@
 
     <LinearLayout
         android:id="@+id/weatherLayout"
-        android:layout_width="290dp"
+        android:layout_width="200dp"
         android:layout_height="0dp"
         android:orientation="vertical"
         android:padding="8dp"
@@ -1548,7 +1557,7 @@
     <LinearLayout
         android:id="@+id/grid4"
         android:layout_width="0dp"
-        android:layout_height="240dp"
+        android:layout_height="210dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:orientation="horizontal"
@@ -1566,7 +1575,7 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="160dp"
-                android:layout_height="78dp"
+                android:layout_height="70dp"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
 
@@ -1583,7 +1592,7 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="160dp"
-                android:layout_height="78dp"
+                android:layout_height="70dp"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceSelected">
 
@@ -1600,7 +1609,7 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="160dp"
-                android:layout_height="78dp"
+                android:layout_height="70dp"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
 
@@ -1645,8 +1654,8 @@
 
     <LinearLayout
         android:id="@+id/volumeLayout"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
+        android:layout_width="260dp"
+        android:layout_height="60dp"
         android:background="#191919"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -1661,17 +1670,19 @@
             android:gravity="center"
             android:text="@string/volume"
             android:textColor="#FFFFFF"
-            android:textSize="30sp" />
+            android:textSize="26sp" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/settingMenuProgressBarr"
-        android:layout_width="500dp"
+        android:layout_width="0dp"
         android:layout_height="120dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/weatherLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -1681,7 +1692,7 @@
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
-                android:layout_width="420dp"
+                android:layout_width="360dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 android:layout_weight="1"
@@ -1701,7 +1712,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:layout_width="80dp"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 android:layout_weight="1"
@@ -1714,7 +1725,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-black"
-                    android:gravity="center_vertical|end"
+                    android:gravity="center"
                     android:text="+32"
                     android:textColor="@color/textColor"
                     android:textSize="20sp" />
@@ -1735,7 +1746,7 @@
     <LinearLayout
         android:id="@+id/infoGrid"
         android:layout_width="0dp"
-        android:layout_height="320dp"
+        android:layout_height="210dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:orientation="vertical"
@@ -1767,7 +1778,7 @@
     <LinearLayout
         android:id="@+id/radio3x3grid"
         android:layout_width="0dp"
-        android:layout_height="240dp"
+        android:layout_height="180dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:orientation="vertical"
@@ -1775,17 +1786,18 @@
         app:layout_constraintBottom_toTopOf="@+id/volumeLayout"
         app:layout_constraintEnd_toStartOf="@+id/weatherLayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sourceTabLayout">
+        app:layout_constraintTop_toBottomOf="@+id/sourceTabLayout"
+        tools:visibility="gone">
 
         <LinearLayout
             android:id="@+id/firstRow"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="60dp"
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio3x3grid1x1card"
-                android:layout_width="80dp"
+                android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -1798,12 +1810,12 @@
                     android:gravity="center"
                     android:text="TextView"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio3x3grid1x2card"
-                android:layout_width="275dp"
+                android:layout_width="165dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -1816,12 +1828,12 @@
                     android:gravity="center"
                     android:text="TextView"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio3x3grid1x3card"
-                android:layout_width="275dp"
+                android:layout_width="165dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -1834,7 +1846,7 @@
                     android:gravity="center"
                     android:text="TextView"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>
@@ -1842,12 +1854,12 @@
         <LinearLayout
             android:id="@+id/secondRow"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="60dp"
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio3x3grid2x1card"
-                android:layout_width="80dp"
+                android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -1860,12 +1872,12 @@
                     android:gravity="center"
                     android:text="TextView"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio3x3grid2x2card"
-                android:layout_width="275dp"
+                android:layout_width="165dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -1878,12 +1890,12 @@
                     android:gravity="center"
                     android:text="TextView"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio3x3grid2x3card"
-                android:layout_width="275dp"
+                android:layout_width="165dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -1896,7 +1908,7 @@
                     android:gravity="center"
                     android:text="TextView"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>
@@ -1904,12 +1916,12 @@
         <LinearLayout
             android:id="@+id/thirdRow"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="60dp"
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio3x3grid3x1card"
-                android:layout_width="80dp"
+                android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -1922,12 +1934,12 @@
                     android:gravity="center"
                     android:text="TextView"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio3x3grid3x2card"
-                android:layout_width="275dp"
+                android:layout_width="165dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -1940,12 +1952,12 @@
                     android:gravity="center"
                     android:text="TextView"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/radio3x3grid3x3card"
-                android:layout_width="275dp"
+                android:layout_width="165dp"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
                 app:cardBackgroundColor="@color/sourceMainBackground">
@@ -1958,7 +1970,7 @@
                     android:gravity="center"
                     android:text="TextView"
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>

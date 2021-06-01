@@ -12,6 +12,10 @@ String frequency_box;
 String function_name;
 String endString = ":end_string";
 
+String lastSource;
+String lastMessage;
+String lastVolume;
+
 unsigned long delayTime = 250;
 
 void setup() {
@@ -32,12 +36,15 @@ void volume_text(bool counter){
       if (canMsg.can_id == 289 && canMsg.data[0] == 0x23){
         char digit1 = canMsg.data[6];
         Serial.print(digit1);
+        lastVolume.concat(digit1);
         next_digit = true;
       }
       if (canMsg.can_id == 289 && canMsg.data[0] == 0x24 && next_digit == true){
         char digit2 = canMsg.data[1];
         Serial.print(digit2);
         Serial.println(endString);
+        lastVolume.concat(digit2);
+        lastVolume.concat(endString);
         //Serial.println();
       }
     }
@@ -46,17 +53,24 @@ void volume_text(bool counter){
 
 //Sources function
 void sources(){
+  lastSource = "";
   if (canMsg.data[1] == 0x1F){
     Serial.print("Source:Radio");
     Serial.println(endString);
+    lastSource.concat("Source:Radio");
+    lastSource.concat(endString);
   } 
   else if (canMsg.data[1] == 0x27){
     Serial.print("Source:cd_player");
     Serial.println(endString);
+    lastSource.concat("Source:cd_player");
+    lastSource.concat(endString);
   } 
   else if (canMsg.data[1] == 0x43){
     Serial.print("Source:Auxiliary audio sources");
     Serial.println(endString);
+    lastSource.concat("Source:Auxiliary audio sources");
+    lastSource.concat(endString);
   } 
 } 
 
@@ -812,63 +826,63 @@ void keyboardButtons(char firstBit){
       //KEY 1
       if(firstBit == 0x00){
         Keyboard.press('1');
-        Serial.println("1");
+        //Serial.println("1");
         delay(delayTime);
         Keyboard.releaseAll();
       }
       //KEY 2
       if(firstBit == 0x01){
         Keyboard.press(KEY_ESC);
-        Serial.println("KEY_ESC");
+        //Serial.println("KEY_ESC");
         delay(delayTime);
         Keyboard.releaseAll();
       }
       //KEY 3
       if(firstBit == 0x02){
         Keyboard.press('3');
-        Serial.println("3");
+        //Serial.println("3");
         delay(delayTime);
         Keyboard.releaseAll();
       }
       //KEY 5
       if(firstBit == 0x03){
         Keyboard.press('5');
-        Serial.println("5");
+        //Serial.println("5");
         delay(delayTime);
         Keyboard.releaseAll();
       }
       //KEY 9
       if(firstBit == 0x04){
         Keyboard.press('9');
-        Serial.println("9");
+        //Serial.println("9");
         delay(delayTime);
         Keyboard.releaseAll();
       }
       //KEY 8
       if(firstBit == 0x05){
         Keyboard.press('8');
-        Serial.println("8");
+        //Serial.println("8");
         delay(delayTime);
         Keyboard.releaseAll();
       }
       //KEY 7
       if(firstBit == 0x06){
         Keyboard.press('7');
-        Serial.println("7");
+        //Serial.println("7");
         delay(delayTime);
         Keyboard.releaseAll();
       }
       //KEY 6
       if(firstBit == 0x07){
         Keyboard.press('6');
-        Serial.println("6");
+        //Serial.println("6");
         delay(delayTime);
         Keyboard.releaseAll();
       }
       //KEY 4
       if(firstBit == 0x08){
         Keyboard.press('4');
-        Serial.println("4");
+        //Serial.println("4");
         delay(delayTime);
         Keyboard.releaseAll();
       }  
@@ -892,46 +906,60 @@ void keyboardJoystick(char firstBit, char secondBit){
       //KEY 12
       if(firstBit == 0x10 && secondBit == 0x00){
         Keyboard.press(KEY_UP_ARROW);
-        Serial.println("KEY_UP_ARROW");
+        //Serial.println("KEY_UP_ARROW");
         delay(delayTime);
         Keyboard.releaseAll();
       }
       //KEY 13
       if(firstBit == 0x20 && secondBit == 0x00){
         Keyboard.press(KEY_DOWN_ARROW);
-        Serial.println("KEY_DOWN_ARROW");
+        //Serial.println("KEY_DOWN_ARROW");
         delay(delayTime);
         Keyboard.releaseAll();
       }
       //KEY 14
       if(firstBit == 0x30 && secondBit == 0x00){
         Keyboard.press(KEY_LEFT_ARROW);
-        Serial.println("KEY_LEFT_ARROW");
+        //Serial.println("KEY_LEFT_ARROW");
         delay(delayTime);
         Keyboard.releaseAll();
       }
       //KEY 15
       if(firstBit == 0x40 && secondBit == 0x00){
         Keyboard.press(KEY_RIGHT_ARROW);
-        Serial.println("KEY_RIGHT_ARROW");
+        //Serial.println("KEY_RIGHT_ARROW");
         delay(delayTime);
         Keyboard.releaseAll();
       }
       //KEY 16
       if(firstBit == 0x01 && secondBit == 0x00){
         Keyboard.press(0xE0);
-        Serial.println("ENTER_KEY");
+        //Serial.println("ENTER_KEY");
         delay(delayTime);
         Keyboard.releaseAll();
       }
 }
 
 void loop(){
+  String messageRecv ;
+  String incomingByte;
+  if (Serial.available()){
+    char c = Serial.read();
+    incomingByte.concat(c);
+  }
+  if (incomingByte == "reqMsg"){
+    Serial.println(lastSource);
+    Serial.println(lastVolume);
+    Serial.println(lastMessage);
+  }
+  
   if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
     if(canMsg.can_id == 289){
       //Volume function
       if(canMsg.data[0] == 0x10 && canMsg.data[2] == 0x35 && canMsg.data[6] == 0x00){
+        lastVolume = "";
         Serial.print("device_volume:");
+        lastVolume.concat("device_volume:");
         volume_text(false);
       }
 
