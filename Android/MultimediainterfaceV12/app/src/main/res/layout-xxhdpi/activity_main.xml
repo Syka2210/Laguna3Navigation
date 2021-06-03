@@ -379,7 +379,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="5dp"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/weatherLayout"
         app:layout_constraintStart_toStartOf="parent"
@@ -1551,6 +1551,13 @@
                 android:scrollbars="vertical"
                 android:text="-------Debug text input-------"
                 android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+
         </androidx.cardview.widget.CardView>
     </LinearLayout>
 
@@ -1975,6 +1982,33 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/googleMaps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="openApp"
+        android:text="maps"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/volumeLayout" />
+
+    <Button
+        android:id="@+id/waze"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="openApp"
+        android:text="waze"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/googleMaps" />
+
+    <Button
+        android:id="@+id/spotify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="openApp"
+        android:text="Spotify"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/waze" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

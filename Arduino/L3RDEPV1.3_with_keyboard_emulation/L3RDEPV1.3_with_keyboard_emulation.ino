@@ -541,7 +541,7 @@ void gridSort3x2(bool counter){
       if (canMsg.can_id == 289 && start_titles == true){
         //Serial.println(arrayElements);
         for (int i=1; i<=7; i++){
-          if (canMsg.data[i] == 0x0D &&(canMsg.data[i+1] == 0xF1 || canMsg.data[i+1] == 0xF2 || canMsg.data[i+1] == 0x00 || canMsg.data[i-1] == 0xF0)){
+          if (canMsg.data[i] == 0x0D && (canMsg.data[i+1] == 0xF1 || canMsg.data[i+1] == 0xF2 || canMsg.data[i+1] == 0x00 || canMsg.data[i-1] == 0xF0)){
             if (rowNr == 3){
               //rowNr = 1;
             }else rowNr++;
@@ -996,10 +996,10 @@ void loop(){
         if (canMsg.data[3] == 0x73 && canMsg.data[4] == 0x02 && canMsg.data[6] == 0x40){
           musical_atmosphere(false, canMsg.data[1]);
         }
-        if (canMsg.data[3] == 0x63 && canMsg.data[4] == 0x09 && (canMsg.data[6] == 0x40 || canMsg.data[6] == 0x60)){
+        if (canMsg.data[3] == 0x63 && canMsg.data[4] == 0x09){
           confirm_cancel_function(false);
         }
-        if (canMsg.data[3] == 0x52 && canMsg.data[4] == 0x09 && (canMsg.data[6] == 0x40 || canMsg.data[6] == 0x60)){
+        if (canMsg.data[3] == 0x52 && canMsg.data[4] == 0x09){
           info_box(false);
         }
         if (canMsg.data[3] == 0x41 && canMsg.data[4] == 0x13 && canMsg.data[5] == 0x01 && canMsg.data[6] == 0x20 && canMsg.data[7] == 0x80){

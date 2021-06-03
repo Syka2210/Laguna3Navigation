@@ -16,6 +16,7 @@ String frequency_box;
 String function_name;
 String endString = ":end_string";
 
+String incomingByte;
 String lastSource;
 String lastMessage;
 String lastVolume;
@@ -481,7 +482,97 @@ void gridSortRadio(bool counter) {
   }
 }
 
+//PTY 3x2 grid
+void gridPTY3x2(bool counter){
+  int arraySize = 7;
+  String array3x2[arraySize];
+  bool start_titles = false;
+  bool counter_0x00 = false;
+  bool icon = false;
+  int rowNr = 1;
+  int columnNr = 2;
+  int arrayPos = 0;
+  int arrayElements = 0;
+  char character;
+  while (counter == false){
+    if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
+      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74){
+        //Check how many strings are in the 3x3 array
+        for (int i = 0; i < arraySize; i++){
+          if (array3x2[i].length() > 0) arrayElements++;
+        }
+        //Check how many strings are in the 3x3 array
 
+        //Save the curent selection in the function_name variable
+        function_name = array3x2[5];
+        //Save the curent selection in the function_name variable
+        
+        //Serial transmit the titles depending of number
+        if (arrayElements <= 2){
+          //Insert below the 3 items identifier
+          Serial.print("complex_grid1x2:");
+          Serial.print(array3x2[1]);
+          Serial.print(":");
+          Serial.print(array3x2[4]);
+          Serial.println(endString);
+          return;
+        }
+        if (arrayElements >= 3){
+          //Insert below the 3 items identifier
+          Serial.print("complex_grid3x2:");
+          Serial.print(array3x2[1]);
+          Serial.print(":");
+          Serial.print(array3x2[2]);
+          Serial.print(":");
+          Serial.print(array3x2[3]);
+          Serial.print(":");
+          Serial.print(array3x2[4]);
+          Serial.print(":");
+          Serial.print(array3x2[5]);
+          Serial.print(":");
+          Serial.print(array3x2[6]);
+          Serial.println(endString);
+          return;
+        }
+      }
+
+      if (canMsg.can_id == 289 && (canMsg.data[7] == 0xF0 || canMsg.data[7] == 0xF1 || canMsg.data[7] == 0xF2)){
+        icon = true;
+      }
+
+      if (canMsg.can_id == 289 && canMsg.data[0] == 0x23){ 
+        start_titles = true;
+      }
+
+      if (canMsg.can_id == 289 && start_titles == true){
+        //Serial.println(arrayElements);
+        for (int i=1; i<=7; i++){
+          if (canMsg.data[i] == 0x0D){
+            rowNr++;
+          }
+
+          //Checking where on the 3x2 array whe are to save the string
+          if (rowNr == 1 && columnNr == 1) arrayPos = 1;
+          if (rowNr == 2 && columnNr == 1) arrayPos = 2;
+          if (rowNr == 3 && columnNr == 1) arrayPos = 3;
+          if (rowNr == 1 && columnNr == 2) arrayPos = 4;
+          if (rowNr == 2 && columnNr == 2) arrayPos = 5;
+          if (rowNr == 3 && columnNr == 2) arrayPos = 6;
+          //Checking where on the 3x2 array whe are to save the string
+
+          //Saving the string on the coresponding 3x3 array position
+            if (columnNr == 2){
+              if (canMsg.data[i] >= 0x20 && canMsg.data[i] <= 0x7E){
+              character = canMsg.data[i];
+              array3x2[arrayPos].concat(character);
+              }
+            }
+          //Saving the string on the coresponding 3x2 array position
+        }
+      }
+    }
+  }
+}
 
 //Universal 3x2 grid - Checked
 void gridSort3x2(bool counter){
@@ -829,7 +920,7 @@ void info_box(bool counter){
   }
 }
 
-/*
+
 void keyboardButtons(char firstBit){
       //KEY 1
       if(firstBit == 0x00){
@@ -859,12 +950,13 @@ void keyboardButtons(char firstBit){
         delay(delayTime);
         Keyboard.releaseAll();
       }
-      //KEY 9
+      //KEY 9  -- APP PopUp menu
       if(firstBit == 0x04){
-        Keyboard.press('9');
-        //Serial.println("9");
-        delay(delayTime);
-        Keyboard.releaseAll();
+        //Keyboard.press('9');
+        Serial.print("keypad:menu");
+        Serial.println(endString);
+        //delay(delayTime);
+        //Keyboard.releaseAll();
       }
       //KEY 8
       if(firstBit == 0x05){
@@ -901,15 +993,19 @@ void keyboardJoystick(char firstBit, char secondBit){
       if(firstBit == 0x00 && secondBit == 0x06){
        // Keyboard.press(KEY_UP_ARROW);
        // Serial.println("KEY_UP_ARROW");
-        delay(delayTime);
-        Keyboard.releaseAll();
+       //delay(delayTime);
+       //Keyboard.releaseAll();
+       Serial.print("keypad:right");
+       Serial.println(endString);
       }
       //KEY 11
       if(firstBit == 0x10 && secondBit == 0x05){
        // Keyboard.press(KEY_UP_ARROW);
        // Serial.println("KEY_UP_ARROW");
-        delay(delayTime);
-        Keyboard.releaseAll();
+       // delay(delayTime);
+       // Keyboard.releaseAll();
+       Serial.print("keypad:left");
+       Serial.println(endString);
       }
       //KEY 12
       if(firstBit == 0x10 && secondBit == 0x00){
@@ -945,22 +1041,45 @@ void keyboardJoystick(char firstBit, char secondBit){
         //Serial.println("ENTER_KEY");
         delay(delayTime);
         Keyboard.releaseAll();
+        Serial.print("keypad:enter");
+        Serial.println(endString);
       }
 }
-*/
+
+
+void satelliteButtons(char secondBit, char thirdBit){
+  //NEXT button
+  if(secondBit == 0x01 && thirdBit == 0x01){
+    Keyboard.press('n');
+    delay(delayTime);
+    Keyboard.releaseAll();
+  }
+  //PREVIOUS button
+  if(secondBit == 0x01 && thirdBit == 0x41){
+    Keyboard.press('p');
+    delay(delayTime);
+    Keyboard.releaseAll();
+  }
+  //SELECT button
+  if(secondBit == 0x00 && thirdBit == 0x00){
+    Keyboard.press('s');
+    delay(delayTime);
+    Keyboard.releaseAll();
+  }
+}
 
 void loop(){
   String messageRecv ;
-  String incomingByte;
   if (Serial.available()){
     char c = Serial.read();
     incomingByte.concat(c);
+    if (incomingByte == "reqMsg"){
+      Serial.println(lastSource);
+      Serial.println(lastVolume);
+      Serial.println(lastMessage);
+    }
   }
-  if (incomingByte == "reqMsg"){
-    Serial.println(lastSource);
-    Serial.println(lastVolume);
-    Serial.println(lastMessage);
-  }
+  
   if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
     if(canMsg.can_id == 289){
       //Volume function
@@ -993,6 +1112,10 @@ void loop(){
           gridSortRadio(false); // CHECKED
         }
 
+        if (canMsg.data[4] == 0x13 && canMsg.data[5] == 0x03){
+          gridPTY3x2(false);
+        }
+
         if (canMsg.data[4] == 0x07 && canMsg.data[6] == 0x20){
           gridSort3x3(false); // CHECKED        
         }
@@ -1004,10 +1127,10 @@ void loop(){
         if (canMsg.data[3] == 0x73 && canMsg.data[4] == 0x02 && canMsg.data[6] == 0x40){
           musical_atmosphere(false, canMsg.data[1]);
         }
-        if (canMsg.data[3] == 0x63 && canMsg.data[4] == 0x09 && (canMsg.data[6] == 0x40 || canMsg.data[6] == 0x60)){
+        if (canMsg.data[3] == 0x63 && canMsg.data[4] == 0x09){
           confirm_cancel_function(false);
         }
-        if (canMsg.data[3] == 0x52 && canMsg.data[4] == 0x09 && (canMsg.data[6] == 0x40 || canMsg.data[6] == 0x60)){
+        if (canMsg.data[3] == 0x52 && canMsg.data[4] == 0x09){
           info_box(false);
         }
         if (canMsg.data[3] == 0x41 && canMsg.data[4] == 0x13 && canMsg.data[5] == 0x01 && canMsg.data[6] == 0x20 && canMsg.data[7] == 0x80){
@@ -1024,7 +1147,13 @@ void loop(){
     if (BOARD == "Keyboard" && canMsg.can_id == 1598){
       keyboardJoystick(canMsg.data[0], canMsg.data[1]);      
     }
+
+
 */
+
+    if (canMsg.can_id == 1423){
+      satelliteButtons(canMsg.data[1] == 0x01, canMsg.data[2]);
+    }
 
   }
 }
