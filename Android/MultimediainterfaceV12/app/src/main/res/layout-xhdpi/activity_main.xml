@@ -2056,5 +2056,14 @@
             android:orientation="horizontal"></LinearLayout>
     </LinearLayout>
 
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onReqButton"
+        android:text="REQ msg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/volumeLayout" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 

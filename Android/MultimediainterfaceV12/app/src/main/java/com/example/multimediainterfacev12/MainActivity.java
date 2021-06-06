@@ -12,6 +12,7 @@ import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     private static final String TAG = "MainActivity";
     public int selectedPopUpApp = 1;
     public int popUpMenuShown = 0;
+    public String volumeLast = "-";
     private Arduino arduino;
 
     //Initialize log file
@@ -187,9 +189,13 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
 
         //Pop up
         appSelectPopUp = new Dialog(this);
-        googleMapsCard = findViewById(R.id.googleMapsCard);
-        wazeCard = findViewById(R.id.wazeCard);
-        spotifyCard = findViewById(R.id.spotifyCard);
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View vi = inflater.inflate(R.layout.app_selection_menu, null);
+
+        googleMapsCard = vi.findViewById(R.id.googleMapsCard);
+        wazeCard = vi.findViewById(R.id.wazeCard);
+        spotifyCard = vi.findViewById(R.id.spotifyCard);
 
 
         volume = findViewById(R.id.volume_text);
@@ -504,6 +510,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         logFile(messageReceived);
 
         if (messageReceived.contains("end_string")){
+            Log.i(TAG, messageReceived);
             // SOURCE
             if (messageReceived.toLowerCase().contains("source")){
                 source(messageReceived);
@@ -608,6 +615,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 String[] messageIds = messageReceived.split(":");
                 // string ex: keypad : Menu : end_string
                 appSelectionMenu(messageIds[1]);
+                messageReceived = "";
             }
 
             //log string
@@ -653,7 +661,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         });
     }
 
-    public void source(final String message){
+    public void source(final String message) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -687,11 +695,21 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @SuppressLint("StringFormatInvalid")
             @Override
             public void run() {
-                Log.i(TAG, "volume");
+                Log.i(TAG, "METHOD - volume");
                 // string ex: volume : 22 : end_string
                 String[] messageIds = message.split(":");
-                //volume.setText(getString(R.string.volume, messageIds[1]));
-                volume.setText("Volume: " + messageIds[1] + " ");
+                if (messageIds[1].toLowerCase().contains("unpause")){
+                    volume.setText(volumeLast);
+                    //Log.i(TAG, "Last volume is :" + volumeLast);
+                }
+                else if (messageIds[1].toLowerCase().contains("pause")){
+                    volume.setText(messageIds[1]);
+                }
+                else if (!messageIds[1].toLowerCase().contains("pause")){
+                    volume.setText(messageIds[1]);
+                    volumeLast = messageIds[1];
+                    //Log.i(TAG, "current value is :" + volumeLast);
+                }
             }
         });
     }
@@ -1428,61 +1446,70 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     }
 
     public void appSelectionMenu(String keyReceived){
-        Log.i(TAG, "appSelectionMenu");
-        appSelectPopUp.setContentView(R.layout.app_selection_menu);
-        appSelectPopUp.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "appSelectionMenu");
+                appSelectPopUp.setContentView(R.layout.app_selection_menu);
+                appSelectPopUp.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        Intent googleMaps = getPackageManager().getLaunchIntentForPackage("com.google.android.apps.maps");
-        Intent waze = getPackageManager().getLaunchIntentForPackage("com.waze");
-        Intent spotify = getPackageManager().getLaunchIntentForPackage("com.spotify.music");
+                Intent googleMaps = getPackageManager().getLaunchIntentForPackage("com.google.android.apps.maps");
+                Intent waze = getPackageManager().getLaunchIntentForPackage("com.waze");
+                Intent spotify = getPackageManager().getLaunchIntentForPackage("com.spotify.music");
 
-        //set all the app background to not selected
-        googleMapsCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuBackground));
-        wazeCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuBackground));
-        spotifyCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuBackground));
+                //set all the app background to not selected
+                googleMapsCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuBackground));
+                wazeCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
+                spotifyCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuBackground));
 
-        if (keyReceived.toLowerCase().contains("menu")){
-            if (appSelectPopUp.isShowing()){
-                appSelectPopUp.dismiss();
-                selectedPopUpApp = 1;
-            }
-            else {
-                googleMapsCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
-                selectedPopUpApp = 1;
-                appSelectPopUp.show();
-            }
-        }
-        else if (keyReceived.toLowerCase().contains("right")){
-            if (selectedPopUpApp == 3) selectedPopUpApp = 1;
-            else selectedPopUpApp++;
-        }
-        else if (keyReceived.toLowerCase().contains("left")){
-            if (selectedPopUpApp == 1) selectedPopUpApp = 3;
-            else selectedPopUpApp--;
-        }
+                if (keyReceived.toLowerCase().contains("menu")){
+                    if (appSelectPopUp.isShowing()){
+                        appSelectPopUp.dismiss();
+                        selectedPopUpApp = 1;
+                    }
+                    else {
+                        selectedPopUpApp = 1;
+                        appSelectPopUp.show();
+                        googleMapsCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
 
-        //check which is the current app selected and highlight it
-        if (selectedPopUpApp == 1) googleMapsCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
-        else if (selectedPopUpApp == 2) wazeCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
-        else if (selectedPopUpApp == 3) spotifyCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
+                    }
+                }
+                else if (keyReceived.toLowerCase().contains("right")){
+                    if (selectedPopUpApp == 3) selectedPopUpApp = 1;
+                    else selectedPopUpApp++;
+                }
+                else if (keyReceived.toLowerCase().contains("left")){
+                    if (selectedPopUpApp == 1) selectedPopUpApp = 3;
+                    else selectedPopUpApp--;
+                }
 
-        else if (keyReceived.toLowerCase().contains("enter")){
-            if (selectedPopUpApp == 1){
-                if (googleMaps != null){
-                    startActivity(googleMaps);
+                //check which is the current app selected and highlight it
+                //if (selectedPopUpApp == 1) googleMapsCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
+                //else if (selectedPopUpApp == 2) wazeCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
+                //else if (selectedPopUpApp == 3) spotifyCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
+
+                else if (keyReceived.toLowerCase().contains("enter")){
+                    if (selectedPopUpApp == 1){
+                        if (googleMaps != null){
+                            appSelectPopUp.dismiss();
+                            startActivity(googleMaps);
+                        }
+                    }
+                    else if (selectedPopUpApp == 2){
+                        if (waze != null){
+                            appSelectPopUp.dismiss();
+                            startActivity(waze);
+                        }
+                    }
+                    else if (selectedPopUpApp == 3){
+                        if (spotify != null){
+                            appSelectPopUp.dismiss();
+                            startActivity(spotify);
+                        }
+                    }
                 }
             }
-            else if (selectedPopUpApp == 2){
-                if (waze != null){
-                    startActivity(waze);
-                }
-            }
-            else if (selectedPopUpApp == 3){
-                if (spotify != null){
-                    startActivity(spotify);
-                }
-            }
-        }
+        });
     }
 
     public void openApp(View v){
@@ -1506,6 +1533,18 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             }
         }
         Log.i(TAG, "openApp");
+    }
+
+    public void onReqButton(View v){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String msg = "reqMsg";
+                arduino.send(msg.getBytes());
+                Log.i(TAG, "onReqButton");
+            }
+        });
+
     }
 
     public void showToast(String message){
