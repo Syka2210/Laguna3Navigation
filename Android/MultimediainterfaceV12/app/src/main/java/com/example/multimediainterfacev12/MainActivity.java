@@ -466,13 +466,19 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         super.onStart();
         arduino.setArduinoListener((ArduinoListener) this);
         Log.i(TAG, "onStart");
+        /*
         String msg = "reqMsg";
         arduino.send(msg.getBytes());
         Log.i(TAG, msg);
+
+         */
     }
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
+        String msg = "reqMsg";
+        arduino.send(msg.getBytes());
+        Log.i(TAG, msg);
     }
     protected void onPause(){
         super.onPause();
@@ -698,7 +704,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 Log.i(TAG, "METHOD - volume");
                 // string ex: volume : 22 : end_string
                 String[] messageIds = message.split(":");
-                if (messageIds[1].toLowerCase().contains("unpause")){
+                if (messageIds[1].toLowerCase().contains("return")){
                     volume.setText(volumeLast);
                     //Log.i(TAG, "Last volume is :" + volumeLast);
                 }
