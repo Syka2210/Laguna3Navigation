@@ -1,30 +1,46 @@
 package com.example.multimediainterfacev12;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.usb.UsbDevice;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import me.aflak.arduino.Arduino;
 import me.aflak.arduino.ArduinoListener;
@@ -37,7 +53,27 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     private Arduino arduino;
 
     //Initialize log file
-    private static final String LOG_FILE = "dataReceiveLog.txt";
+    //private static final String LOG_FILE = "dataReceiveLog.txt";
+    private static final String LOG_FILE = new SimpleDateFormat("yyyyMMddHHmm'.txt'").format(new Date());
+
+    //Initialize weather
+    Button btn_getWeatherByName;
+    Button btn_getWeatherByCoordinates;
+    EditText et_dataInput;
+    ListView lv_weatherReport;
+    int REQUEST_CODE_LOCATION_PERMISSION = 1;
+    TextView textLatLong;
+    TextView tv_temp;
+    TextView tv_temp_min;
+    TextView tv_temp_max;
+    TextView tv_cityName;
+    TextView tv_pressure;
+    TextView tv_humidity;
+    TextView tv_main;
+    TextView tv_description;
+    TextView tv_feelsLike;
+    double latitude = 0;
+    double longitude = 0;
 
     //Debug textView
     private TextView debugTextbox;
@@ -82,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     private TextView radio3x3grid3x1text;
     private TextView radio3x3grid3x2text;
     private TextView radio3x3grid3x3text;
-
 
 
     //Declaring the 3x2 menu Layout
@@ -133,8 +168,6 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     private ImageView iconEmergency1x1, iconEmergency2x1, iconEmergency3x1;
 
 
-
-
     //Declaring the volume settings Layout
     private LinearLayout settigsMenuProgressBar;
     private ProgressBar menuVolumeProgressBar;
@@ -183,6 +216,87 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         //Make screen stay always on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         arduino = new Arduino(this, 250000);
+
+        //Weather items
+        btn_getWeatherByName = findViewById(R.id.btn_getWeatherbyName);
+        //btn_getWeatherByCoordinates = findViewById(R.id.btn_getWeatherByCoordinates);
+        //et_dataInput = findViewById(R.id.et_dataInput);
+        //lv_weatherReport = findViewById(R.id.lv_weatherReports);
+        tv_temp = findViewById(R.id.tv_temp);
+        tv_temp_min = findViewById(R.id.tv_temp_min);
+        tv_temp_max = findViewById(R.id.tv_temp_max);
+        tv_cityName = findViewById(R.id.tv_cityName);
+        tv_pressure = findViewById(R.id.tv_pressure);
+        tv_humidity = findViewById(R.id.tv_humidity);
+        tv_main = findViewById(R.id.tv_main);
+        tv_description = findViewById(R.id.tv_description);
+        tv_feelsLike = findViewById(R.id.tv_feelsLike);
+
+        final WeatherDataService weatherDataService = new WeatherDataService(MainActivity.this);
+
+        //Click listeners for weather by name button
+        btn_getWeatherByName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "W by name: buttonClicked");
+
+                //acquire coordinates
+                coordinates();
+
+                if (latitude != 0 && longitude != 0){
+                    Log.i(TAG, "got latitude and longitude");
+                    weatherDataService.getCityID(latitude, longitude, new WeatherDataService.VolleyResponseListener() {
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(MainActivity.this, "something wrong", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onResponse(String main, String description, String icon, String temp, String temp_min, String temp_max, String feels_like, String pressure, String humidity, String cityName) {
+                            //Toast.makeText(MainActivity.this, "Returned main= " + main + " description=" + description, Toast.LENGTH_SHORT).show();
+                            tv_main.setText(main);
+                            tv_description.setText(description);
+                            tv_temp.setText(temp);
+                            tv_temp_min.setText(temp_min);
+                            tv_temp_max.setText(temp_max);
+                            tv_feelsLike.setText(feels_like);
+                            tv_pressure.setText(pressure);
+                            tv_humidity.setText(humidity);
+                            tv_cityName.setText(cityName);
+                        }
+
+                    });
+                    //Toast.makeText(MainActivity.this, "Returned an ID of " + cityID, Toast.LENGTH_SHORT).show();
+                    latitude = 0;
+                    longitude = 0;
+                }
+
+
+//                // Instantiate the RequestQueue.
+//                RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+//                //String url = "https://api.openweathermap.org/data/2.5/weather?q=" + et_dataInput.getText().toString() + "&appid=63b3859e68a3572bd20b683f5dde6411";
+//                String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude + "&appid=63b3859e68a3572bd20b683f5dde6411";
+//
+//                // Request a string response from the provided URL.
+//                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+//                        new Response.Listener<String>() {
+//                            @Override
+//                            public void onResponse(String response) {
+//                                Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
+//                            }
+//                        }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        Toast.makeText(MainActivity.this, "Error occured", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//
+//                // Add the request to the RequestQueue.
+//                //queue.add(stringRequest);
+//                MySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
+
+            }
+        });
 
         debugTextbox = findViewById(R.id.debugText);
         debugTextbox.setMovementMethod(new ScrollingMovementMethod());
@@ -235,7 +349,6 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         radio3x3grid3x1text = findViewById(R.id.radio3x3grid3x1text);
         radio3x3grid3x2text = findViewById(R.id.radio3x3grid3x2text);
         radio3x3grid3x3text = findViewById(R.id.radio3x3grid3x3text);
-
 
 
         //Declaring 3x2 grid with the first column for icons and second column for text
@@ -399,9 +512,9 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         iconNumber_4_2x1 = findViewById(R.id.complex2x1number_4);
         iconNumber_4_3x1 = findViewById(R.id.complex3x1number_4);
         //++++++++++++++++++++++++++++++++++++++++++++++++
-        iconNumber_5_1x1 =findViewById(R.id.complex1x1number_5);
-        iconNumber_5_2x1 =findViewById(R.id.complex2x1number_5);
-        iconNumber_5_3x1 =findViewById(R.id.complex3x1number_5);
+        iconNumber_5_1x1 = findViewById(R.id.complex1x1number_5);
+        iconNumber_5_2x1 = findViewById(R.id.complex2x1number_5);
+        iconNumber_5_3x1 = findViewById(R.id.complex3x1number_5);
         //++++++++++++++++++++++++++++++++++++++++++++++++
         iconAdaptationVolume1x1 = findViewById(R.id.complex1x1adaptationVolume);
         iconAdaptationVolume2x1 = findViewById(R.id.complex2x1adaptationVolume);
@@ -412,11 +525,9 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         iconEmergency3x1 = findViewById(R.id.complex3x1emergency);
 
 
-
-
         //Declaring the menu Volume progress bar
         settigsMenuProgressBar = findViewById(R.id.settingMenuProgressBarr);
-        menuVolumeProgressBar = (ProgressBar)findViewById(R.id.menuVolumeProgressBar);
+        menuVolumeProgressBar = (ProgressBar) findViewById(R.id.menuVolumeProgressBar);
         functionName = findViewById(R.id.functionName);
         currentValue = findViewById(R.id.currentValue);
 
@@ -438,8 +549,8 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         bassTrebleLayout = findViewById(R.id.bassTrebleLayout);
         bassTextCard = findViewById(R.id.bassTextCard);
         trebleTextCard = findViewById(R.id.trebleTextCard);
-        bassProgressBar = (ProgressBar)findViewById(R.id.bassProgressBar);
-        trebleProgressBar = (ProgressBar)findViewById(R.id.trebleProgressBar);
+        bassProgressBar = (ProgressBar) findViewById(R.id.bassProgressBar);
+        trebleProgressBar = (ProgressBar) findViewById(R.id.trebleProgressBar);
 
 
         //Declaring the source tab with the three card options
@@ -459,6 +570,62 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         infoGridText = findViewById(R.id.infoGridText);
 
         Log.i(TAG, "onCreate");
+    }
+
+    public void coordinates(){
+        Log.i(TAG, "coordinates method");
+        if (ContextCompat.checkSelfPermission(
+                getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE_LOCATION_PERMISSION);
+        } else {
+            getCurrentLocation();
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getCurrentLocation();
+            } else {
+                Toast.makeText(this, "Permission denied!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void getCurrentLocation() {
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(3000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        LocationServices.getFusedLocationProviderClient(MainActivity.this)
+                .requestLocationUpdates(locationRequest, new LocationCallback() {
+
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        super.onLocationResult((locationResult));
+                        LocationServices.getFusedLocationProviderClient(MainActivity.this)
+                                .removeLocationUpdates(this);
+                        if (locationResult != null && locationResult.getLocations().size() > 0) {
+                            int latestLocationIndex = locationResult.getLocations().size() - 1;
+                            latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
+                            longitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
+                            //textLatLong.setText(String.format("Latidude: %s\nLongitude: %s", latitude, longitude));
+                        }
+                    }
+                }, Looper.getMainLooper());
     }
 
     @Override
@@ -510,12 +677,10 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         String str = new String(bytes);
         messageReceived = messageReceived + str;
 
-
         if (messageReceived.contains("end_string")) debugTextbox(messageReceived);
 
-        logFile(messageReceived);
-
         if (messageReceived.contains("end_string")){
+            logFile(messageReceived);
             Log.i(TAG, messageReceived);
             // SOURCE
             if (messageReceived.toLowerCase().contains("source")){
@@ -633,7 +798,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
 
             //CLEAR STRING IF NOT RECOGNIZED
             else {
-                logFile(messageReceived);
+                //logFile(messageReceived);
                 messageReceived = "";
             }
 
