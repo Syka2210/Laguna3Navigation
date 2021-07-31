@@ -40,5 +40,6 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'com.github.felHR85:UsbSerial:6.1.0'
     implementation 'com.android.volley:volley:1.2.0'
+    implementation 'com.github.pwittchen:weathericonview:1.1.0'
 
 }

@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.github.pwittchen.weathericonview.WeatherIconView;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     private static final String LOG_FILE = new SimpleDateFormat("yyyyMMddHHmm'.txt'").format(new Date());
 
     //Initialize weather
+    private WeatherIconView weatherIconView;
     Button btn_getWeatherByName;
     Button btn_getWeatherByCoordinates;
     EditText et_dataInput;
@@ -211,13 +213,19 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+
         //Make screen stay always on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+
         arduino = new Arduino(this, 250000);
 
         //Weather items
+        weatherIconView = (WeatherIconView) findViewById(R.id.my_weather_icon);
+
+        weatherIconView.setIconResource(getString(R.string.wi_day_snow));
+
         btn_getWeatherByName = findViewById(R.id.btn_getWeatherbyName);
         //btn_getWeatherByCoordinates = findViewById(R.id.btn_getWeatherByCoordinates);
         //et_dataInput = findViewById(R.id.et_dataInput);
