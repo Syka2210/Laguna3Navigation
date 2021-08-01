@@ -21,13 +21,9 @@ public class WeatherDataService {
     Context context;
     String lat;
     //Values in the WEATHER ARRAY
-    String main, description, icon;
+    String id, main, description, icon;
     //Values in the main Object
     String temp, feels_like, temp_min, temp_max, pressure, humidity;
-    //Values in the wind Object
-    String speed, deg;
-    //Values in the clouds Object
-    String all;
     //Values in the main JSONObject
     String cityName;
 
@@ -41,14 +37,14 @@ public class WeatherDataService {
     public interface VolleyResponseListener{
         void onError(String message);
 
-        void onResponse(String main, String description, String icon, String temp, String temp_min, String temp_max, String feels_like, String pressure, String humidity, String cityName);
+        void onResponse(String id, String main, String description, String icon, String temp, String temp_min, String temp_max, String feels_like, String pressure, String humidity, String cityName);
     }
 
-    public void getCityID(Double latitude, Double longitude, VolleyResponseListener volleyResponseListener){
+    public void getWeatherByCoordinates(Double latitude, Double longitude, VolleyResponseListener volleyResponseListener){
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(context);
 
-        Log.i(TAG, "Entered getCityID");
+        Log.i(TAG, "Entered getWeatherByCoordinates with lat=" + latitude + " and long=" + longitude);
 
         String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude + "&appid=63b3859e68a3572bd20b683f5dde6411" + "&units=metric";
 
@@ -62,6 +58,7 @@ public class WeatherDataService {
 
                     JSONArray weatherArray = response.getJSONArray("weather");
                     JSONObject weather = weatherArray.getJSONObject(0);
+                    id = weather.getString("id");
                     main = weather.getString("main");
                     description = weather.getString("description");
                     icon = weather.getString("icon");
@@ -79,15 +76,7 @@ public class WeatherDataService {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                //Toast.makeText(context, "Lat=" + latitude + " Long=" + longitude, Toast.LENGTH_SHORT).show();
-                //Toast.makeText(context, "Latitude = " + main, Toast.LENGTH_SHORT).show();
-
-//                Toast.makeText(context, "Main=" + main + " Description=" + description + " Icon=" + icon +
-//                        "Temp=" + temp + " temp_min=" + temp_min +
-//                        " temp_min=" + temp_min + " fells_like=" + feels_like +
-//                        " pressure=" + pressure + " humidity=" + humidity +
-//                        " cityName=" + cityName, Toast.LENGTH_LONG).show();
-                volleyResponseListener.onResponse(main, description, icon, temp, temp_min, temp_max, feels_like, pressure, humidity, cityName);
+                volleyResponseListener.onResponse(id, main, description, icon, temp, temp_min, temp_max, feels_like, pressure, humidity, cityName);
             }
 
         }, new Response.ErrorListener() {
@@ -98,27 +87,6 @@ public class WeatherDataService {
             }
         });
 
-
-/*        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainActivity.this, "Error occured", Toast.LENGTH_SHORT).show();
-            }
-        });
- */
-
-        // Add the request to the RequestQueue.
-        //queue.add(stringRequest);
         MySingleton.getInstance(context).addToRequestQueue(request);
-
-        //return lat;
-
     }
 }

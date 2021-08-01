@@ -1,6 +1,7 @@
 package com.example.multimediainterfacev12;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
@@ -14,7 +15,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.usb.UsbDevice;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -22,10 +25,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,47 +52,53 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     public int selectedPopUpApp = 1;
     public int popUpMenuShown = 0;
     public String volumeLast = "-";
+    public String iconID;
     private Arduino arduino;
 
     //Initialize log file
     //private static final String LOG_FILE = "dataReceiveLog.txt";
     private static final String LOG_FILE = new SimpleDateFormat("yyyyMMddHHmm'.txt'").format(new Date());
+    /**
+     * Coordinates with timer handler
+     */
+    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private Coordinates coordinates;
 
-    //Initialize weather
-    private WeatherIconView weatherIconView;
-    Button btn_getWeatherByName;
-    Button btn_getWeatherByCoordinates;
-    EditText et_dataInput;
-    ListView lv_weatherReport;
+    /**
+     * Initialize weather
+     */
+    final WeatherDataService weatherDataService = new WeatherDataService(MainActivity.this);
     int REQUEST_CODE_LOCATION_PERMISSION = 1;
-    TextView textLatLong;
-    TextView tv_temp;
-    TextView tv_temp_min;
-    TextView tv_temp_max;
-    TextView tv_cityName;
-    TextView tv_pressure;
-    TextView tv_humidity;
-    TextView tv_main;
-    TextView tv_description;
-    TextView tv_feelsLike;
+    TextView weather_cityName;
+    TextView weather_mainTemp;
+    WeatherIconView weather_icon;
+    TextView weather_description;
+    TextView weather_tempMin;
+    TextView weather_tempMax;
     double latitude = 0;
     double longitude = 0;
 
-    //Debug textView
+    /**
+     * Debug box
+     */
     private TextView debugTextbox;
 
+    /**
+     * App selection pop up
+     */
     //App selection pop up
     Dialog appSelectPopUp;
     private CardView googleMapsCard;
     private CardView wazeCard;
     private CardView spotifyCard;
 
-
-    //Declaring the volume layout and the volume text box
+    /**
+     *Declaring the volume layout and the volume text box
+     */
     private TextView volume;
-
-
-    //Declaring the Radio Layout and the textviews
+    /**
+     *Declaring the Radio Layout and the textviews
+     */
     private LinearLayout radio3x4grid;
     private TextView radio1x2text, radio1x3text, radio1x4text;
     //----------------------------
@@ -106,7 +113,9 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     //----------------------------
     private TextView radio3x2text, radio3x3text, radio3x4text;
 
-    //Declaring the 3x3 grid Layout
+    /**
+     *Declaring the 3x3 grid Layout
+     */
     private LinearLayout radio3x3grid;
     private TextView radio3x3grid1x1text;
     private TextView radio3x3grid1x2text;
@@ -121,8 +130,9 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     private TextView radio3x3grid3x2text;
     private TextView radio3x3grid3x3text;
 
-
-    //Declaring the 3x2 menu Layout
+    /**
+     * Declaring the 3x2 menu Layout
+     */
     private LinearLayout complex3x2grid;
     private TextView complex1x2text, complex2x2text, complex3x2text;
     private TextView complex1x1text, complex2x1text, complex3x1text;
@@ -169,15 +179,17 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     private ImageView iconAdaptationVolume1x1, iconAdaptationVolume2x1, iconAdaptationVolume3x1;
     private ImageView iconEmergency1x1, iconEmergency2x1, iconEmergency3x1;
 
-
-    //Declaring the volume settings Layout
+    /**
+     *Declaring the volume settings Layout
+     */
     private LinearLayout settigsMenuProgressBar;
     private ProgressBar menuVolumeProgressBar;
     private TextView functionName;
     private TextView currentValue;
 
-
-    //Declaring the musical atmosphere menu Layout
+    /**
+     * Declaring the musical atmosphere menu Layout
+     */
     private LinearLayout musicalAtmosphere;
     private ImageView emptyCercleRow1, checkedCercleRow1, emptyCercleRow2, checkedCercleRow2, emptyCercleRow3, checkedCercleRow3;
     private TextView musicalAtmosphereMainText1, musicalAtmosphereMainText2, musicalAtmosphereMainText3;
@@ -189,137 +201,92 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     private ProgressBar bassProgressBar;
     private ProgressBar trebleProgressBar;
 
-
-    //Declaring the Source Tab Layout
+    /**
+     * Declaring the Source Tab Layout
+     */
     CardView radioCard;
     CardView cdplayerCard;
     CardView auxCard;
 
-    //Declaring the grid 4 Layout
+    /**
+     * Declaring the grid 4 Layout
+     */
     private LinearLayout grid4;
     private TextView grid4text1x1;
     private TextView grid4text2x1;
     private TextView grid4text3x1;
     private TextView grid4text1x2;
 
-    //Declaring the Information one box Layout
+    /**
+     *Declaring the Information one box Layout
+     */
     private LinearLayout infoGrid;
     private TextView infoGridText;
 
     String messageReceived = "";
-    int a = 0;
-    int menuVolumeCounter = 0;
 
+
+    /**
+     * METHODS START
+     */
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Make screen stay always on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-
         arduino = new Arduino(this, 250000);
 
-        //Weather items
-        weatherIconView = (WeatherIconView) findViewById(R.id.my_weather_icon);
-
-        weatherIconView.setIconResource(getString(R.string.wi_day_snow));
-
-        btn_getWeatherByName = findViewById(R.id.btn_getWeatherbyName);
-        //btn_getWeatherByCoordinates = findViewById(R.id.btn_getWeatherByCoordinates);
-        //et_dataInput = findViewById(R.id.et_dataInput);
-        //lv_weatherReport = findViewById(R.id.lv_weatherReports);
-        tv_temp = findViewById(R.id.tv_temp);
-        tv_temp_min = findViewById(R.id.tv_temp_min);
-        tv_temp_max = findViewById(R.id.tv_temp_max);
-        tv_cityName = findViewById(R.id.tv_cityName);
-        tv_pressure = findViewById(R.id.tv_pressure);
-        tv_humidity = findViewById(R.id.tv_humidity);
-        tv_main = findViewById(R.id.tv_main);
-        tv_description = findViewById(R.id.tv_description);
-        tv_feelsLike = findViewById(R.id.tv_feelsLike);
-
-        final WeatherDataService weatherDataService = new WeatherDataService(MainActivity.this);
-
-        //Click listeners for weather by name button
-        btn_getWeatherByName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "W by name: buttonClicked");
-
-                //acquire coordinates
-                coordinates();
-
-                if (latitude != 0 && longitude != 0){
-                    Log.i(TAG, "got latitude and longitude");
-                    weatherDataService.getCityID(latitude, longitude, new WeatherDataService.VolleyResponseListener() {
-                        @Override
-                        public void onError(String message) {
-                            Toast.makeText(MainActivity.this, "something wrong", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onResponse(String main, String description, String icon, String temp, String temp_min, String temp_max, String feels_like, String pressure, String humidity, String cityName) {
-                            //Toast.makeText(MainActivity.this, "Returned main= " + main + " description=" + description, Toast.LENGTH_SHORT).show();
-                            tv_main.setText(main);
-                            tv_description.setText(description);
-                            tv_temp.setText(temp);
-                            tv_temp_min.setText(temp_min);
-                            tv_temp_max.setText(temp_max);
-                            tv_feelsLike.setText(feels_like);
-                            tv_pressure.setText(pressure);
-                            tv_humidity.setText(humidity);
-                            tv_cityName.setText(cityName);
-                        }
-
-                    });
-                    //Toast.makeText(MainActivity.this, "Returned an ID of " + cityID, Toast.LENGTH_SHORT).show();
-                    latitude = 0;
-                    longitude = 0;
-                }
-
-
-//                // Instantiate the RequestQueue.
-//                RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-//                //String url = "https://api.openweathermap.org/data/2.5/weather?q=" + et_dataInput.getText().toString() + "&appid=63b3859e68a3572bd20b683f5dde6411";
-//                String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude + "&appid=63b3859e68a3572bd20b683f5dde6411";
-//
-//                // Request a string response from the provided URL.
-//                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-//                        new Response.Listener<String>() {
-//                            @Override
-//                            public void onResponse(String response) {
-//                                Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
-//                            }
-//                        }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Toast.makeText(MainActivity.this, "Error occured", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//
-//                // Add the request to the RequestQueue.
-//                //queue.add(stringRequest);
-//                MySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
-
+        /**
+         *Coordinates
+         */
+        try {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
             }
-        });
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
+        /**
+         *Weather items
+         */
+        weather_cityName = findViewById(R.id.weather_cityName);
+        weather_mainTemp = findViewById(R.id.weather_mainTemp);
+        weather_icon = findViewById(R.id.weather_icon);
+        weather_description = findViewById(R.id.weather_description);
+        weather_tempMax = findViewById(R.id.weather_tempMax);
+        weather_tempMin = findViewById(R.id.weather_tempMin);
+
+        /**
+         * Start timed weather update
+         */
+        //updateWeather();
+        timedRefreshWeather.run();
+
+
+        /**
+         * Debug box
+         */
         debugTextbox = findViewById(R.id.debugText);
         debugTextbox.setMovementMethod(new ScrollingMovementMethod());
 
-        //Pop up
+        /**
+         * App selection pop-up
+         */
         appSelectPopUp = new Dialog(this);
-
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View vi = inflater.inflate(R.layout.app_selection_menu, null);
-
         googleMapsCard = vi.findViewById(R.id.googleMapsCard);
         wazeCard = vi.findViewById(R.id.wazeCard);
         spotifyCard = vi.findViewById(R.id.spotifyCard);
 
-
+        /**
+         * Volume
+         */
         volume = findViewById(R.id.volume_text);
 
         //Declaring radio 3x4 grid and it's cards and text views
@@ -580,61 +547,6 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         Log.i(TAG, "onCreate");
     }
 
-    public void coordinates(){
-        Log.i(TAG, "coordinates method");
-        if (ContextCompat.checkSelfPermission(
-                getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE_LOCATION_PERMISSION);
-        } else {
-            getCurrentLocation();
-        }
-    }
-
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getCurrentLocation();
-            } else {
-                Toast.makeText(this, "Permission denied!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void getCurrentLocation() {
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(3000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        LocationServices.getFusedLocationProviderClient(MainActivity.this)
-                .requestLocationUpdates(locationRequest, new LocationCallback() {
-
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        super.onLocationResult((locationResult));
-                        LocationServices.getFusedLocationProviderClient(MainActivity.this)
-                                .removeLocationUpdates(this);
-                        if (locationResult != null && locationResult.getLocations().size() > 0) {
-                            int latestLocationIndex = locationResult.getLocations().size() - 1;
-                            latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
-                            longitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
-                            //textLatLong.setText(String.format("Latidude: %s\nLongitude: %s", latitude, longitude));
-                        }
-                    }
-                }, Looper.getMainLooper());
-    }
 
     @Override
     protected void onStart(){
@@ -828,6 +740,95 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         super.onDestroy();
         arduino.unsetArduinoListener();
         arduino.close();
+    }
+
+    /**
+     * Timed refresh of the weather widget
+     */
+    private Runnable timedRefreshWeather = new Runnable() {
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        public void run() {
+            updateWeather();
+            /**
+             * repeat the update every 10 minutes
+             */
+            mHandler.postDelayed(this, 600000);
+        }
+    };
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void refreshWeather(View view){
+        updateWeather();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void updateWeather(){
+        Log.i(TAG, "Weather updated");
+        /**
+         * Get coordinates
+         */
+        coordinates = new Coordinates(MainActivity.this);
+        if (coordinates.canGetLocation()){
+            latitude = coordinates.getLatitude();
+            longitude = coordinates.getLongitude();
+        } else {
+            coordinates.showSettingsAlert();
+        }
+        if (latitude != 0 && longitude != 0){
+            Log.i(TAG, "got latitude and longitude");
+            Log.i(TAG, "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude + "&appid=63b3859e68a3572bd20b683f5dde6411" + "&units=metric");
+            weatherDataService.getWeatherByCoordinates(latitude, longitude, new WeatherDataService.VolleyResponseListener() {
+                @Override
+                public void onError(String message) {
+                    Toast.makeText(MainActivity.this, "something wrong", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onResponse(String id, String main, String description, String icon, String temp, String temp_min, String temp_max, String feels_like, String pressure, String humidity, String cityName) {
+                    //Toast.makeText(MainActivity.this, "Returned main= " + main + " description=" + description, Toast.LENGTH_SHORT).show();
+                    weather_cityName.setText(cityName);
+
+                    if (icon.substring(icon.length() - 1).contains("d")){
+                        id = "wi_owm_day_" + id;
+                    } else {
+                        id = "wi_owm_night_" + id;
+                    }
+                    String pack = getPackageName();
+                    int resId = getResources().getIdentifier(id, "string", pack);
+                    if (resId != 0 ){
+                        weather_icon.setIconResource(getString(resId));
+                        Toast.makeText(MainActivity.this, "Weather updated", Toast.LENGTH_SHORT).show();
+                    } else {
+                        weather_icon.setVisibility(View.INVISIBLE);
+                    }
+
+                    int indexCharacter = temp.indexOf(".");
+                    if (indexCharacter != -1){
+                        temp = temp.substring(0, indexCharacter);
+                        weather_mainTemp.setText(temp + "\u00B0");
+                    } else Log.i(TAG, "Temp index = -1!");
+
+                    description = description.substring(0,1).toUpperCase() + description.substring(1).toLowerCase();
+                    weather_description.setText(description);
+
+                    indexCharacter = temp_max.indexOf(".");
+                    if (indexCharacter != -1){
+                        temp_max = temp_max.substring(0, indexCharacter);
+                        weather_tempMax.setText("H:" + temp_max + "\u00B0");
+                    }
+                    indexCharacter = temp_min.indexOf(".");
+                    if (indexCharacter != -1){
+                        temp_min = temp_min.substring(0, indexCharacter);
+                        weather_tempMin.setText("H:" + temp_min + "\u00B0");
+                    }
+
+                    latitude = 0;
+                    longitude = 0;
+                    Log.i(TAG, "Coordinates reset are:" + latitude + " " + longitude);
+                }
+            });
+        }
     }
 
     public void debugTextbox(final String message){
