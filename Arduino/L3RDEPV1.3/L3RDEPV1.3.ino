@@ -1,6 +1,9 @@
 #include <mcp2515.h>
 #include <Keyboard.h>
 
+int backButton = 3;      // 4x1 keyboard -- button assigned for back 
+int homeButton = 4;      // 4x1 keyboard -- button assigned for home
+int appSwitchButton = 5; // 4x1 keyboard -- button assigned for app switch button
 
 struct can_frame canMsg;
 
@@ -18,16 +21,25 @@ String lastSource;
 String lastMessage;
 String lastVolume;
 
+//Log function active/inactive
+bool logFileActive = false;
+
 unsigned long delayTime = 250;
+
 void setup() {
   Serial.begin(250000);
+  delay(2000);
+  //Serial.println("Serial start");
   mcp2515.reset();
   mcp2515.setBitrate(CAN_500KBPS, MCP_8MHZ);
   mcp2515.setNormalMode();
+
+  pinMode(backButton, INPUT_PULLUP);
+  pinMode(homeButton, INPUT_PULLUP);
+  pinMode(appSwitchButton, INPUT_PULLUP);
 }
 
-int get_array_position(int columnNr, int rowNr)
-{
+int get_array_position(int columnNr, int rowNr) {
   int arrayPos = 0;
   if (columnNr == 1)
   {
@@ -51,9 +63,25 @@ int get_array_position(int columnNr, int rowNr)
   return arrayPos;
 }
 
+void logFunction(){
+  if (canMsg.can_id == 289){
+     Serial.print("LOG-FILE:FRAME ID=");
+      Serial.print(canMsg.can_id);
+      for (int i=0; i<=7; i++){
+        Serial.print(":");
+        if (canMsg.data[i] < 16) Serial.print('0');
+        Serial.print(canMsg.data[i], HEX);
+      }
+      Serial.println(endString);
+  }
+  //Send frame to ANDROID for debugging LOG
+     
+  //Send frame to ANDROID for debugging LOG
+}
+
 //Volume function
 void volume_text(bool counter, bool unpause){
-  bool endText = false;
+  bool endFunction = false;
   String volume = String();
   char character;
   if (unpause == true){
@@ -64,30 +92,30 @@ void volume_text(bool counter, bool unpause){
   }
   while (counter == false && unpause == false){
     if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
-      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74){
+      //Send frame to ANDROID for debugging LOG
+      if (logFileActive == true) logFunction();
 
+      if (endFunction == true){
         //Serial transmit the volume
-        if (endText == true){
-          Serial.print("device_volume:");
-          Serial.print(volume);
-          Serial.println(endString);
-          lastVolume = String("device_volume:") + volume + endString;
-          return;
-        }
+        Serial.print("device_volume:");
+        Serial.print(volume);
+        Serial.println(endString);
+        lastVolume = String("device_volume:") + volume + endString;
+        return;        
       }
 
-    if (canMsg.can_id == 289){
-      for (int i=1; i<=7; i++){
-          if (canMsg.data[i] == 0x81) endText = true;
+      if (canMsg.can_id == 289){
+        for (int i=1; i<=7; i++){
+          if (canMsg.data[i] == 0x81) endFunction = true;
           //Saving the string
-            if (endText == false){
-              if (canMsg.data[i] >= 0x20 && canMsg.data[i] <= 0x7E){
-              character = canMsg.data[i];
-              volume = volume + character;
-              }
+          if (endFunction == false){
+            if (canMsg.data[i] >= 0x20 && canMsg.data[i] <= 0x7E){
+            character = canMsg.data[i];
+            volume = volume + character;
             }
           }
-          //Saving the string
+        }
+        //Saving the string
       }
     }
   }
@@ -156,7 +184,9 @@ String frequency_type_box(bool counter){
   char character;
   bool counter_0x00 = false;
   while (counter == false){
-    if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){ 
+    if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
+      //Send frame to ANDROID for debugging LOG
+      if (logFileActive == true) logFunction(); 
       if (canMsg.data[0] >= 0x23){
         for (int i=1; i<=7; i++){
           if (canMsg.data[i] == 0x00 && i != 0){
@@ -174,8 +204,6 @@ String frequency_type_box(bool counter){
     }
   }
 }
-
-
 
 //Icons function - CHECKED
 String icons(char input){
@@ -323,6 +351,9 @@ int high_box_function(bool counter){
   int cbh = 0;
   while (counter == false){ 
     if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
+      //Send frame to ANDROID for debugging LOG
+      if (logFileActive == true) logFunction();
+
       if (canMsg.can_id == 289 && canMsg.data[0] == 0x21){
         if (canMsg.data[6] == 0x20 && high_box != 1){
           Serial.print("HighlightedBox:1");
@@ -354,9 +385,13 @@ int high_box_function(bool counter){
 //Counter never changes, infinite loop?
 void menu_volume(bool counter, String function){
   String menu_volume;
+  bool endFunction = false;
   while (counter == false){
     if  (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
-      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74){
+      //Send frame to ANDROID for debugging LOG
+      if (logFileActive == true) logFunction();
+
+      if (endFunction == true){
         //Serial transmit the titles
         /*
         menu_volume = String("menu_volume:") + function + String(":") + value + endString;
@@ -376,7 +411,10 @@ void menu_volume(bool counter, String function){
       }
       if (canMsg.can_id == 289 && canMsg.data[0] == 0x22){
         menu_volume = canMsg.data[6];
-      }      
+      }
+      if (canMsg.data[7] == 0x81){
+        endFunction = true;
+      }
     }
   }
 }
@@ -389,6 +427,7 @@ void musical_atmosphere(bool counter, char signs){
   bool start_titles = false;
   bool curselect = false;
   bool counter_set = false;
+  bool endFunction = false;
   int rowNr = 1;
   int columnNr = 1;
   int arrayPos = 0;
@@ -398,7 +437,10 @@ void musical_atmosphere(bool counter, char signs){
   char character;
   while (counter == false){
     if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
-      if ((canMsg.can_id == 1313 && canMsg.data[0] == 0x74) || arrayPos >= 10 ){
+      //Send frame to ANDROID for debugging LOG
+      if (logFileActive == true) logFunction();
+
+      if (endFunction == true){
         //Serial transmit the titles
         // String ex: musical_atmosphere : 2 : off : on :   : title_1 : title_2 :   : + : 5 : - : 2 : end_string
         // Highlighted portion 21/1=text box ; 22/2=bass ; 23/3=treble
@@ -496,8 +538,6 @@ void musical_atmosphere(bool counter, char signs){
             }
           }
 
-          
-
           if (signs == 0x5A && canMsg.data[0] == 0x2B){
             if (canMsg.data[5] <= 0x09) array3x2[7] = "+";
             if (canMsg.data[5] >= 0xF7) array3x2[7] = "-";
@@ -510,7 +550,11 @@ void musical_atmosphere(bool counter, char signs){
             //------------------------------------------------------------
             if (canMsg.data[6] <= 0x09) array3x2[10] = canMsg.data[6];
             if (canMsg.data[6] >= 0xF7) array3x2[10] = 256 - canMsg.data[6];            
-          }        
+          }
+
+          if (canMsg.data[0] == 0x2C || canMsg.data[7] == 0x81){
+            endFunction = true;
+          }    
         } 
       }     
     }
@@ -535,7 +579,10 @@ void gridSortRadio(bool counter) {
   char character;
   while (counter == false) {
     if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK) {
-      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74) {
+      //Send frame to ANDROID for debugging LOG
+      if (logFileActive == true) logFunction();
+
+      if (columnNr == 4) {
         //Check how many strings are in the 3x3 array
         for (int i = 0; i < arraySize; i++) {
           if (array3x3[i].length() > 0) arrayElements++;
@@ -682,7 +729,10 @@ void gridPTY3x2(bool counter, char type){
   char character;
   while (counter == false){
     if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
-      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74){
+      //Send frame to ANDROID for debugging LOG
+      if (logFileActive == true) logFunction();
+
+      if (columnNr == 3){
         //Check how many strings are in the 3x3 array
         for (int i = 0; i < arraySize; i++){
           if (array3x2[i].length() > 0) arrayElements++;
@@ -789,7 +839,10 @@ void gridSort3x2(bool counter){
   char character;
   while (counter == false){
     if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
-      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74){
+      //Send frame to ANDROID for debugging LOG
+      if (logFileActive == true) logFunction();
+
+      if (columnNr == 3){
         //Check how many strings are in the 3x3 array
         for (int i = 0; i < arraySize; i++){
           if (array3x2[i].length() > 0) arrayElements++;
@@ -890,10 +943,7 @@ void gridSort3x2(bool counter){
 //Grid 3x3
 //TODO: Tidy up the Serial.prints
 //TODO: Refactor
-void gridSort3x3(bool counter){
-
-  Serial.print("entered gridSort3x3    : ");
-  
+void gridSort3x3(bool counter){  
   int arraySize = 7;
   String array3x3[arraySize];
   String gridSort3x3 = String();
@@ -907,7 +957,10 @@ void gridSort3x3(bool counter){
   char character;
   while (counter == false){
     if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
-      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74){
+      //Send frame to ANDROID for debugging LOG
+      if (logFileActive == true) logFunction();
+
+      if (columnNr == 3){
         //Check how many strings are in the 3x3 array
         for (int i = 0; i < arraySize; i++){
           if (array3x3[i].length() > 0) arrayElements++;
@@ -1044,7 +1097,10 @@ void confirm_cancel_function(bool counter){
   char character;
   while (counter == false){
     if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
-      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74){
+      //Send frame to ANDROID for debugging LOG
+      if (logFileActive == true) logFunction();
+
+      if (columnNr == 3){
         //Check how many strings are in the array
         for (int i = 0; i < arraySize; i++){
           if (array3x2[i].length() > 0) arrayElements++;
@@ -1127,9 +1183,14 @@ void info_box(bool counter){
   String info_box = String();
   bool start_titles = false;
   char character;
+  bool counter_0x00 = false;
+  bool endFunction = false;
   while (counter == false) {
     if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
-      if (canMsg.can_id == 1313 && canMsg.data[0] == 0x74) {
+      //Send frame to ANDROID for debugging LOG
+      if (logFileActive == true) logFunction();
+      
+      if (endFunction == true) {
         /*
         info_box = String("info_box:") + arrayInfoBox[1] + endString;
         lastMessage = info_box;
@@ -1150,6 +1211,14 @@ void info_box(bool counter){
 
       if (canMsg.can_id == 289 && start_titles == true){
         for (int i = 1; i <= 7; i++){
+          //Check for the end of the message package
+          if (canMsg.data[i] == 0x00 && i != 0){
+              if (counter_0x00 == true){
+                endFunction = true;
+                counter_0x00 = false;
+              } else counter_0x00 = true;
+            } else counter_0x00 = false;
+
           if (canMsg.data[i] >= 0x20 && canMsg.data[i] <= 0x7E){
             character = canMsg.data[i];
             arrayInfoBox[1].concat(character);
@@ -1334,9 +1403,34 @@ void loop(){
     incomingMessage = "";
   }
   //End of message request
+
+  //Search for 4x1 keypad button press
+  if (!digitalRead(backButton)){
+        Keyboard.press(KEY_ESC);
+        //Serial.println("KEY_ESC");
+        delay(delayTime);
+        Keyboard.releaseAll();
+  }
+  if (!digitalRead(homeButton)){
+        Keyboard.press('h');
+        //Serial.println("KEY_ESC");
+        delay(delayTime);
+        Keyboard.releaseAll();
+  }
+  if (!digitalRead(appSwitchButton)){
+        Keyboard.press('s');
+        //Serial.println("KEY_ESC");
+        delay(delayTime);
+        Keyboard.releaseAll();
+  }
+  //Search for 4x1 keypad button press
+
   
   if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK){
     if(canMsg.can_id == 289){
+      //Send frame to ANDROID for debugging LOG
+      if (logFileActive == true) logFunction();      
+
       //Volume function
       if (canMsg.data[0] == 0x10 && canMsg.data[2] == 0x35){
         volume_text(false, false);
@@ -1393,7 +1487,6 @@ void loop(){
         }
       }                                       
     }
-
 
     else if (canMsg.can_id == 1597){
       keyboardButtons(canMsg.data[0]);   
