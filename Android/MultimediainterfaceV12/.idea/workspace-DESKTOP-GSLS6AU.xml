@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config>
+        <device id="Nexus 7 2013" />
+      </config>
+    </shared>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="info" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="70a8f92a-9cab-4320-a66c-ab969e3aea3c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../3D parts/Ansamblu_Carcasa_Nexus7 V1.3.SLDASM" beforeDir="false" afterPath="$PROJECT_DIR$/../../3D parts/Ansamblu_Carcasa_Nexus7 V1.3.SLDASM" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../3D parts/Display case PCB box v1.3.SLDPRT" beforeDir="false" afterPath="$PROJECT_DIR$/../../3D parts/Display case PCB box v1.3.SLDPRT" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../3D parts/PCB assembly/PCB_Assembly.SLDASM" beforeDir="false" afterPath="$PROJECT_DIR$/../../3D parts/PCB assembly/PCB_Assembly.SLDASM" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../3D parts/PCB.SLDPRT" beforeDir="false" afterPath="$PROJECT_DIR$/../../3D parts/PCB.SLDPRT" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../3D parts/STEP/LM2596_DC-DC_CONVERTER.STEP" beforeDir="false" afterPath="$PROJECT_DIR$/../../3D parts/STEP/LM2596_DC-DC_CONVERTER.STEP" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../3D parts/STEP/membrane_1x4-keypad.stp" beforeDir="false" afterPath="$PROJECT_DIR$/../../3D parts/STEP/membrane_1x4-keypad.stp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/markdown-navigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/markdown-navigator.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/render.experimental.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/render.experimental.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/multimediainterfacev12/Coordinates.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/multimediainterfacev12/Coordinates.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/multimediainterfacev12/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/multimediainterfacev12/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/multimediainterfacev12/WeatherDataService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/multimediainterfacev12/WeatherDataService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout-xhdpi/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout-xhdpi/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/app_selection_menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/app_selection_menu.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Arduino/L3RDEPV1.3/L3RDEPV1.3.ino" beforeDir="false" afterPath="$PROJECT_DIR$/../../Arduino/L3RDEPV1.3/L3RDEPV1.3.ino" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Arduino/UpdateListDisplay/UpdateListDisplay.ino" beforeDir="false" afterPath="$PROJECT_DIR$/../../Arduino/UpdateListDisplay/UpdateListDisplay.ino" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../README.md" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Nexus_7_API_23" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view />
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="resourceFile" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectId" id="1w4X1p9ASl1QcncqgryxpV9WVjy" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="Nexus_7_API_23" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2022-04-09T12:36:14.009Z" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Build Variants" />
+    <property name="project.structure.proportion" value="0.17" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="PsdUISettings">
+    <option name="BUILD_VARIANTS_TAB" value="Flavors" />
+    <option name="LAST_EDITED_BUILD_TYPE" value="release" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Syka\OneDrive\Proiect navigatie laguna\Laguna3Navigation\Android\MultimediainterfaceV12\app\src\main\res\values" />
+      <recent name="C:\Users\Syka\OneDrive\Proiect navigatie laguna\Laguna3Navigation\Android\MultimediainterfaceV12\app\src\main\java\com\example\multimediainterfacev12" />
+      <recent name="C:\Users\Syka\Desktop\MultimediainterfaceV12\app\src\main\res\values" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
+      <module name="app" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Hybrid>
+      <Java />
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Sample Java Methods" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="70a8f92a-9cab-4320-a66c-ab969e3aea3c" name="Default Changelist" comment="" />
+      <created>1627718621322</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1627718621322</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1234" height="366" key="GridCell.Tab.0.bottom" timestamp="1649341478071">
+      <screen x="0" y="0" width="2560" height="1040" />
+    </state>
+    <state width="1234" height="366" key="GridCell.Tab.0.bottom/0.0.2560.1040@0.0.2560.1040" timestamp="1649341478071" />
+    <state width="1234" height="366" key="GridCell.Tab.0.center" timestamp="1649341478071">
+      <screen x="0" y="0" width="2560" height="1040" />
+    </state>
+    <state width="1234" height="366" key="GridCell.Tab.0.center/0.0.2560.1040@0.0.2560.1040" timestamp="1649341478071" />
+    <state width="1234" height="366" key="GridCell.Tab.0.left" timestamp="1649341478071">
+      <screen x="0" y="0" width="2560" height="1040" />
+    </state>
+    <state width="1234" height="366" key="GridCell.Tab.0.left/0.0.2560.1040@0.0.2560.1040" timestamp="1649341478071" />
+    <state width="1234" height="366" key="GridCell.Tab.0.right" timestamp="1649341478071">
+      <screen x="0" y="0" width="2560" height="1040" />
+    </state>
+    <state width="1234" height="366" key="GridCell.Tab.0.right/0.0.2560.1040@0.0.2560.1040" timestamp="1649341478071" />
+    <state x="100" y="116" width="774" height="831" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1649493642430">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="100" y="116" width="774" height="831" key="com.android.tools.idea.avdmanager.AvdListDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1649493642430" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/multimediainterfacev12/MainActivity.java</url>
+          <line>264</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/multimediainterfacev12/MainActivity.java</url>
+          <line>1824</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

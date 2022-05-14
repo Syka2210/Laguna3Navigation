@@ -93,277 +93,169 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/musicalAtmosphere"
-        android:layout_width="550dp"
-        android:layout_height="180dp"
-        android:layout_marginStart="20dp"
+        android:id="@+id/volumeLayout"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:background="#191919"
         android:orientation="horizontal"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/volume_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center"
+            android:text="@string/volume"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/weatherLayout"
+        android:layout_width="290dp"
+        android:layout_height="0dp"
+        android:background="#2E2E2E"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <DigitalClock
+            android:id="@+id/textClock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:format24Hour="hh:mm"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:textColor="#3B91FF"
+            android:textSize="60sp" />
+
+        <TextView
+            android:id="@+id/textDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:text="Aug 6, 2021"
+            android:textColor="#3B91FF"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/weather_cityName"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:text="---------"
+            android:textColor="#000000"
+            android:textSize="25sp" />
+
         <LinearLayout
-            android:id="@+id/musicalAtmosphereMain"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/weather_mainTemp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="--\u00B0"
+                android:textColor="#000000"
+                android:textSize="60sp" />
+
+            <com.github.pwittchen.weathericonview.WeatherIconView
+                android:id="@+id/weather_icon"
+                android:layout_width="120dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                custom:weatherIconColor="@android:color/black"
+                custom:weatherIconResource="@string/wi_day_sunny_overcast"
+                custom:weatherIconSize="50" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/weather_description"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:text="----- ------"
+            android:textColor="#6E6E6E"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/weather_tempMax"
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center_vertical"
+                android:paddingStart="20dp"
+                android:text="H: --\u00B0"
+                android:textColor="#6E6E6E"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/weather_tempMin"
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center_vertical"
+                android:paddingStart="20dp"
+                android:text="L: --\u00B0"
+                android:textColor="#6E6E6E"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/imageView7"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:onClick="refreshWeather"
+                custom:srcCompat="@drawable/refresh" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="bottom"
+            android:orientation="horizontal" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:background="@color/cardview_dark_background"
-            android:orientation="vertical">
+            app:cardBackgroundColor="#111C59">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/debugText"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="@color/cardview_dark_background"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:maxLines="30"
+                android:scrollbars="vertical"
+                android:text="-------Debug text input-------"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp" />
+        </androidx.cardview.widget.CardView>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardRow1"
-                    android:layout_width="80dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    app:cardBackgroundColor="@color/sourceMainBackground">
 
-                    <ImageView
-                        android:id="@+id/musicAtRow1EmptyCerc"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="invisible"
-                        app:srcCompat="@drawable/empty_circle" />
-
-                    <ImageView
-                        android:id="@+id/musicAtRow1FullCerc"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="invisible"
-                        app:srcCompat="@drawable/full_circle" />
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardText1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    app:cardBackgroundColor="@color/sourceMainBackground">
-
-                    <TextView
-                        android:id="@+id/musicalAtmosphereMainText1"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:fontFamily="sans-serif-black"
-                        android:textColor="@color/textColor"
-                        android:textSize="20sp" />
-                </androidx.cardview.widget.CardView>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="@color/cardview_dark_background"
-                android:orientation="horizontal">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardRow2"
-                    android:layout_width="80dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    app:cardBackgroundColor="@color/sourceSelected">
-
-                    <ImageView
-                        android:id="@+id/musicAtRow2EmptyCerc"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="invisible"
-                        app:srcCompat="@drawable/empty_circle" />
-
-                    <ImageView
-                        android:id="@+id/musicAtRow2FullCerc"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="invisible"
-                        app:srcCompat="@drawable/full_circle" />
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardText2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    app:cardBackgroundColor="@color/sourceSelected">
-
-                    <TextView
-                        android:id="@+id/musicalAtmosphereMainText2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:fontFamily="sans-serif-black"
-                        android:textColor="@color/textColor"
-                        android:textSize="20sp" />
-                </androidx.cardview.widget.CardView>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="@color/cardview_dark_background"
-                android:orientation="horizontal">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardRow3"
-                    android:layout_width="80dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    app:cardBackgroundColor="@color/sourceMainBackground">
-
-                    <ImageView
-                        android:id="@+id/musicAtRow3EmptyCerc"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="invisible"
-                        app:srcCompat="@drawable/empty_circle" />
-
-                    <ImageView
-                        android:id="@+id/musicAtRow3FullCerc"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="invisible"
-                        app:srcCompat="@drawable/full_circle" />
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardText3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    app:cardBackgroundColor="@color/sourceMainBackground">
-
-                    <TextView
-                        android:id="@+id/musicalAtmosphereMainText3"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:fontFamily="sans-serif-black"
-                        android:textColor="@color/textColor"
-                        android:textSize="20sp" />
-                </androidx.cardview.widget.CardView>
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/bassTrebleLayout"
-            android:layout_width="250dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/bassLayout"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:orientation="horizontal">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/bassTextCard"
-                    android:layout_width="125dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    app:cardBackgroundColor="@color/sourceMainBackground">
-
-                    <TextView
-                        android:id="@+id/bassText"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:fontFamily="sans-serif-black"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:text="BASS:"
-                        android:textColor="@color/textColor"
-                        android:textSize="20sp" />
-                </androidx.cardview.widget.CardView>
-
-                <TextView
-                    android:id="@+id/bassValue"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:textColor="@color/textColor"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <ProgressBar
-                android:id="@+id/bassProgressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:indeterminateOnly="false"
-                android:max="19"
-                android:progressDrawable="@drawable/progress_bar_states" />
-
-            <LinearLayout
-                android:id="@+id/trebleLayout"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:orientation="horizontal">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/trebleTextCard"
-                    android:layout_width="125dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="1dp"
-                    app:cardBackgroundColor="@color/sourceMainBackground">
-
-                    <TextView
-                        android:id="@+id/trebleText"
-                        android:layout_width="125dp"
-                        android:layout_height="match_parent"
-                        android:fontFamily="sans-serif-black"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:text="TREBLE:"
-                        android:textColor="@color/textColor"
-                        android:textSize="20sp" />
-                </androidx.cardview.widget.CardView>
-
-                <TextView
-                    android:id="@+id/trebleValue"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:textColor="@color/textColor"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <ProgressBar
-                android:id="@+id/trebleProgressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginStart="2dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
-                android:gravity="left"
-                android:indeterminateOnly="false"
-                android:max="19"
-                android:progressDrawable="@drawable/progress_bar_states" />
-        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -595,6 +487,206 @@
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/radio3x3grid"
+        android:layout_width="0dp"
+        android:layout_height="240dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/volumeLayout"
+        app:layout_constraintEnd_toStartOf="@+id/weatherLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sourceTabLayout">
+
+        <LinearLayout
+            android:id="@+id/firstRow"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/radio3x3grid1x1card"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                app:cardBackgroundColor="@color/sourceMainBackground">
+
+                <TextView
+                    android:id="@+id/radio3x3grid1x1text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/radio3x3grid1x2card"
+                android:layout_width="275dp"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                app:cardBackgroundColor="@color/sourceMainBackground">
+
+                <TextView
+                    android:id="@+id/radio3x3grid1x2text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/radio3x3grid1x3card"
+                android:layout_width="275dp"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                app:cardBackgroundColor="@color/sourceMainBackground">
+
+                <TextView
+                    android:id="@+id/radio3x3grid1x3text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/secondRow"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/radio3x3grid2x1card"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                app:cardBackgroundColor="@color/sourceMainBackground">
+
+                <TextView
+                    android:id="@+id/radio3x3grid2x1text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/radio3x3grid2x2card"
+                android:layout_width="275dp"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                app:cardBackgroundColor="@color/sourceMainBackground">
+
+                <TextView
+                    android:id="@+id/radio3x3grid2x2text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/radio3x3grid2x3card"
+                android:layout_width="275dp"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                app:cardBackgroundColor="@color/sourceMainBackground">
+
+                <TextView
+                    android:id="@+id/radio3x3grid2x3text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/thirdRow"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/radio3x3grid3x1card"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                app:cardBackgroundColor="@color/sourceMainBackground">
+
+                <TextView
+                    android:id="@+id/radio3x3grid3x1text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/radio3x3grid3x2card"
+                android:layout_width="275dp"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                app:cardBackgroundColor="@color/sourceMainBackground">
+
+                <TextView
+                    android:id="@+id/radio3x3grid3x2text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/radio3x3grid3x3card"
+                android:layout_width="275dp"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                app:cardBackgroundColor="@color/sourceMainBackground">
+
+                <TextView
+                    android:id="@+id/radio3x3grid3x3text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -1519,135 +1611,277 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/weatherLayout"
-        android:layout_width="290dp"
-        android:layout_height="0dp"
-        android:background="#2E2E2E"
-        android:orientation="vertical"
-        android:padding="8dp"
-        android:visibility="visible"
+        android:id="@+id/musicalAtmosphere"
+        android:layout_width="550dp"
+        android:layout_height="180dp"
+        android:layout_marginStart="20dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <DigitalClock
-            android:id="@+id/digitalClock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-black"
-            android:gravity="center"
-            android:padding="20dp"
-            android:textColor="#3B91FF"
-            android:textSize="40sp" />
-
-        <TextView
-            android:id="@+id/weather_cityName"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:paddingStart="20dp"
-            android:text="---------"
-            android:textSize="25sp" />
-
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/weather_mainTemp"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="--\u00B0"
-                android:textSize="60sp" />
-
-            <com.github.pwittchen.weathericonview.WeatherIconView
-                android:id="@+id/weather_icon"
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                custom:weatherIconColor="@android:color/black"
-                custom:weatherIconResource="@string/wi_day_sunny_overcast"
-                custom:weatherIconSize="50" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/weather_description"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:fontFamily="sans-serif-black"
-            android:gravity="center_vertical"
-            android:paddingStart="20dp"
-            android:text="----- ------"
-            android:textColor="#6E6E6E"
-            android:textSize="18sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/weather_tempMax"
-                android:layout_width="10dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif-black"
-                android:gravity="center_vertical"
-                android:paddingStart="20dp"
-                android:text="H: --\u00B0"
-                android:textColor="#6E6E6E"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/weather_tempMin"
-                android:layout_width="10dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:fontFamily="sans-serif-black"
-                android:gravity="center_vertical"
-                android:paddingStart="20dp"
-                android:text="L: --\u00B0"
-                android:textColor="#6E6E6E"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:id="@+id/imageView7"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:onClick="refreshWeather"
-                custom:srcCompat="@drawable/refresh" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:gravity="bottom"
-            android:orientation="horizontal"/>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
+            android:id="@+id/musicalAtmosphereMain"
+            android:layout_width="300dp"
             android:layout_height="180dp"
-            app:cardBackgroundColor="#111C59">
+            android:background="@color/cardview_dark_background"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/debugText"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:maxLines="30"
-                android:scrollbars="vertical"
-                android:text="-------Debug text input-------"
-                android:textColor="#FFFFFF"
-                android:textSize="10sp" />
-        </androidx.cardview.widget.CardView>
+                android:layout_height="60dp"
+                android:background="@color/cardview_dark_background"
+                android:orientation="horizontal">
 
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardRow1"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    app:cardBackgroundColor="@color/sourceMainBackground">
 
+                    <ImageView
+                        android:id="@+id/musicAtRow1EmptyCerc"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="invisible"
+                        app:srcCompat="@drawable/empty_circle" />
+
+                    <ImageView
+                        android:id="@+id/musicAtRow1FullCerc"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="invisible"
+                        app:srcCompat="@drawable/full_circle" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardText1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    app:cardBackgroundColor="@color/sourceMainBackground">
+
+                    <TextView
+                        android:id="@+id/musicalAtmosphereMainText1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-black"
+                        android:textColor="@color/textColor"
+                        android:textSize="20sp" />
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/cardview_dark_background"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardRow2"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    app:cardBackgroundColor="@color/sourceSelected">
+
+                    <ImageView
+                        android:id="@+id/musicAtRow2EmptyCerc"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="invisible"
+                        app:srcCompat="@drawable/empty_circle" />
+
+                    <ImageView
+                        android:id="@+id/musicAtRow2FullCerc"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="invisible"
+                        app:srcCompat="@drawable/full_circle" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardText2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    app:cardBackgroundColor="@color/sourceSelected">
+
+                    <TextView
+                        android:id="@+id/musicalAtmosphereMainText2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-black"
+                        android:textColor="@color/textColor"
+                        android:textSize="20sp" />
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/cardview_dark_background"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardRow3"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    app:cardBackgroundColor="@color/sourceMainBackground">
+
+                    <ImageView
+                        android:id="@+id/musicAtRow3EmptyCerc"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="invisible"
+                        app:srcCompat="@drawable/empty_circle" />
+
+                    <ImageView
+                        android:id="@+id/musicAtRow3FullCerc"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="invisible"
+                        app:srcCompat="@drawable/full_circle" />
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardText3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    app:cardBackgroundColor="@color/sourceMainBackground">
+
+                    <TextView
+                        android:id="@+id/musicalAtmosphereMainText3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-black"
+                        android:textColor="@color/textColor"
+                        android:textSize="20sp" />
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bassTrebleLayout"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/bassLayout"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/bassTextCard"
+                    android:layout_width="125dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    app:cardBackgroundColor="@color/sourceMainBackground">
+
+                    <TextView
+                        android:id="@+id/bassText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="sans-serif-black"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:text="BASS:"
+                        android:textColor="@color/textColor"
+                        android:textSize="20sp" />
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/bassValue"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textColor="@color/textColor"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/bassProgressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:indeterminateOnly="false"
+                android:max="19"
+                android:progressDrawable="@drawable/progress_bar_states" />
+
+            <LinearLayout
+                android:id="@+id/trebleLayout"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/trebleTextCard"
+                    android:layout_width="125dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    app:cardBackgroundColor="@color/sourceMainBackground">
+
+                    <TextView
+                        android:id="@+id/trebleText"
+                        android:layout_width="125dp"
+                        android:layout_height="match_parent"
+                        android:fontFamily="sans-serif-black"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:text="TREBLE:"
+                        android:textColor="@color/textColor"
+                        android:textSize="20sp" />
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/trebleValue"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textColor="@color/textColor"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/trebleProgressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:indeterminateOnly="false"
+                android:max="19"
+                android:progressDrawable="@drawable/progress_bar_states" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -1746,27 +1980,6 @@
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/volumeLayout"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:background="#191919"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:id="@+id/volume_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:fontFamily="sans-serif-black"
-            android:gravity="center"
-            android:text="@string/volume"
-            android:textColor="#FFFFFF"
-            android:textSize="30sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -1870,214 +2083,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/radio3x3grid"
-        android:layout_width="0dp"
-        android:layout_height="240dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/volumeLayout"
-        app:layout_constraintEnd_toStartOf="@+id/weatherLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sourceTabLayout">
-
-        <LinearLayout
-            android:id="@+id/firstRow"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/radio3x3grid1x1card"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                app:cardBackgroundColor="@color/sourceMainBackground">
-
-                <TextView
-                    android:id="@+id/radio3x3grid1x1text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="TextView"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/radio3x3grid1x2card"
-                android:layout_width="275dp"
-                android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                app:cardBackgroundColor="@color/sourceMainBackground">
-
-                <TextView
-                    android:id="@+id/radio3x3grid1x2text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="TextView"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/radio3x3grid1x3card"
-                android:layout_width="275dp"
-                android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                app:cardBackgroundColor="@color/sourceMainBackground">
-
-                <TextView
-                    android:id="@+id/radio3x3grid1x3text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="TextView"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/secondRow"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/radio3x3grid2x1card"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                app:cardBackgroundColor="@color/sourceMainBackground">
-
-                <TextView
-                    android:id="@+id/radio3x3grid2x1text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="TextView"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/radio3x3grid2x2card"
-                android:layout_width="275dp"
-                android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                app:cardBackgroundColor="@color/sourceMainBackground">
-
-                <TextView
-                    android:id="@+id/radio3x3grid2x2text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="TextView"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/radio3x3grid2x3card"
-                android:layout_width="275dp"
-                android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                app:cardBackgroundColor="@color/sourceMainBackground">
-
-                <TextView
-                    android:id="@+id/radio3x3grid2x3text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="TextView"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/thirdRow"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/radio3x3grid3x1card"
-                android:layout_width="80dp"
-                android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                app:cardBackgroundColor="@color/sourceMainBackground">
-
-                <TextView
-                    android:id="@+id/radio3x3grid3x1text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="TextView"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/radio3x3grid3x2card"
-                android:layout_width="275dp"
-                android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                app:cardBackgroundColor="@color/sourceMainBackground">
-
-                <TextView
-                    android:id="@+id/radio3x3grid3x2text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="TextView"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/radio3x3grid3x3card"
-                android:layout_width="275dp"
-                android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                app:cardBackgroundColor="@color/sourceMainBackground">
-
-                <TextView
-                    android:id="@+id/radio3x3grid3x3text"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="TextView"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp" />
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/appSelectionLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/colorPrimary"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/myrect"
         android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/volumeLayout"
@@ -2087,18 +2096,20 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="5dp">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/gMapsCard"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="120dp"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
                 app:cardBackgroundColor="@color/sourceMainBackground"
                 app:cardElevation="30dp"
-                app:contentPadding="25dp">
+                app:contentPadding="15dp">
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -2111,13 +2122,14 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/wazeCard"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
                 app:cardBackgroundColor="@color/sourceMainBackground"
                 app:cardElevation="30dp"
-                app:contentPadding="25dp">
+                app:contentPadding="15dp">
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -2129,13 +2141,14 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/spotifyCard"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
                 app:cardBackgroundColor="@color/sourceMainBackground"
                 app:cardElevation="30dp"
-                app:contentPadding="25dp">
+                app:contentPadding="15dp">
 
                 <ImageView
                     android:id="@+id/imageView4"
@@ -2148,17 +2161,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"></LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"></LinearLayout>
     </LinearLayout>
 
     <Button

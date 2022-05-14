@@ -4,21 +4,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.helper.widget.Layer;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.usb.UsbDevice;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.speech.RecognizerIntent;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,7 +45,10 @@ import com.google.android.gms.location.LocationServices;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import me.aflak.arduino.Arduino;
@@ -55,7 +62,9 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     public String iconID;
     private Arduino arduino;
 
-    //Initialize log file
+    /**
+     * Initialize log file
+     */
     //private static final String LOG_FILE = "dataReceiveLog.txt";
     private static final String LOG_FILE = new SimpleDateFormat("yyyyMMddHHmm'.txt'").format(new Date());
     /**
@@ -86,11 +95,18 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     /**
      * App selection pop up
      */
-    //App selection pop up
     Dialog appSelectPopUp;
     private CardView googleMapsCard;
     private CardView wazeCard;
     private CardView spotifyCard;
+    TextView app_select_tv;
+    String destination;
+    String popUpMenuAppSelected;
+    private static final int RECOGNIZER_RESULT = 1;
+    LinearLayout appSelectionLayout;
+    CardView gMapsCard;
+    CardView layout_wazeCard;
+    CardView layout_spotifyCard;
 
     /**
      *Declaring the volume layout and the volume text box
@@ -231,14 +247,25 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
      */
 
 
+    @SuppressLint("WrongViewCast")
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+/**
+ * Set the date bellow the digital clock
+ * TODO: BEWARE!!! Check for regular update of the date, or at midnight it will not change. Maybe implement it with the weather refresh?
+ */
+        Calendar calendar = Calendar.getInstance();
+        String currentDate = DateFormat.getDateInstance().format(calendar.getTime());
+        TextView textDate = findViewById(R.id.textDate);
+        textDate.setText(currentDate);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         arduino = new Arduino(this, 250000);
+        arduino.addVendorId(11914); // Use 11914 for the Raspberry Pi Pico board or 9025 for the Arduino boards
+        arduino.addVendorId(9025);
 
         /**
          *Coordinates
@@ -277,12 +304,17 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         /**
          * App selection pop-up
          */
-        appSelectPopUp = new Dialog(this);
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View vi = inflater.inflate(R.layout.app_selection_menu, null);
-        googleMapsCard = vi.findViewById(R.id.googleMapsCard);
-        wazeCard = vi.findViewById(R.id.wazeCard);
-        spotifyCard = vi.findViewById(R.id.spotifyCard);
+//        appSelectPopUp = new Dialog(this);
+//        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+//        @SuppressLint("InflateParams") View vi = inflater.inflate(R.layout.app_selection_menu, null);
+//        googleMapsCard = vi.findViewById(R.id.googleMapsCard);
+//        wazeCard = vi.findViewById(R.id.wazeCard);
+//        spotifyCard = vi.findViewById(R.id.spotifyCard);
+//        app_select_tv = vi.findViewById(R.id.app_select_tv);
+        appSelectionLayout = findViewById(R.id.appSelectionLayout);
+        gMapsCard = findViewById(R.id.gMapsCard);
+        layout_wazeCard = findViewById(R.id.wazeCard);
+        layout_spotifyCard = findViewById(R.id.spotifyCard);
 
         /**
          * Volume
@@ -545,6 +577,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         infoGridText = findViewById(R.id.infoGridText);
 
         Log.i(TAG, "onCreate");
+        logFile("ANDROID: onCreate");
     }
 
 
@@ -553,6 +586,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         super.onStart();
         arduino.setArduinoListener((ArduinoListener) this);
         Log.i(TAG, "onStart");
+        logFile("ANDROID: onStart");
         /*
         String msg = "reqMsg";
         arduino.send(msg.getBytes());
@@ -563,33 +597,46 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
+        logFile("ANDROID: onResume");
+
         String msg = "reqMsg";
         arduino.send(msg.getBytes());
-        Log.i(TAG, msg);
+        Log.i(TAG, "The folowing message was sent to Arduino:" + msg);
     }
     protected void onPause(){
         super.onPause();
         Log.i(TAG, "onPause");
+        logFile("ANDROID: onPause");
     }
     protected void onStop(){
         super.onStop();
         Log.i(TAG, "onStop");
+        logFile("ANDROID: onStop");
     }
     protected void onRestart(){
         super.onRestart();
         Log.i(TAG, "onRestart");
+        logFile("ANDROID: onRestart");
+
+        String msg = "reqMsg";
+        arduino.send(msg.getBytes());
+        Log.i(TAG, "The folowing message was sent to Arduino:" + msg);
     }
 
     @Override
     public void onArduinoAttached(UsbDevice device){
         showToast("Arduino attached!");
         arduino.open(device);
+        Log.i(TAG, "Arduino attached");
+        logFile("ANDROID: onArduinoAttached");
     }
 
     @Override
     public void onArduinoDetached() {
         showToast("Arduino detached!");
         arduino.close();
+        Log.i(TAG, "Arduino detached");
+        logFile("ANDROID: onArduinoDetached");
     }
 
     @Override
@@ -732,7 +779,8 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
 
     @Override
     public void onUsbPermissionDenied() {
-
+        Log.i(TAG, "USB permission denied");
+        logFile("ANDROID: onUsbPermissionDenied");
     }
 
     @Override
@@ -740,6 +788,8 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         super.onDestroy();
         arduino.unsetArduinoListener();
         arduino.close();
+        Log.i(TAG, "onDestroy");
+        logFile("ANDROID: onDestroy");
     }
 
     /**
@@ -754,6 +804,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
              * repeat the update every 10 minutes
              */
             mHandler.postDelayed(this, 600000);
+            logFile("ANDROID: timedRefreshWeather");
         }
     };
 
@@ -765,6 +816,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void updateWeather(){
         Log.i(TAG, "Weather updated");
+        logFile("ANDROID: updateWeather");
         /**
          * Get coordinates
          */
@@ -820,7 +872,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                     indexCharacter = temp_min.indexOf(".");
                     if (indexCharacter != -1){
                         temp_min = temp_min.substring(0, indexCharacter);
-                        weather_tempMin.setText("H:" + temp_min + "\u00B0");
+                        weather_tempMin.setText("L:" + temp_min + "\u00B0");
                     }
 
                     latitude = 0;
@@ -846,6 +898,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "source");
+                logFile("ANDROID: source");
                 // Set all sources back to initial color
                 radioCard.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
                 cdplayerCard.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
@@ -876,6 +929,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "METHOD - volume");
+                logFile("ANDROID: volume");
                 // string ex: volume : 22 : end_string
                 String[] messageIds = message.split(":");
                 if (messageIds[1].toLowerCase().contains("return")){
@@ -899,6 +953,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "highBox");
+                logFile("ANDROID: highBox");
                 //Set all card colours to main colour
                 radio2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
                 radio2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
@@ -926,6 +981,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "radioDisplayShort");
+                logFile("ANDROID: radioDisplayShort");
                 closeAllDisplays();
                 clearTextBoxes();
                 //Set all card colours to main colour
@@ -954,6 +1010,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "radioDisplay");
+                logFile("ANDROID: radioDisplay");
                 closeAllDisplays();
                 clearTextBoxes();
                 //Set all card colours to main colour
@@ -992,6 +1049,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "frequency3x3Display");
+                logFile("ANDROID: frequency3x3Display");
                 closeAllDisplays();
                 clearTextBoxes();
                 //set all card colours to main colour
@@ -1023,6 +1081,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "frequency3x3DisplayShort");
+                logFile("ANDROID: frequency3x3DisplayShort");
                 closeAllDisplays();
                 clearTextBoxes();
                 //set all card colours to main colour
@@ -1050,6 +1109,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "menuDisplay");
+                logFile("ANDROID: menuDisplay");
                 closeAllDisplays();
                 clearTextBoxes();
                 setIconsToInvisible();
@@ -1070,6 +1130,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "menuDisplayShort");
+                logFile("ANDROID: menuDisplayShort");
                 closeAllDisplays();
                 clearTextBoxes();
                 setIconsToInvisible();
@@ -1088,6 +1149,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "menuVolumeProgressBar");
+                logFile("ANDROID: menuVolumeProgressBar");
                 closeAllDisplays();
                 // string ex: menu_volume : function_name : value : end_string
                 String[] messageIds = message.split(":");
@@ -1104,6 +1166,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "menuMusicalAtmosphere");
+                logFile("ANDROID: menuMusicalAtmosphere");
                 int bassVolume;
                 int trebleVolume;
                 closeAllDisplays();
@@ -1211,6 +1274,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "confirm_cancel");
+                logFile("ANDROID: confirm_cancel");
                 closeAllDisplays();
                 clearTextBoxes();
                 // string ex: confirm_cancel_function : Cancel : Confirm : : Do you want to reset : these parameters? : end_string
@@ -1231,6 +1295,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "informationBox");
+                logFile("ANDROID: informationBox");
                 closeAllDisplays();
                 infoGridText.setText("");
                 // string ex: info_box : Message is received here bla bla : end_string
@@ -1246,6 +1311,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "closeAllDisplays");
+                logFile("ANDROID: closeAllDisplays");
                 radio3x4grid.setVisibility(View.INVISIBLE);
                 radio3x3grid.setVisibility(View.INVISIBLE);
                 complex3x2grid.setVisibility(View.INVISIBLE);
@@ -1262,6 +1328,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "clearTextBoxes");
+                logFile("ANDROID: clearTextBoxes");
                 radio2x1text.setText("");
                 radio1x2text.setText("");
                 radio1x3text.setText("");
@@ -1300,6 +1367,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "setIconsToInvisible");
+                logFile("ANDROID: setIconsToInvisible");
                 complex1x1text.setVisibility(View.INVISIBLE);
                 complex2x1text.setVisibility(View.INVISIBLE);
                 complex3x1text.setVisibility(View.INVISIBLE);
@@ -1480,6 +1548,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "setIconsVisible");
+                logFile("ANDROID: setIconsVisible");
                 if (!icon1.contains("icon")){
                     complex1x1text.setText(icon1);
                     complex1x1text.setVisibility(View.VISIBLE);
@@ -1630,29 +1699,41 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             @Override
             public void run() {
                 Log.i(TAG, "appSelectionMenu");
-                appSelectPopUp.setContentView(R.layout.app_selection_menu);
-                appSelectPopUp.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                logFile("ANDROID: appSelectionMenu");
+//                appSelectPopUp.setContentView(R.layout.app_selection_menu);
+//                appSelectPopUp.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
                 Intent googleMaps = getPackageManager().getLaunchIntentForPackage("com.google.android.apps.maps");
                 Intent waze = getPackageManager().getLaunchIntentForPackage("com.waze");
                 Intent spotify = getPackageManager().getLaunchIntentForPackage("com.spotify.music");
 
                 //set all the app background to not selected
-                googleMapsCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuBackground));
-                wazeCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
-                spotifyCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuBackground));
+//                googleMapsCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
+//                wazeCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
+//                spotifyCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuBackground));
+//                app_select_tv.setText("0");
+                gMapsCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuBackground));
+                layout_wazeCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuBackground));
+                layout_spotifyCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuBackground));
 
                 if (keyReceived.toLowerCase().contains("menu")){
-                    if (appSelectPopUp.isShowing()){
-                        appSelectPopUp.dismiss();
+                    if (appSelectionLayout.isShown()){
+                        appSelectionLayout.setVisibility(View.INVISIBLE);
+                    } else {
+                        appSelectionLayout.setVisibility(View.VISIBLE);
                         selectedPopUpApp = 1;
+                        gMapsCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
                     }
-                    else {
-                        selectedPopUpApp = 1;
-                        appSelectPopUp.show();
-                        googleMapsCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
-
-                    }
+//                    if (appSelectPopUp.isShowing()){
+//                        appSelectPopUp.dismiss();
+//                        selectedPopUpApp = 1;
+//                    }
+//                    else {
+//                        selectedPopUpApp = 1;
+//                        appSelectPopUp.show();
+//                        googleMapsCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
+//
+//                    }
                 }
                 else if (keyReceived.toLowerCase().contains("right")){
                     if (selectedPopUpApp == 3) selectedPopUpApp = 1;
@@ -1664,32 +1745,81 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 }
 
                 //check which is the current app selected and highlight it
-                //if (selectedPopUpApp == 1) googleMapsCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
-                //else if (selectedPopUpApp == 2) wazeCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
-                //else if (selectedPopUpApp == 3) spotifyCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
+                if (selectedPopUpApp == 1) {
+                    gMapsCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
+//                    googleMapsCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
+                    Log.i(TAG, "selectedPopUp=" + selectedPopUpApp +"; googleMapsCard");
+                }
+                else if (selectedPopUpApp == 2) {
+                    layout_wazeCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
+//                    wazeCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
+                    Log.i(TAG, "selectedPopUp=" + selectedPopUpApp +"; wazeCard");
+                }
+                else if (selectedPopUpApp == 3) {
+                    layout_spotifyCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
+//                    spotifyCard.setCardBackgroundColor(getResources().getColor(R.color.popUpMenuSelected));
+                    Log.i(TAG, "selectedPopUp=" + selectedPopUpApp +"; spotifyCard");
+                }
 
-                else if (keyReceived.toLowerCase().contains("enter")){
+                if (keyReceived.toLowerCase().contains("enter") && appSelectionLayout.getVisibility() == View.VISIBLE){
+                    Log.i(TAG, "enter pressed");
                     if (selectedPopUpApp == 1){
-                        if (googleMaps != null){
-                            appSelectPopUp.dismiss();
-                            startActivity(googleMaps);
-                        }
+                        Log.i(TAG, "selectedPopUp=1");
+                         //appSelectPopUp.dismiss();
+                        popUpMenuAppSelected = "googleMaps";
+                        appSelectionLayout.setVisibility(View.INVISIBLE);
+
+                        Intent speachIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                        speachIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                        speachIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Please specify your destination:");
+                        startActivityForResult(speachIntent, RECOGNIZER_RESULT);
                     }
                     else if (selectedPopUpApp == 2){
-                        if (waze != null){
-                            appSelectPopUp.dismiss();
-                            startActivity(waze);
-                        }
+                        //appSelectPopUp.dismiss();
+                        popUpMenuAppSelected = "waze";
+                        appSelectionLayout.setVisibility(View.INVISIBLE);
+
+                        Intent speachIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                        speachIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                        speachIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Please specify your destination:");
+                        startActivityForResult(speachIntent, RECOGNIZER_RESULT);
                     }
                     else if (selectedPopUpApp == 3){
                         if (spotify != null){
-                            appSelectPopUp.dismiss();
+                            //appSelectPopUp.dismiss();
+                            appSelectionLayout.setVisibility(View.INVISIBLE);
                             startActivity(spotify);
                         }
                     }
                 }
             }
         });
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        Log.i(TAG, "onActivityResult");
+        logFile("ANDROID: onActivityResult -> get voice to text and open nav app with destination set");
+        if (requestCode == RECOGNIZER_RESULT && resultCode == RESULT_OK){
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            destination = matches.get(0).toString();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (popUpMenuAppSelected == "googleMaps"){
+            //Start GoogleMaps Intent using the data received from GoogleVoiceToText
+            Uri gmmIntentUri = Uri.parse("google.navigation:q=" + destination + "&mode=d");
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            popUpMenuAppSelected = "";
+            startActivity(mapIntent);
+        }else if (popUpMenuAppSelected == "waze"){
+            /**
+             * Start Waze Intent using the data received from GoogleVoiceToText
+             */
+            popUpMenuAppSelected = "";
+        }
+
     }
 
     public void openApp(View v){
@@ -1713,6 +1843,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
             }
         }
         Log.i(TAG, "openApp");
+        logFile("ANDROID: openApp - Gmaps, Waze, Spotify");
     }
 
     public void onReqButton(View v){
@@ -1722,6 +1853,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 String msg = "reqMsg";
                 arduino.send(msg.getBytes());
                 Log.i(TAG, "onReqButton");
+                logFile("ANDROID: onReqButton");
             }
         });
 
@@ -1732,6 +1864,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
     }
 
     public void logFile(String message){
+
         FileOutputStream fos = null;
         try {
             fos = openFileOutput(LOG_FILE, MODE_APPEND);

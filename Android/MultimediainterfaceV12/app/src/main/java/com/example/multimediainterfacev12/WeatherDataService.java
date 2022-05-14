@@ -46,7 +46,7 @@ public class WeatherDataService {
 
         Log.i(TAG, "Entered getWeatherByCoordinates with lat=" + latitude + " and long=" + longitude);
 
-        String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude + "&appid=63b3859e68a3572bd20b683f5dde6411" + "&units=metric";
+        String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon=" + longitude + "&lang=ro" + "&appid=63b3859e68a3572bd20b683f5dde6411" + "&units=metric";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
