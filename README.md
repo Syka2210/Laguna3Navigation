@@ -30,3 +30,9 @@ The message sent to the android device from Pico consist of a string with identi
 Message identifier  |  Data to be displayed |  end of message identifier
 :-------------------------:|:-------------------------:|:-----------------:
 view_43 | FM : 3 (highlighted box) : 92.90 : 100.00 : 120.20 : KISS FM : PRO FM : DIGI FM : 1 : 2 : 3 | end_string
+
+For the development of this project, the following sources were used:
+- reverse engineering the Renault multimedia unit: https://hackaday.io/project/27439-smart-car-radio/log/67874-reverse-engineering-the-renault-update-list-display-part-1
+- Android library for comunicating with Arduino through USB: https://github.com/OmarAflak/Arduino-Library
+- Removing the battery from Nexus and powering it from external soucrces for eliminating the risc of battery swelling during heat summer days and risking a fire hazard: https://www.reddit.com/r/timurskernel/comments/3lui2n/video_how_to_remove_n7_battery_and_wire_direct_to/?utm_source=xpromo&utm_medium=amp&utm_name=amp_comment_iterations&utm_term=active&utm_content=post_body
+- Timur's kernel for deep sleep mode: https://www.reddit.com/r/timurskernel/comments/51lhgf/v40_for_android_601/   https://github.com/mehrvarz/msm-marshmallow-tm-usbhost-charge
