@@ -25,6 +25,7 @@ This data needed to be sent to the Android device, and processed to show an eleg
 OE display menu             |  New module display menu
 :-------------------------:|:-------------------------:
 ![IMG_20210511_163811](https://user-images.githubusercontent.com/73030948/193441588-5d84a813-81a6-4cae-b3fa-1438c31c8d6d.jpg) | ![IMG_20221002_094015](https://user-images.githubusercontent.com/73030948/193441556-13d58a33-d28d-4645-b7f6-0681a14f08fb.jpg)
+
 This app also creates a log file with all the data received for debugging purposes. It can be enabled or disabled, depending on how the unit is performing.
 
 The message sent to the android device from Pico consist of a string with identifiers at the beginning and at the end, and with a separator for spliting the string easily. The Pico .ino file have a detailed info for explaining how each of the function works.
