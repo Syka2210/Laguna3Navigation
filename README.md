@@ -1,6 +1,8 @@
 # Laguna3Navigation
 A custom navigation module for Renault Laguna III, replacing the OE screen with an Android device that comunicates with the multimedia CAN BUS network. 
-![Git_image_1](https://user-images.githubusercontent.com/73030948/168442703-f956957c-f6e9-4b89-b50a-4849eae1af57.jpg)
+Back view             |  Front view
+:-------------------------:|:-------------------------:
+![IMG_20221002_092058](https://user-images.githubusercontent.com/73030948/193441050-f1efbb43-76cb-4566-a6fb-61b67fe674e8.jpg) |  ![IMG_20221002_092205](https://user-images.githubusercontent.com/73030948/193441074-121e753d-78a7-4cbe-b709-bd1acdd1360a.jpg)
 
 This project started as an alternative to the limited navigation unit that the Laguna III is equipped with (those until the R-link variant). The only difference from the aftermarket versions is the use of the OE radio. I've decided to keep the radio unit and find a way to display the info received from it to the Android device implemented, along with other useful info such as: weather info, ETA to the destination.
 Also, the use of the Android navigation (Google Maps, Waze), and other apps (Spotify, YouTube, etc) was one of the main reasons for the implementation of this new multimedia interface.
@@ -20,4 +22,8 @@ After that being settled, the next issue at hand was acquiring the message packa
 
 For reading the CAN Buss network, I started from an Arduino Uno with a MCP2515 module, and worked my way up to a Raspberry Pi Pico (due to the higher capabilities of processing data, higher Ram and flash memory, castellated holes for slim mounting, and let's be onest, for the slick look of it). 
 This data needed to be sent to the Android device, and processed to show an elegant interface, similar to the original one, in order to navigate through the menu easily. That meant an app was required. So with the help of Google (literally), I've developed an app that receives the data from the Pico through the wired serial connection, and display our messages and icons same as the OE display. 
+OE display menu             |  New module display menu
+:-------------------------:|:-------------------------:
+![IMG_20210511_163811](https://user-images.githubusercontent.com/73030948/193441588-5d84a813-81a6-4cae-b3fa-1438c31c8d6d.jpg) | ![IMG_20221002_094015](https://user-images.githubusercontent.com/73030948/193441556-13d58a33-d28d-4645-b7f6-0681a14f08fb.jpg)
 
+The message sent to the android device from Pico 
