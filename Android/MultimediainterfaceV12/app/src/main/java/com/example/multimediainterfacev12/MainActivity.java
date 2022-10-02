@@ -644,6 +644,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         String str = new String(bytes);
         messageReceived = messageReceived + str;
 
+        // -- Print the message received on the debug window on the right
         if (messageReceived.contains("end_string")) debugTextbox(messageReceived);
 
         if (messageReceived.contains("end_string")){
@@ -670,15 +671,15 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
 
             //////////////////////////RADIO/////////////////////////////
             //Radio 1x3 grid ---> SHORT
-            else if (messageReceived.toLowerCase().contains("radio_grid1x3")){
-                // string ex: radio_grid3x3 : 3 (highlighted box) : FM : 92.90 : KISS FM : 1 : end_string
+            else if (messageReceived.toLowerCase().contains("view_41")){
+                // string ex:  view_41 : FM : 3 (highlighted box) : 92.90 : KISS FM : 1 : end_string
                 radioDisplayShort(messageReceived);
                 messageReceived = "";
             }
 
             //Radio 3x3 grid ---> LONG
-            else if (messageReceived.toLowerCase().contains("radio_grid3x3")){
-                // string ex: radio_grid3x3 : 3 (highlighted box) : FM : 92.90 : KISS FM : 1 : 100.00 : PRO FM : 2 : 120.20 : DIGI FM : 3 : end_string
+            else if (messageReceived.toLowerCase().contains("view_43")){
+                // string ex: view_43 : FM : 3 (highlighted box) : 92.90 : 100.00 : 120.20 : KISS FM : PRO FM : DIGI FM : 1 : 2 : 3 : end_string
                 radioDisplay(messageReceived);
                 messageReceived = "";
             }
@@ -701,15 +702,15 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
 
             //////////////////////////MENU 3x2/////////////////////////////
             //Menu 3x2 grid ---> LONG
-            else if (messageReceived.toLowerCase().contains("complex_grid3x2")){
-                // STRING EX ---> complex_grid3x2 : icon1 : icon2 : icon3 : track_name1 : track_name2 : track_name3 : end_string
+            else if (messageReceived.toLowerCase().contains("view_c3")){
+                // STRING EX ---> view_c3 : icon1 : icon2 : icon3 : track_name1 : track_name2 : track_name3 : end_string
                 menuDisplay(messageReceived);
                 messageReceived = "";
             }
 
             //Menu 1x2 grid ---> SHORT
-            else if (messageReceived.toLowerCase().contains("complex_grid1x2")){
-                // STRING EX ---> complex_grid1x2 : icon1 : track_name1 : end_string
+            else if (messageReceived.toLowerCase().contains("view_c1")){
+                // STRING EX ---> view_c1 : icon1 : track_name1 : end_string
                 menuDisplayShort(messageReceived);
                 messageReceived = "";
             }
@@ -718,8 +719,8 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
 
 
             ////////////////////VOLUME PROGRESS BAR////////////////////////
-            else if (messageReceived.toLowerCase().contains("menu_volume")){
-                // string ex: menu_volume : function_name : value : end_string
+            else if (messageReceived.toLowerCase().contains("view_70")){
+                // string ex ---> view_70 : function_name : value : end_string
                 menuVolumeProgressBar(messageReceived);
                 messageReceived = "";
             }
@@ -727,23 +728,26 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
 
 
             //////////////////////MUSICAL ATMOSPHERE//////////////////////
-            else if (messageReceived.toLowerCase().contains("musical_atmosphere")){
-                // String ex: musical_atmosphere : 2 : off : on : _ : title_1 : title_2 : _ : + : 5 : - : 2 : end_string
+            else if (messageReceived.toLowerCase().contains("view_73")){
+                // The musical atmosphere menu
+                // String ex: view_73 : 2 (high box) : icon : icon : icon : title_1 : title_2 : title_3 : + : 5 : - : 2 : end_string
                 menuMusicalAtmosphere(messageReceived);
                 messageReceived = "";
             }
             //////////////////////MUSICAL ATMOSPHERE//////////////////////
 
             // 3+1 selection
-            else if (messageReceived.toLowerCase().contains("confirm_cancel_function")){
-                // string ex: confirm_cancel_function : Cancel : Confirm : : Do you want to reset : these parameters? : end_string
+            else if (messageReceived.toLowerCase().contains("view_63")){
+                // The confirm_cancel_function
+                // string ex: view_63 : Cancel : Confirm : _ : Do you want to reset : these parameters? : end_string
                 confirm_cancel(messageReceived);
                 messageReceived = "";
             }
 
             //info box
-            else if(messageReceived.toLowerCase().contains("info_box")){
-                // string ex: info_box : Message is received here bla bla : end_string
+            else if(messageReceived.toLowerCase().contains("view_52")){
+                // The info box
+                // string ex: view_52 : Message is received here bla bla : end_string
                 informationBox(messageReceived);
                 messageReceived = "";
             }
@@ -988,17 +992,17 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 radio2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
                 radio2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
                 radio2x4card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
-                // STRING EX -->  radio_grid3x3 : 3 (highlighted box) : FM : 92.90 : KISS FM : 1 : 100.00 : PRO FM : 2 : 120.20 : DIGI FM : 3 : end_string
+                // STRING EX -->  view_41 : FM : 3 (highlighted box) : 92.90 : KISS FM : 1 : end_string
                 String[] messageIds = message.split(":");
-                radio2x1text.setText(messageIds[2]);
+                radio2x1text.setText(messageIds[1]);
                 //---------------------------------
                 radio2x2text.setText(messageIds[3]);
                 radio2x3text.setText(messageIds[4]);
                 radio2x4text.setText(messageIds[5]);
                 //---------------------------------
-                if (messageIds[1].contains("2")) radio2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
-                if (messageIds[1].contains("3")) radio2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
-                if (messageIds[1].contains("4")) radio2x4card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
+                if (messageIds[2].contains("2")) radio2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
+                else if (messageIds[2].contains("3")) radio2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
+                else if (messageIds[2].contains("4")) radio2x4card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
                 //Bring front the Radio layout.
                 radio3x4grid.setVisibility(View.VISIBLE);
             }
@@ -1017,9 +1021,9 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 radio2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
                 radio2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
                 radio2x4card.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
-                // STRING EX -->  radio_grid3x3 : 3 (highlighted box) : FM : 92.90 :  100.00 : 120.20 : KISS FM : PRO FM : DIGI FM : 1 : 2 : 3 : end_string
+                // string ex: view_43 : FM : 3 (highlighted box) : 92.90 : 100.00 : 120.20 : KISS FM : PRO FM : DIGI FM : 1 : 2 : 3 : end_string
                 String[] messageIds = message.split(":");
-                radio2x1text.setText(messageIds[2]);
+                radio2x1text.setText(messageIds[1]);
                 //---------------------------------
                 radio1x2text.setText(messageIds[3]);
                 radio2x2text.setText(messageIds[4]);
@@ -1033,9 +1037,9 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 radio2x4text.setText(messageIds[10]);
                 radio3x4text.setText(messageIds[11]);
                 //---------------------------------
-                if (messageIds[1].contains("2")) radio2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
-                if (messageIds[1].contains("3")) radio2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
-                if (messageIds[1].contains("4")) radio2x4card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
+                if (messageIds[2].contains("2")) radio2x2card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
+                else if (messageIds[2].contains("3")) radio2x3card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
+                else if (messageIds[2].contains("4")) radio2x4card.setCardBackgroundColor(getResources().getColor(R.color.sourceSelected));
                 //Bring front the Radio layout.
                 radio3x4grid.setVisibility(View.VISIBLE);
 
@@ -1104,6 +1108,13 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         });
     }
 
+//—————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//  A three row / three columns view, usually with icons in the first column, and text on the second
+//  There may be instances where in the second column we have additional icons (mainly in the settings - bluetooth)
+//  ||icon||TEXT||
+//  ||icon||TEXT||
+//  ||icon||TEXT||
+//—————————————————————————————————————————————————————————————————————————————————————————————————————————————————
     public void menuDisplay(final String message){
         runOnUiThread(new Runnable() {
             @Override
@@ -1113,7 +1124,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 closeAllDisplays();
                 clearTextBoxes();
                 setIconsToInvisible();
-                // STRING EX ---> complex_grid3x2 : icon1 : icon2 : icon3 : track_name1 : track_name2 : track_name3 : end_string
+                // STRING EX ---> view_c3 : icon1 : icon2 : icon3 : track_name1 : track_name2 : track_name3 : end_string
                 String[] messageIds = message.split(":");
                 // Set first icon visible
                 setIconsVisible(messageIds[1], messageIds[2], messageIds[3]);
@@ -1125,6 +1136,11 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         });
     }
 
+//—————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//  A one row / two columns view, usually with an icon in the first column, and text on the second
+//  There may be instances where in the second column we have additional icons (mainly in the settings - bluetooth)
+//  ||icon||TEXT||
+//—————————————————————————————————————————————————————————————————————————————————————————————————————————————————
     public void menuDisplayShort(final String message){
         runOnUiThread(new Runnable() {
             @Override
@@ -1134,7 +1150,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 closeAllDisplays();
                 clearTextBoxes();
                 setIconsToInvisible();
-                // STRING EX ---> complex_grid1x2 : icon1 : track_name1 : end_string
+                // STRING EX ---> view_c1 : icon1 : track_name1 : end_string
                 String[] messageIds = message.split(":");
                 // Set first icon visible
                 setIconsVisible("", messageIds[1], "");
@@ -1144,6 +1160,11 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         });
     }
 
+//—————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//  A progress bar that displays the level of volume for different setting of the audio.
+//        || Bluetooth volume      || +20 ||
+//        ||   ---------------            ||
+//—————————————————————————————————————————————————————————————————————————————————————————————————————————————————
     public void menuVolumeProgressBar(final String message){
         runOnUiThread(new Runnable() {
             @Override
@@ -1151,7 +1172,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 Log.i(TAG, "menuVolumeProgressBar");
                 logFile("ANDROID: menuVolumeProgressBar");
                 closeAllDisplays();
-                // string ex: menu_volume : function_name : value : end_string
+                // string ex ---> view_70 : function_name : value : end_string
                 String[] messageIds = message.split(":");
                 functionName.setText(messageIds[1]);
                 currentValue.setText(messageIds[2]);
@@ -1161,6 +1182,14 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         });
     }
 
+//—————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//  The musical atmosphere menu, which has a selection circle (empty or full), and on the Bass/treble option there
+//  are two level indicators for those settings.
+//        || ICON ||  "Rock"         ||  --   --
+//        || ICON ||  Bass/treble    ||  --   --
+//        || ICON ||  "Voice"        ||  --   --
+//                                        B   T
+//—————————————————————————————————————————————————————————————————————————————————————————————————————————————————
     private void menuMusicalAtmosphere(String message) {
         runOnUiThread(new Runnable() {
             @Override
@@ -1173,7 +1202,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 bassTrebleLayout.setVisibility(View.INVISIBLE);
                 bassTextCard.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
                 trebleTextCard.setCardBackgroundColor(getResources().getColor(R.color.sourceMainBackground));
-                // String ex: musical_atmosphere : 2 : off : on : _ : title_1 : title_2 : _ : + : 5 : - : 2 : end_string
+                // String ex: view_73 : 2 (high box) : icon : icon : icon : title_1 : title_2 : title_3 : + : 5 : - : 2 : end_string
                 String[] messageIds = message.split(":");
                 if (messageIds[1].toLowerCase().contains("2")){
                     //set other CardView to main colors
@@ -1269,6 +1298,14 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         });
     }
 
+//—————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//  A three rows on the first column with a only one box on the second column view.
+//        || TEXT ||                 ||
+//        ||------||                 ||
+//        || TEXT ||                 ||
+//        ||------||                 ||
+//        || TEXT ||                 ||
+//—————————————————————————————————————————————————————————————————————————————————————————————————————————————————
     public void confirm_cancel(String message){
         runOnUiThread(new Runnable() {
             @Override
@@ -1277,7 +1314,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 logFile("ANDROID: confirm_cancel");
                 closeAllDisplays();
                 clearTextBoxes();
-                // string ex: confirm_cancel_function : Cancel : Confirm : : Do you want to reset : these parameters? : end_string
+                // string ex: view_63 : Cancel : Confirm : _ : Do you want to reset : these parameters? : end_string
                 String[] messageIds = message.split(":");
                 //Set text
                 grid4text1x1.setText(messageIds[1]);
@@ -1290,6 +1327,12 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
         });
     }
 
+//—————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+//  A INFO view. Only one box that receives characters. It might receive some icons, have to investigate.
+//        || TEXT          ||
+//        || TEXT          ||
+//        || TEXT          ||
+//—————————————————————————————————————————————————————————————————————————————————————————————————————————————————
     public void informationBox(String message){
         runOnUiThread(new Runnable() {
             @Override
@@ -1298,7 +1341,7 @@ public class MainActivity extends AppCompatActivity implements ArduinoListener {
                 logFile("ANDROID: informationBox");
                 closeAllDisplays();
                 infoGridText.setText("");
-                // string ex: info_box : Message is received here bla bla : end_string
+                // string ex: view_52 : Message is received here bla bla : end_string
                 String[] messageIds = message.split(":");
                 infoGridText.setText(messageIds[1]);
                 infoGrid.setVisibility(View.VISIBLE);
