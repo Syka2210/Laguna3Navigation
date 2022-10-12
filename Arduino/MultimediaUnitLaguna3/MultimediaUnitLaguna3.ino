@@ -9,12 +9,12 @@ Add jpystick and buttons commands!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // The Pico has two SPI peripherals, SPI and SPI1. Either (or both) can be used.
 // The are no default pin assignments to these must be set explicitly.
 //——————————————————————————————————————————————————————————————————————————————
-static const byte MCP2515_SCK  = 2 ; // SCK input of MCP2515
-static const byte MCP2515_MOSI = 3 ; // SDI input of MCP2515
-static const byte MCP2515_MISO = 4 ; // SDO output of MCP2517
+static const byte MCP2515_SCK  = 18 ; // SCK input of MCP2515
+static const byte MCP2515_MOSI = 19 ; // SDI input of MCP2515
+static const byte MCP2515_MISO = 16 ; // SDO output of MCP2517
 
-static const byte MCP2515_CS  = 5 ;  // CS input of MCP2515 (adapt to your design)
-static const byte MCP2515_INT = 6 ;  // INT output of MCP2515 (adapt to your design)
+static const byte MCP2515_CS  = 17 ;  // CS input of MCP2515 (adapt to your design)
+static const byte MCP2515_INT = 12 ;  // INT output of MCP2515 (adapt to your design)
 //——————————————————————————————————————————————————————————————————————————————
 //  MCP2515 Driver object
 //——————————————————————————————————————————————————————————————————————————————
@@ -937,8 +937,167 @@ void view_73(int arrayLength){
   sendToSerial("view_73", "", high_box, view73[1], view73[2], view73[3], view73[4], view73[5], view73[6], "", "", "", bass_sign, bass, treble_sign, treble);
 }
 
+//——————————————————————————————————————————————————————————————————————————————
+//  Takes the frames from the navigation control unit (the joystick and the buttons)
+//  and converts them in a Keyboard emulated data, in order to navigate through the Android
+//  device.
+//  The android device uses a third party app (Xposed Edge Pro) that converts some of these
+//  commands to specific events (open app, open voice input for destination, etc.)
+//     /‾‾‾‾‾‾‾|‾‾‾‾‾‾‾‾‾‾‾|‾‾‾‾‾‾‾\           //     /‾‾‾‾‾‾‾|‾‾‾‾‾‾‾‾‾‾‾|‾‾‾‾‾‾‾\ 
+//    /  |     |    BACK   |     |  \          //    /   1    |     2     |    3   \ 
+//   /   |_   /_____________\   _|   \         //   /        /_____________\        \ 
+//  |________/               \________|        //  |________/  *    12      \________|
+//  |       |       |||       |       |        //  |       |                 |       |  * 10 - rotate joystick right
+//  |  MAP  |   __       __   | INFO  |        //  |   4   | 14    (16)      |   5   | ** 11 - rotate joystick left
+//  | 2D/3D |   ‾‾       ‾‾   | ROUTE |        //  |       |     (CLIK)   15 |       |
+//  |       |       |||       |       |        //  |       |                 |       |
+//  |‾‾‾‾‾‾‾‾\               /‾‾‾‾‾‾‾‾|        //  |‾‾‾‾‾‾‾‾\       13   ** /‾‾‾‾‾‾‾‾|
+//   \  DEST  \‾‾‾‾‾‾|‾‾‾‾‾‾/  MENU  /         //   \        \‾‾‾‾‾‾|‾‾‾‾‾‾/        /
+//    \  *HOME | REP | LIG |  *SET  /          //    \    6   |  7  |  8  |    9   /
+//     \_______|_____|_____|_______/           //     \_______|_____|_____|_______/
+//——————————————————————————————————————————————————————————————————————————————
+//  1 -                                          9 - "keypad:menu" (string)
+//  2 - ESCPAE (keyboard)                       10 - "keypad:right" (string) *
+//  3 -                                         11 - "keypad:left"  (string) * 
+//  4 - *press once  - Google Maps              12 -    UP ARROW (keyboard)
+//      *press twice - Waze              
+//  5 - IF (Google Maps) THEN voice input       13 -  DOWN ARROW (keyboard)
+//  6 -                                         14 -  LEFT ARROW (keyboard)
+//  7 -                                         15 - RIGHT ARROW (keyboard)
+//  8 - SCREEN BRIGHTNESS ????                  16 -       ENTER (keyboard)
+//  
+//  * We use this to select specific apps from the interface
+
+//——————————————————————————————————————————————————————————————————————————————
+void keyboardButtons(char firstBit){
+      //KEY 1
+      if(firstBit == 0x00){
+        Keyboard.press('1');
+        //Serial.println("1");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 2
+      if(firstBit == 0x01){
+        Keyboard.press(KEY_ESC);
+        //Serial.println("KEY_ESC");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 3
+      if(firstBit == 0x02){
+        Keyboard.press('3');
+        //Serial.println("3");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 5
+      if(firstBit == 0x03){
+        Keyboard.press('5');
+        //Serial.println("5");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 9  -- APP PopUp menu
+      if(firstBit == 0x04){
+        //Keyboard.press('9');
+        Serial.print("keypad:menu");
+        Serial.println(endString);
+        //delay(delayTime);
+        //Keyboard.releaseAll();
+      }
+      //KEY 8
+      if(firstBit == 0x05){
+        Keyboard.press('8');
+        //Serial.println("8");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 7
+      if(firstBit == 0x06){
+        Keyboard.press('7');
+        //Serial.println("7");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 6
+      if(firstBit == 0x07){
+        Keyboard.press('6');
+        //Serial.println("6");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 4
+      if(firstBit == 0x08){
+        Keyboard.press('4');
+        //Serial.println("4");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }  
+}
+
+void keyboardJoystick(char firstBit, char secondBit){
+      //KEY 10
+      if(firstBit == 0x00 && secondBit == 0x06){
+       // Keyboard.press(KEY_UP_ARROW);
+       // Serial.println("KEY_UP_ARROW");
+       //delay(delayTime);
+       //Keyboard.releaseAll();
+       Serial.print("keypad:right");
+       Serial.println(endString);
+      }
+      //KEY 11
+      if(firstBit == 0x10 && secondBit == 0x05){
+       // Keyboard.press(KEY_UP_ARROW);
+       // Serial.println("KEY_UP_ARROW");
+       // delay(delayTime);
+       // Keyboard.releaseAll();
+       Serial.print("keypad:left");
+       Serial.println(endString);
+      }
+      //KEY 12
+      if(firstBit == 0x10 && secondBit == 0x00){
+        Keyboard.press(KEY_UP_ARROW);
+        //Serial.println("KEY_UP_ARROW");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 13
+      if(firstBit == 0x20 && secondBit == 0x00){
+        Keyboard.press(KEY_DOWN_ARROW);
+        //Serial.println("KEY_DOWN_ARROW");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 14
+      if(firstBit == 0x30 && secondBit == 0x00){
+        Keyboard.press(KEY_LEFT_ARROW);
+        //Serial.println("KEY_LEFT_ARROW");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 15
+      if(firstBit == 0x40 && secondBit == 0x00){
+        Keyboard.press(KEY_RIGHT_ARROW);
+        //Serial.println("KEY_RIGHT_ARROW");
+        delay(delayTime);
+        Keyboard.releaseAll();
+      }
+      //KEY 16
+      if(firstBit == 0x01 && secondBit == 0x00){
+        Keyboard.press(0xE0);
+        //Serial.println("ENTER_KEY");
+        delay(delayTime);
+        Keyboard.releaseAll();
+        Serial.print("keypad:enter");
+        Serial.println(endString);
+      }
+}
+
+
 
 void loop() {
+  // --- Check for message request from Android device on app startup to send the last messages memorized
   if (Serial.available() > 0){
     while (Serial.available() > 0){
       char s = Serial.read();
@@ -951,6 +1110,27 @@ void loop() {
     }
     receivedMessage = "";
   }
+  // --- Search for 4x1 keypad button press
+  if (!digitalRead(backButton)){
+        Keyboard.press(KEY_ESC);
+        Serial.println("KEY_ESC");
+        delay(delayTime);
+        Keyboard.releaseAll();
+  }
+  if (!digitalRead(homeButton)){
+        Keyboard.press('h');
+        Serial.println("h");
+        delay(delayTime);
+        Keyboard.releaseAll();
+  }
+  if (!digitalRead(appSwitchButton)){
+        Keyboard.press('s');
+        Serial.println("s");
+        delay(delayTime);
+        Keyboard.releaseAll();
+  }
+  // --- Scan for ISO-TP format message package and send it to be saved in an array
+  // !!! TO DO - Remove the debugging lines !!!
   if (can.receive (canMsg)){
     if (canMsg.id == 289){
       int packageLength = 0;
@@ -972,6 +1152,10 @@ void loop() {
           Serial.println();
         }
       }
+    }else if (canMsg.id == 1597){
+      keyboardButtons(canMsg.data[0]);
+    }else if (canMsg.id == 1598){
+      keyboardJoystick(canMsg.data[0], canMsg.data[1]);      
     }
   }
 }
