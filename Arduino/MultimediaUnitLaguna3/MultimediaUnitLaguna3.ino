@@ -2,9 +2,6 @@
 #include <SPI.h>
 #include <Keyboard.h>
 
-
-Add jpystick and buttons commands!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 //——————————————————————————————————————————————————————————————————————————————
 // The Pico has two SPI peripherals, SPI and SPI1. Either (or both) can be used.
 // The are no default pin assignments to these must be set explicitly.
@@ -37,6 +34,8 @@ const int appSwitchButton = 9; // 4x1 keyboard -- button assigned for app switch
 //——————————————————————————————————————————————————————————————————————————————
 bool logFileActive = true;
 bool secondSerialActive = true;
+
+unsigned long delayTime = 250;
 
 unsigned char dataPackage[200];
 char dataPackegePos;
@@ -450,13 +449,13 @@ String icons(char input){
       iconOutput = "icon_Vehicle_phonebook";
       break;
     case 0x14:
-      iconOutput = "icon_Mobile_phonebook";
+      iconOutput = "icon_Vehicle_phonebook"; // Mobile_phonebook
       break;
     case 0x15:
       iconOutput = "icon_Call_history";
       break;
     case 0x16:
-      iconOutput = "icon_Mail_box";
+      iconOutput = "icon_Mailbox";
       break;
     case 0x17:
       iconOutput = "icon_Directory_management";
@@ -504,19 +503,19 @@ String icons(char input){
       iconOutput = "icon_Voice_prompt_volume";
       break;
     case 0x40:
-      iconOutput = "icon_1";
+      iconOutput = "icon_number_1";
       break;
     case 0x41:
-      iconOutput = "icon_2";
+      iconOutput = "icon_number_2";
       break;
     case 0x42:
-      iconOutput = "icon_3";
+      iconOutput = "icon_number_3";
       break;
     case 0x43:
-      iconOutput = "icon_4";
+      iconOutput = "icon_number_4";
       break;
     case 0x44:
-      iconOutput = "icon_5";
+      iconOutput = "icon_number_5";
       break;
     case 0x60:
       iconOutput = "icon_Adaptation_volume";
@@ -652,6 +651,10 @@ void view_C3(int arrayLength){
 //  IT MIGHT also contain the source selected (radio, CD player, Auxiliary audio sources). That package comes without
 //  column separator, so we will only search for text match after the end of the dataPackage interogation.
 //  || FM || FREQUENCY || CHANELL NAME || CHANELL NR ||
+//  ---------------------------------------------------
+//  This might also return a different type of view with only 3 columns for the LW band. We cand adress this in the 
+//  android app by verifying the presence of text in the last column. 
+//  || FM || FREQUENCY || CHANELL NR ||
 //—————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 void view_41(int arrayLength){
   String view41[4];
@@ -724,7 +727,7 @@ void view_41_main_volume(int arrayLength, bool unpause){
   //--- Serial transmit the volume
   sendToSerial("device_volume", "", '_', volume);
   // Save the last volume value in a global variable in case of a Android app restart and request of info
-  lastVolume = "device_volume" + ":" + volume + ":" + endString;
+  //lastVolume = "device_volume" + ":" + volume + ":" + endString;
   return;
 }
 
@@ -736,6 +739,11 @@ void view_41_main_volume(int arrayLength, bool unpause){
 //        || FREQUENCY || CHANELL NAME || CHANELL NR ||
 //  || FM || FREQUENCY || CHANELL NAME || CHANELL NR ||
 //        || FREQUENCY || CHANELL NAME || CHANELL NR ||
+//  This might also return a different type of view with only 3 columns for the LW band. We cand adress this in the 
+//  android app by verifying the presence of text in the last column. 
+//        || FREQUENCY || CHANELL NR ||
+//  || FM || FREQUENCY || CHANELL NR ||
+//        || FREQUENCY || CHANELL NR ||
 //—————————————————————————————————————————————————————————————————————————————————————————————————————————————————
 void view_43(int arrayLength, bool memory){
   String view43[10];
@@ -964,7 +972,7 @@ void view_73(int arrayLength){
 //  5 - IF (Google Maps) THEN voice input       13 -  DOWN ARROW (keyboard)
 //  6 -                                         14 -  LEFT ARROW (keyboard)
 //  7 -                                         15 - RIGHT ARROW (keyboard)
-//  8 - SCREEN BRIGHTNESS ????                  16 -       ENTER (keyboard)
+//  8 - "keypad:brightness" (string)            16 -       ENTER (keyboard)
 //  
 //  * We use this to select specific apps from the interface
 
@@ -1006,10 +1014,10 @@ void keyboardButtons(char firstBit){
         //delay(delayTime);
         //Keyboard.releaseAll();
       }
-      //KEY 8
+      //KEY 8  -- Brightness menu 
       if(firstBit == 0x05){
-        Keyboard.press('8');
-        //Serial.println("8");
+        Serial.print("keypad:brightness");
+        Serial.println(endString);
         delay(delayTime);
         Keyboard.releaseAll();
       }
